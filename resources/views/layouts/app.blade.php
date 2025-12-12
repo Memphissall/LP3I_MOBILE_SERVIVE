@@ -155,8 +155,9 @@
         transition-transform duration-300">
         
         <div class="sidebar-logo-text px-8 pt-8 pb-8">
-            <div class="text-2xl font-bold text-white"> 
-                <span class="text-3xl font-extrabold text-blue-300 mr-0.5">AcaPro</span>
+            <div class="text-2xl font-bold text-gray-800">
+                <span class="text-3xl font-extrabold text-blue-500 mr-0.5">E</span><span class="text-3xl font-bold text-gray-400">|</span>
+                <span class="text-red-600">Management</span>
             </div>
             {{-- Tombol close untuk mobile: Hanya terlihat di layar kecil (lg:hidden) --}}
             <button id="close-sidebar-btn" class="absolute top-4 right-4 lg:hidden text-gray-300 hover:text-white">

@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('materi', function (Blueprint $table) {
@@ -15,15 +18,16 @@ return new class extends Migration
             $table->string('file_materi')->nullable();
             $table->dateTime('tanggal_upload');
             $table->integer('pertemuan');
-            // Relasi
-            $table->unsignedBigInteger('nidn');      // ke tabel dosen
-            $table->string('kode_mk');               // ke tabel mata kuliah
-            $table->unsignedBigInteger('id_kelas');  // ke tabel kelas
-
+            $table->foreign('nidn')->references('nidn')->on('dosen'); // Asumsi primary key tabel 'dosen' adalah 'nidn'
+            $table->foreign('kode_mk')->references('kode_mk')->on('mata_kuliah'); // Asumsi primary key tabel 'mata_kuliah' adalah 'kode_mk'
+            $table->foreign('id_kelas')->references('id_kelas')->on('kelas');  // ke tabel kelas
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('materi');

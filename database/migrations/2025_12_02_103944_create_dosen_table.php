@@ -19,10 +19,13 @@ return new class extends Migration
             $table->string('bidang');
             $table->string('tempat');
             $table->date('tanggal_lahir');
+
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
+
             $table->string('agama');
             $table->string('email')->unique();
             $table->string('no_telp');
+
             $table->integer('honor_per_sks');
 
             // Status lengkap

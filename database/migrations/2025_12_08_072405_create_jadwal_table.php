@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('id_ruangan'); 
             $table->string('nidn');
             $table->string('hari');
-            $table->time('waktu');
+            $table->time('jam_mulai');
+            $table->time('jam_selesai');
+            $table->enum('jenis_perkuliahan', ['Tatap Muka', 'Online', 'Tidak Masuk'])->default('Tatap Muka');
             $table->timestamps();
             $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan'); 
             $table->foreign('nidn')->references('nidn')->on('dosen'); 

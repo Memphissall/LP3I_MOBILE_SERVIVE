@@ -13,7 +13,8 @@ return new class extends Migration {
             $table->integer('sks')->nullable();
             $table->string('semester')->nullable();
             $table->text('sap')->nullable();
-            //foreign key ke tabel kelas
+            
+            // kolom foreign key ke tabel kelas
             $table->unsignedBigInteger('id_kelas'); 
             $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');
 

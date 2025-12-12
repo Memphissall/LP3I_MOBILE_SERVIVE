@@ -11,18 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('honor', function (Blueprint $table) {
-            $table->id('id_honor'); 
-            $table->string('nidn');
-            $table->date('tanggal'); 
-            $table->integer('total_sks'); 
-            $table->unsignedBigInteger('honor_transport'); 
-            $table->unsignedBigInteger('honor_per_sks');
-            $table->unsignedBigInteger('honor_soal'); 
-            $table->unsignedBigInteger('honor_koreksi'); 
-            $table->unsignedBigInteger('total_honor'); 
+        Schema::create('transkrip_nilai', function (Blueprint $table) {
+           $table->id('id_transkrip'); 
+            $table->string('nipd')->unique(); 
+            $table->decimal('ipk', 3, 2)->nullable(); 
+            $table->date('tanggal_lulus')->nullable(); 
             $table->timestamps();
-            $table->foreign('nidn')->references('nidn')->on('dosen');
+            $table->foreign('nipd')->references('nipd')->on('mahasiswa')->onDelete('cascade');
         });
     }
 
@@ -31,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('honor');
+        Schema::dropIfExists('transkrip_nilai');
     }
 };

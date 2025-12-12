@@ -10,9 +10,17 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        
+        // Mendaftarkan alias 'admin' ke class AdminSessionMock
+        $middleware->alias([
+            // Alias 'admin' sekarang merujuk ke logic Session Mock kamu!
+            'admin' => \App\Http\Middleware\AdminSessionMock::class, 
+        ]);
     })
+
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->create();

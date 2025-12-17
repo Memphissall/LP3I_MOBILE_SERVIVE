@@ -1,14 +1,11 @@
 @extends('layouts.app')
 
-{{-- Menentukan Title untuk halaman ini --}}
-@section('title', 'Dashboard Staf Akademik') 
-
 {{-- Bagian konten utama --}}
 @section('content')
     <header class="flex justify-between items-center mb-6">
         <div>
             <p class="text-sm font-medium text-gray-500">
-                Selamat datang kembali, Bu Rina! 👋
+                Selamat datang di👋
             </p>
             <h1 class="text-3xl font-bold text-gray-900 mt-1">
                 Dashboard Staf Akademik

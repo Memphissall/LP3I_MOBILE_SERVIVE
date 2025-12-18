@@ -10,20 +10,25 @@ class Mahasiswa extends Model
 
     protected $fillable = [
         'id_kelas',
-        'nidn',
-        'nama_mhs',
+        'nipd',        // Changed from 'nidn' to match database
+        'nama',        // Changed from 'nama_mhs' to match database
         'jenis_kelamin',
         'tempat_lahir',
         'tgl_lahir',
         'agama',
         'jurusan',
+        'angkatan',
+        'periode',
         'email',
         'alamat',
-        'no_telp'
+        'no_tlp',      // Changed from 'no_telp' to match database
+        'kelas',       // Legacy column
+        'foto',
+        'status'
     ];
 
-    // Relasi ke kelas
-    public function kelas()
+    // Relasi ke kelas (Renamed to dataKelas to avoid collision with 'kelas' string column)
+    public function dataKelas()
     {
         return $this->belongsTo(Kelas::class, 'id_kelas');
     }

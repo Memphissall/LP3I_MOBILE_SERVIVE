@@ -6,7 +6,7 @@
     <title>AcaPro - Dashboard Staf Akademik</title>
     
     {{-- TAILWIND & LUCIDE ICONS (Tetap menggunakan CDN) --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
     {{-- FONT POPPINS --}}

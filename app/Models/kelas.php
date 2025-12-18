@@ -12,7 +12,16 @@ class Kelas extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'nama_kelas'
+        'nama_kelas',
+        'kode_mk',
+        'jurusan',
+        'tahun_ajaran',
+        'nama_pa'
     ];
+
+    public function mahasiswa()
+    {
+        return $this->hasMany(Mahasiswa::class, 'id_kelas', 'id_kelas');
+    }
 }
 

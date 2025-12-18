@@ -56,4 +56,23 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::view('validasi-absensi', 'akademik.validasi_absensi')->name('validasi_absensi');
     Route::view('kelola-laporan', 'akademik.kelola_laporan')->name('kelola_laporan');
 
+    // API Routes for Modal
+    Route::get('/api/mahasiswa-list', [App\Http\Controllers\KelasController::class, 'getMahasiswaList'])->name('api.mahasiswa.list');
+    Route::get('/api/kelas-list', [App\Http\Controllers\KelasController::class, 'getKelasList'])->name('api.kelas.list');
+    Route::post('/api/kelas/add-students', [App\Http\Controllers\KelasController::class, 'addMahasiswaToKelas'])->name('api.kelas.add_students');
+    Route::get('/mahasiswa/print', [App\Http\Controllers\KelasController::class, 'printStudents'])->name('mahasiswa.print');
+    
+    // Mahasiswa CRUD Routes
+    Route::get('/mahasiswa/{id}/edit', [App\Http\Controllers\MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
+    Route::put('/mahasiswa/{id}', [App\Http\Controllers\MahasiswaController::class, 'update'])->name('mahasiswa.update');
+    Route::delete('/mahasiswa/{id}', [App\Http\Controllers\MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
+    
+    // Dosen CRUD Routes
+    Route::get('/api/dosen-list', [App\Http\Controllers\DosenController::class, 'index'])->name('api.dosen.list');
+    Route::post('/dosen', [App\Http\Controllers\DosenController::class, 'store'])->name('dosen.store');
+    Route::get('/dosen/{id}/edit', [App\Http\Controllers\DosenController::class, 'edit'])->name('dosen.edit');
+    Route::put('/dosen/{id}', [App\Http\Controllers\DosenController::class, 'update'])->name('dosen.update');
+    Route::delete('/dosen/{id}', [App\Http\Controllers\DosenController::class, 'destroy'])->name('dosen.destroy');
+    Route::get('/dosen/print', [App\Http\Controllers\DosenController::class, 'printDosen'])->name('dosen.print');
+
 });

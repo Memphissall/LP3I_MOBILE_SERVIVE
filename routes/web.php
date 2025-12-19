@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AkademikController; // Wajib: Untuk Master Data Akademik
 use App\Http\Controllers\DashboardController; // Asumsi: Untuk menampilkan dashboard
-use App\Http\Controllers\LecturerController; // Asumsi: Untuk menampilkan dosen
+use App\Http\Controllers\Admin\LaporanController; // Wajib: Untuk Laporan E-Management
 
 // =========================================================================
 // RUTE HALAMAN AWAL
@@ -69,16 +69,17 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::delete('/jadwal/{id}', [AkademikController::class, 'destroyJadwal'])->name('akademik.jadwal.destroy'); // Delete
     
     // Absensi
-    Route::get('/akademik/validasi-absensi', [AkademikController::class, 'validasiAbsensi'])->name('validasiAbsensi.index');
-    Route::post('/akademik/validasi-absensi/save', [AkademikController::class, 'storeValidasiAbsensi'])->middleware('Auth');
+    Route::get('/validasi-absensi', [AkademikController::class, 'validasiAbsensi'])->name('validasiAbsensi.index');
+    Route::post('/validasi-absensi/save', [AkademikController::class, 'storeValidasiAbsensi'])->middleware('Auth');
 
-    // Menggunakan Route::view untuk rute yang masih murni statis (tanpa controller)
-    Route::view('laporan-krs', 'akademik.krs')->name('krs.laporan');
-    Route::view('kelola-matkul', 'akademik.kelola_matkul')->name('kelola_matkul');
-    Route::view('kelola-jadwal', 'akademik.kelola_jadwal')->name('kelola_jadwal');
+});
 
-    // 3. Validasi & Laporan
-    Route::view('validasi-absensi', 'akademik.validasi_absensi')->name('validasi_absensi');
-    Route::view('kelola-laporan', 'akademik.kelola_laporan')->name('kelola_laporan');
+Route::prefix('akademik/laporan')->name('laporan.')->group(function () {
+    // 1. Laporan Mahasiswa
+    Route::get('/mahasiswa', [LaporanController::class, 'indexMahasiswa'])->name('mhs.index');
+    Route::post('/mahasiswa/cetak', [LaporanController::class, 'cetakMahasiswa'])->name('mhs.cetak');
 
+    // 2. Laporan Dosen
+    Route::get('/dosen', [LaporanController::class, 'indexDosen'])->name('dosen.index');
+    Route::post('/dosen/cetak', [LaporanController::class, 'cetakDosen'])->name('dosen.cetak');
 });

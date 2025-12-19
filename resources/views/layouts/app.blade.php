@@ -80,9 +80,9 @@
             background-color: rgba(255, 255, 255, 0.05); 
         }
         .submenu .nav-link.active {
-            background-color: var(--primary-blue); 
+            background-color: #ffffff; 
             border-left: 3px solid #f9fafb; 
-            color: #ffffff;
+            color: var(--primary-blue);
             font-weight: 500;
             box-shadow: none;
         }

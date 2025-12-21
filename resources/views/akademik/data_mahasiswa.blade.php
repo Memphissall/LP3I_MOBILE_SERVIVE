@@ -72,7 +72,7 @@
                 <span>Tampilkan Data</span>
             </button>
             <button id="print-btn"
-                class="ml-3 flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-150 transform hover:scale-[1.02] active:scale-100"
+                class="ml-3 flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-150 transform hover:scale-[1.02] active:scale-100"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                 <span>Print</span>
@@ -158,7 +158,7 @@ $(document).ready(function() {
                      $tbody.closest('table').removeClass('hidden');
                      
                      data.forEach(student => {
-                        const kelasDisplay = student.id_kelas ? `<span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">ID: ${student.id_kelas}</span>` : '<span class="text-red-500 text-xs">Belum Ada</span>';
+                        const kelasDisplay = student.data_kelas ? `<span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">${student.data_kelas.nama_kelas}</span>` : '<span class="text-red-500 text-xs">Belum Ada</span>';
                         
                         const row = `
                             <tr data-id="${student.id}" class="hover:bg-gray-50 transition duration-100">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Data Mahasiswa</title>
+    <title>Cetak Data Mata Kuliah</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,7 +42,7 @@
 </head>
 <body>
 
-    <h2>Laporan Data Mahasiswa</h2>
+    <h2>Laporan Data Mata Kuliah</h2>
     
     <div class="header-info">
         <p>Tanggal Cetak: {{ date('d-m-Y') }}</p>
@@ -52,34 +52,24 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>NIM</th>
-                <th>Nama Mahasiswa</th>
+                <th>Kode MK</th>
+                <th>Nama Mata Kuliah</th>
+                <th>SKS</th>
+                <th>Semester</th>
+                <th>Jenis</th>
                 <th>Jurusan</th>
-                <th>Angkatan</th>
-                <th>Kelas</th>
-                <th>Pembimbing Akademik</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($students as $index => $student)
+            @foreach($matkul as $index => $mk)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $student->nipd }}</td>
-                <td>{{ $student->nama }}</td>
-                <td>{{ $student->jurusan }}</td>
-                <td>{{ $student->angkatan }}</td>
-                <td>
-                    @if($student->dataKelas)
-                        {{ $student->dataKelas->nama_kelas }}
-                    @endif
-                </td>
-                <td>
-                    @if($student->dataKelas)
-                        {{ $student->dataKelas->nama_pa }}
-                    @else
-                        -
-                    @endif
-                </td>
+                <td>{{ $mk->kode_mk }}</td>
+                <td>{{ $mk->nama_mk }}</td>
+                <td>{{ $mk->sks }}</td>
+                <td>{{ $mk->semester }}</td>
+                <td>{{ $mk->jenis }}</td>
+                <td>{{ $mk->jurusan }}</td>
             </tr>
             @endforeach
         </tbody>

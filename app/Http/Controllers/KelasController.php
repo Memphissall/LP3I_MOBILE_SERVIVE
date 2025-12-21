@@ -17,7 +17,7 @@ class KelasController extends Controller
      */
     public function getMahasiswaList(Request $request)
     {
-        $query = Mahasiswa::query();
+        $query = Mahasiswa::with('dataKelas');
 
         // Filter: Belum punya kelas (optional, tergantung requirement, tapi biasanya yang mau ditambahin itu yg belum punya kelas, atau bisa overwrite)
         // $query->whereNull('id_kelas'); 

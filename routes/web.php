@@ -74,5 +74,22 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::put('/dosen/{id}', [App\Http\Controllers\DosenController::class, 'update'])->name('dosen.update');
     Route::delete('/dosen/{id}', [App\Http\Controllers\DosenController::class, 'destroy'])->name('dosen.destroy');
     Route::get('/dosen/print', [App\Http\Controllers\DosenController::class, 'printDosen'])->name('dosen.print');
+    
+    // Matkul CRUD Routes
+    Route::get('/api/matkul-list', [App\Http\Controllers\MatkulController::class, 'index'])->name('api.matkul.list');
+    Route::post('/matkul', [App\Http\Controllers\MatkulController::class, 'store'])->name('matkul.store');
+    Route::get('/matkul/{id}/edit', [App\Http\Controllers\MatkulController::class, 'edit'])->name('matkul.edit');
+    Route::put('/matkul/{id}', [App\Http\Controllers\MatkulController::class, 'update'])->name('matkul.update');
+    Route::delete('/matkul/{id}', [App\Http\Controllers\MatkulController::class, 'destroy'])->name('matkul.destroy');
+    Route::get('/matkul/print', [App\Http\Controllers\MatkulController::class, 'printMatkul'])->name('matkul.print');
+    
+    // Jadwal CRUD Routes
+    Route::get('/api/jadwal-list', [App\Http\Controllers\JadwalController::class, 'index'])->name('api.jadwal.list');
+    Route::get('/api/jadwal-dropdown', [App\Http\Controllers\JadwalController::class, 'getDropdownData'])->name('api.jadwal.dropdown');
+    Route::post('/jadwal', [App\Http\Controllers\JadwalController::class, 'store'])->name('jadwal.store');
+    Route::get('/jadwal/{id}/edit', [App\Http\Controllers\JadwalController::class, 'edit'])->name('jadwal.edit');
+    Route::put('/jadwal/{id}', [App\Http\Controllers\JadwalController::class, 'update'])->name('jadwal.update');
+    Route::delete('/jadwal/{id}', [App\Http\Controllers\JadwalController::class, 'destroy'])->name('jadwal.destroy');
+    Route::get('/jadwal/print', [App\Http\Controllers\JadwalController::class, 'printJadwal'])->name('jadwal.print');
 
 });

@@ -11,18 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jadwal', function (Blueprint $table) {
-            $table->id('id_jadwal');
-            $table->string('id_ruangan'); 
-            $table->string('nidn');
-            $table->string('hari');
-            $table->time('waktu');
-            $table->timestamps();
-            $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan'); 
-            $table->foreign('nidn')->references('nidn')->on('dosen'); 
-            $table->foreign('id_kelas')->references('id_kelas')->on('kelas'); 
-            $table->foreign('kode_mk')->references('kode_mk')->on('matakuliah');
-        });
+       Schema::create('jadwal', function (Blueprint $table) {
+    $table->id('id_jadwal');
+    $table->string('id_ruangan'); 
+    $table->string('nidn');
+    $table->unsignedBigInteger('id_kelas');
+    $table->string('kode_mk');
+    $table->string('hari');
+    $table->time('jam_mulai')->nullable();
+    $table->time('jam_selesai')->nullable();
+    $table->timestamps();
+    $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan'); 
+    $table->foreign('nidn')->references('nidn')->on('dosen'); 
+    $table->foreign('id_kelas')->references('id_kelas')->on('kelas'); 
+    $table->foreign('kode_mk')->references('kode_mk')->on('matakuliah');
+});
+
     }
 
     /**

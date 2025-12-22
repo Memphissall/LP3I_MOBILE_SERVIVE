@@ -10,19 +10,20 @@ return new class extends Migration
     {
         Schema::create('dosen', function (Blueprint $table) {
             $table->id();
-
             $table->unsignedBigInteger('user_id')->unique();
-
             $table->string('nidn')->unique();
             $table->string('nama_dosen');
             $table->string('pendidikan');
             $table->string('bidang');
             $table->string('tempat');
             $table->date('tanggal_lahir');
+
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
+
             $table->string('agama');
             $table->string('email')->unique();
             $table->string('no_telp');
+
             $table->integer('honor_per_sks');
 
             // Status lengkap

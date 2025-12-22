@@ -8,17 +8,14 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('matakuliah', function (Blueprint $table) {
-            $table->string('kode_mk')->primary();
-            $table->string('nama_mk');
-            $table->integer('sks')->nullable();
-            $table->string('semester')->nullable();
-            $table->text('sap')->nullable();
-            //foreign key ke tabel kelas
-            $table->unsignedBigInteger('id_kelas'); 
-            $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');
+    $table->string('kode_mk')->primary();
+    $table->string('nama_mk');
+    $table->integer('sks');
+    $table->integer('semester');
+    $table->boolean('tipe_matakuliah')->default(false); // true = umum
+    $table->timestamps();
+});
 
-            $table->timestamps();
-        });
     }
 
     public function down()
@@ -26,4 +23,3 @@ return new class extends Migration {
         Schema::dropIfExists('matakuliah');
     }
 };
-

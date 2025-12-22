@@ -12,15 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('krs', function (Blueprint $table) {
-            $table->id('id_krs');
-            $table->integer('nipd');
-            $table->string('kode_mk');
-            $table->string('tahun_ajaran'); 
-            $table->integer('semester'); 
+            $table->id();
             $table->timestamps();
-            $table->foreign('nipd')->references('nipd')->on('mahasiswa')->onDelete('cascade');
-            $table->foreign('kode_mk')->references('kode_mk')->on('matakuliah'); 
-            $table->unique(['nipd', 'kode_mk', 'tahun_ajaran', 'semester']);
         });
     }
 

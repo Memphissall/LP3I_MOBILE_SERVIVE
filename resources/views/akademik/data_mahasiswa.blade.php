@@ -16,9 +16,9 @@
         <h2 class="text-lg font-semibold text-gray-700 mb-4">Pencarian Data</h2>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="flex flex-col space-y-1">
-                <label class="text-sm font-medium text-gray-600">Jurusan</label>
+                <label class="text-sm font-medium text-gray-600">Bidang Keahlian</label>
                 <select id="filter-jurusan" class="p-2 border rounded-lg outline-none text-sm text-gray-700 bg-gray-50">
-                    <option value="">Semua Jurusan</option>
+                    <option value="">Semua Bidang Keahlian</option>
                 </select>
             </div>
             <div class="flex flex-col space-y-1">

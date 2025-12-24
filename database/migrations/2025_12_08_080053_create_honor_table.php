@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('honor', function (Blueprint $table) {
             $table->id('id_honor'); 
-            $table->string('nidn');
+            $table->unsignedBigInteger('id_dosen');
             $table->date('tanggal'); 
             $table->integer('total_sks'); 
             $table->unsignedBigInteger('honor_transport'); 
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('honor_koreksi'); 
             $table->unsignedBigInteger('total_honor'); 
             $table->timestamps();
-            $table->foreign('nidn')->references('nidn')->on('dosen');
+            $table->foreign('id_dosen')->references('id_dosen')->on('dosen');
         });
     }
 

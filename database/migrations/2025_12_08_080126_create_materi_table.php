@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('materi', function (Blueprint $table) {
             $table->id('id_materi');
+            $table->unsignedBigInteger('id_dosen');
+            $table->unsignedBigInteger('id_matkul');
+            $table->unsignedBigInteger('id_kelas');
             $table->string('judul_materi');
             $table->text('deskripsi')->nullable();
             $table->string('file_materi')->nullable();
             $table->dateTime('tanggal_upload');
             $table->integer('pertemuan');
-            $table->foreign('nidn')->references('nidn')->on('dosen'); // Asumsi primary key tabel 'dosen' adalah 'nidn'
-            $table->foreign('kode_mk')->references('kode_mk')->on('mata_kuliah'); // Asumsi primary key tabel 'mata_kuliah' adalah 'kode_mk'
+            $table->foreign('id_dosen')->references('id_dosen')->on('dosen'); // Asumsi primary key tabel 'dosen' adalah 'nidn'
+            $table->foreign('id_matkul')->references('id_matkul')->on('mata_kuliah'); // Asumsi primary key tabel 'mata_kuliah' adalah 'kode_mk'
             $table->foreign('id_kelas')->references('id_kelas')->on('kelas');  // ke tabel kelas
             $table->timestamps();
         });

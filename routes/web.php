@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AkademikController; // Wajib: Untuk Master Data Akademik
 use App\Http\Controllers\DashboardController; // Asumsi: Untuk menampilkan dashboard
-use App\Http\Controllers\LecturerController; // Asumsi: Untuk menampilkan dosen
+use App\Http\Controllers\DosenController; // Asumsi: Untuk menampilkan dosen
+use App\Http\Controllers\MahasiswaController; // Asumsi: Untuk menampilkan mahasiswa
+use App\Http\Controllers\KelasController; // Asumsi: Untuk menampilkan kelas
 
 // =========================================================================
 // RUTE HALAMAN AWAL
@@ -45,7 +47,7 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     // 2. Data Master (Kelola Dosen, Mahasiswa, Ruangan, Jurusan)
     // Menggunakan Controller untuk arsitektur yang lebih baik
     Route::get('/mahasiswa', [AkademikController::class, 'index'])->name('mahasiswa.index');
-    Route::get('/dosen', [LecturerController::class, 'index'])->name('dosen.index');
+    Route::get('/dosen', [DosenController::class, 'index'])->name('dosen.index');
     
     // Menggunakan Route::view untuk rute yang masih murni statis (tanpa controller)
     Route::view('laporan-krs', 'akademik.krs')->name('krs.laporan');
@@ -57,15 +59,21 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::view('kelola-laporan', 'akademik.kelola_laporan')->name('kelola_laporan');
 
     // API Routes for Modal
-    Route::get('/api/mahasiswa-list', [App\Http\Controllers\KelasController::class, 'getMahasiswaList'])->name('api.mahasiswa.list');
+    Route::get('/api/mahasiswa-list', [App\Http\Controllers\MahasiswaController::class, 'apiList'])->name('api.mahasiswa.list');
     Route::get('/api/kelas-list', [App\Http\Controllers\KelasController::class, 'getKelasList'])->name('api.kelas.list');
     Route::post('/api/kelas/add-students', [App\Http\Controllers\KelasController::class, 'addMahasiswaToKelas'])->name('api.kelas.add_students');
-    Route::get('/mahasiswa/print', [App\Http\Controllers\KelasController::class, 'printStudents'])->name('mahasiswa.print');
+    Route::get('/mahasiswa/print', [App\Http\Controllers\MahasiswaController::class, 'printStudents'])->name('mahasiswa.print');
+    Route::get('/api/filter-data', [App\Http\Controllers\MahasiswaController::class, 'getFilterData'])->name('api.filter.data');
+    Route::get('/api/mahasiswa-tanpa-kelas', [MahasiswaController::class, 'getMahasiswaTanpaKelas'])->name('api.mahasiswa.tanpa.kelas');
     
     // Mahasiswa CRUD Routes
     Route::get('/mahasiswa/{id}/edit', [App\Http\Controllers\MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
     Route::put('/mahasiswa/{id}', [App\Http\Controllers\MahasiswaController::class, 'update'])->name('mahasiswa.update');
     Route::delete('/mahasiswa/{id}', [App\Http\Controllers\MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
+
+    // Kelas Routes
+    // Sesuaikan dengan nama Controller kamu ya, Bubub
+    Route::post('/mahasiswa/assign-class', [KelasController::class, 'assignClass'])->name('mahasiswa.assign');
     
     // Dosen CRUD Routes
     Route::get('/api/dosen-list', [App\Http\Controllers\DosenController::class, 'index'])->name('api.dosen.list');

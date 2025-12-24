@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('absensi', function (Blueprint $table) {
             $table->id('id_absensi'); 
             $table->unsignedBigInteger('id_jadwal'); 
-            $table->string('nipd'); 
+            $table->unsignedBigInteger('id_mahasiswa');
             $table->enum('status', ['Hadir', 'Izin', 'Sakit', 'Alpha']); 
             $table->boolean('validasi')->default(false); 
             $table->date('tanggal'); 
             $table->timestamps();
             $table->foreign('id_jadwal')->references('id_jadwal')->on('jadwal')->onDelete('cascade');
-            $table->foreign('nipd')->references('nipd')->on('mahasiswa')->onDelete('cascade');
+            $table->foreign('id_mahasiswa')->references('id_mahasiswa')->on('mahasiswa')->onDelete('cascade');
         });
     }
 

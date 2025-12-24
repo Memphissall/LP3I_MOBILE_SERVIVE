@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('tugas', function (Blueprint $table) {
             $table->bigIncrements('id_tugas');
-            $table->string('kode_mk');
+            $table->unsignedBigInteger('id_matkul');
             $table->unsignedBigInteger('id_kelas');
             $table->string('judul');
             $table->text('deskripsi')->nullable();
@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('file_tugas')->nullable();
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
             $table->timestamps();
-            $table->foreign('kode_mk')->references('kode_mk')->on('matakuliah')->onDelete('cascade');
+            $table->foreign('id_matkul')->references('id_matkul')->on('mata_kuliah')->onDelete('cascade');
             $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');
         });
     }

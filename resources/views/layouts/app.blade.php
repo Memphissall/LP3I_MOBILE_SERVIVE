@@ -2,8 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AcaPro - Dashboard Staf Akademik</title>
+    <title>E-Academia - Sistem Operasional Akademik</title>
     
     {{-- TAILWIND & LUCIDE ICONS (Tetap menggunakan CDN) --}}
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
@@ -27,7 +28,7 @@
             --sidebar-width: 280px; /* Variabel lebar sidebar */
         }
         body {
-            font-family: 'Poppins', sans-serif; 
+            font-family: 'Poppins'; 
             background-color: var(--light-bg);
             min-height: 100vh;
             margin: 0;
@@ -79,11 +80,17 @@
             background-color: rgba(255, 255, 255, 0.05); 
         }
         .submenu .nav-link.active {
-            background-color: var(--primary-blue); 
+            background-color: #ffffff; 
             border-left: 3px solid #f9fafb; 
-            color: #ffffff;
+            color: var(--primary-blue);
             font-weight: 500;
             box-shadow: none;
+        }
+        #sidebar-menu, #show-data-btn, #print-btn {
+            background-color: #004269;
+        }
+         #header-daftar-mahasiswa, #add-student-btn {
+            background-color: #ff0000;
         }
 
         /* ---------------------------------------------------- */
@@ -150,14 +157,12 @@
     
     {{-- SIDEBAR CONTAINER --}}
     <div id="sidebar-menu" 
-        class="bg-gradient-to-br from-blue-700 to-blue-900 
-        w-[var(--sidebar-width)] h-screen fixed top-0 left-0 z-50 
-        transition-transform duration-300">
+        class="w-[var(--sidebar-width)] h-screen fixed top-0 left-0 z-50 transition-transform duration-300">
         
         <div class="sidebar-logo-text px-8 pt-8 pb-8">
             <div class="text-2xl font-bold text-gray-800">
                 <span class="text-3xl font-extrabold text-blue-500 mr-0.5">E</span><span class="text-3xl font-bold text-gray-400">|</span>
-                <span class="text-red-600">Management</span>
+                <span class="text-red-600 font-extrabold">Academia</span>
             </div>
             {{-- Tombol close untuk mobile: Hanya terlihat di layar kecil (lg:hidden) --}}
             <button id="close-sidebar-btn" class="absolute top-4 right-4 lg:hidden text-gray-300 hover:text-white">

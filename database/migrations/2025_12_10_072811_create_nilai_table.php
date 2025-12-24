@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('nilai', function (Blueprint $table) {
             $table->id('id_nilai');
-            $table->string('nipd');             
-            $table->string('nidn');              
+            $table->unsignedBigInteger('id_mahasiswa');    
+            $table->unsignedBigInteger('id_dosen');        
             $table->float('nilai_kehadiran')->nullable();
             $table->float('nilai_attitude')->nullable();
             $table->float('nilai_formatif')->nullable();
@@ -25,8 +25,8 @@ return new class extends Migration
             $table->float('ip_kumulatif')->nullable();
             $table->string('huruf_mutu')->nullable();
             $table->timestamps();
-            $table->foreign('nipd')->references('nipd')->on('mahasiswa'); 
-            $table->foreign('nidn')->references('nidn')->on('dosen');
+            $table->foreign('id_mahasiswa')->references('id_mahasiswa')->on('mahasiswa'); 
+            $table->foreign('id_dosen')->references('id_dosen')->on('dosen');
         });
     }
 

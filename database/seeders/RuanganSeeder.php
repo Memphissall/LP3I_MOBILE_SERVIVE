@@ -14,7 +14,7 @@ class RuanganSeeder extends Seeder
     {
         $ruangan = [
             [
-                'id_ruangan' => 'R001',
+                'kode_ruangan' => 'R001',
                 'nama_ruangan' => 'Bill Gates',
                 'kapasitas' => 30,
                 'status' => 'Tersedia',
@@ -22,7 +22,7 @@ class RuanganSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'id_ruangan' => 'R002',
+                'kode_ruangan' => 'R002',
                 'nama_ruangan' => 'Soekarno',
                 'kapasitas' => 15,
                 'status' => 'Tersedia',
@@ -30,7 +30,7 @@ class RuanganSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'id_ruangan' => 'R003',
+                'kode_ruangan' => 'R003',
                 'nama_ruangan' => 'BJ Habibie',
                 'kapasitas' => 40,
                 'status' => 'Tersedia',
@@ -38,7 +38,7 @@ class RuanganSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'id_ruangan' => 'R004',
+                'kode_ruangan' => 'R004',
                 'nama_ruangan' => 'Crown',
                 'kapasitas' => 25,
                 'status' => 'Tersedia',
@@ -46,7 +46,7 @@ class RuanganSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'id_ruangan' => 'R005',
+                'kode_ruangan' => 'R005',
                 'nama_ruangan' => 'Pullman',
                 'kapasitas' => 25,
                 'status' => 'Tersedia',

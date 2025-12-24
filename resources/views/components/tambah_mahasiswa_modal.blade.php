@@ -53,26 +53,18 @@
                                 <label for="modal-filter-jurusan" class="block text-sm font-medium text-gray-700">Jurusan</label>
                                 <select id="modal-filter-jurusan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
                                     <option value="Semua Jurusan">Semua Jurusan</option>
-                                    <option value="Teknik Informatika">Teknik Informatika</option>
-                                    <option value="Sistem Informasi">Sistem Informasi</option>
-                                    <option value="Akuntansi">Akuntansi</option>
                                 </select>
                             </div>
                             <div>
                                 <label for="modal-filter-angkatan" class="block text-sm font-medium text-gray-700">Angkatan</label>
                                 <select id="modal-filter-angkatan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
                                     <option value="Semua Tahun">Semua Tahun</option>
-                                    <option value="2023">2023</option>
-                                    <option value="2022">2022</option>
-                                    <option value="2021">2021</option>
                                 </select>
                             </div>
                             <div>
                                 <label for="modal-filter-periode" class="block text-sm font-medium text-gray-700">Periode</label>
                                 <select id="modal-filter-periode" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
                                     <option value="Semua Periode">Semua Periode</option>
-                                    <option value="Ganjil">Ganjil</option>
-                                    <option value="Genap">Genap</option>
                                 </select>
                             </div>
                         </div>
@@ -128,9 +120,6 @@
                                 <label for="class-filter-jurusan" class="block text-sm font-medium text-gray-700">Filter Jurusan Kelas</label>
                                 <select id="class-filter-jurusan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
                                     <option value="Semua Jurusan">Semua Jurusan</option>
-                                    <option value="Teknik Informatika">Teknik Informatika</option>
-                                    <option value="Sistem Informasi">Sistem Informasi</option>
-                                    <option value="Akuntansi">Akuntansi</option>
                                 </select>
                             </div>
                             <div>
@@ -146,19 +135,12 @@
                         <div id="form-new-class" class="space-y-4 hidden bg-blue-50 p-4 rounded-lg border border-blue-200">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="new-kode-mk" class="block text-sm font-medium text-gray-700">Kode MK / Kelas</label>
-                                    <input type="text" name="kode_mk" id="new-kode-mk" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Cth: TI-2023-A">
-                                </div>
-                                <div>
                                     <label for="new-nama-kelas" class="block text-sm font-medium text-gray-700">Nama Kelas</label>
                                     <input type="text" name="nama_kelas" id="new-nama-kelas" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border sm:text-sm" placeholder="Cth: Kelas A">
                                 </div>
                                 <div>
                                     <label for="new-jurusan" class="block text-sm font-medium text-gray-700">Jurusan</label>
                                     <select name="jurusan" id="new-jurusan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border sm:text-sm">
-                                        <option value="Teknik Informatika">Teknik Informatika</option>
-                                        <option value="Sistem Informasi">Sistem Informasi</option>
-                                        <option value="Akuntansi">Akuntansi</option>
                                     </select>
                                 </div>
                                 <div>

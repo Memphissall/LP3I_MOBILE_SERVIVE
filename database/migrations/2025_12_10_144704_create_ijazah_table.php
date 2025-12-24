@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('ijazah', function (Blueprint $table) {
             $table->id('id_ijazah'); 
+            $table->unsignedBigInteger('id_mahasiswa');
             $table->string('no_ijazah')->unique(); 
             $table->date('tanggal_terbit');
-            $table->integer('nipd'); 
             $table->timestamps();
-            $table->foreign('nipd')->references('nipd')->on('mahasiswa')->onDelete('cascade');
+            $table->foreign('id_mahasiswa')->references('id_mahasiswa')->on('mahasiswa')->onDelete('cascade');
         });
     }
 

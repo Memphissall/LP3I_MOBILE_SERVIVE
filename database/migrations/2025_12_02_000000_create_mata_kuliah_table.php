@@ -9,14 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mata_kuliah', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_matkul');
             $table->string('kode_mk')->unique();
             $table->string('nama_mk');
             $table->integer('sks');
             $table->integer('semester');
             $table->enum('jenis', ['Wajib', 'Pilihan']);
             $table->string('jurusan');
-            $table->text('deskripsi')->nullable();
+            $table->text('deskripsi');
+            $table->string('sap')->nullable();
             $table->timestamps();
         });
     }

@@ -22,7 +22,6 @@ class DummyDataSeeder extends Seeder
             // Create 2 classes per major
             for ($i = 0; $i < 2; $i++) {
                 $kelas = Kelas::create([
-                    'kode_mk' => 'MK-' . strtoupper(substr($j, 0, 2)) . '-' . ($i + 1),
                     'nama_kelas' => 'Kelas ' . strtoupper(substr($j, 0, 2)) . ' ' . ($i + 1),
                     'jurusan' => $j,
                     'tahun_ajaran' => '2023/2024',
@@ -44,7 +43,7 @@ class DummyDataSeeder extends Seeder
                 'jenis_kelamin' => $faker->randomElement(['Laki-laki', 'Perempuan']),
                 'tempat_lahir' => $faker->city,
                 'tgl_lahir' => $faker->date('Y-m-d', '2005-01-01'),
-                'kelas' => 'Legacy String', // Optional legacy field
+                'kelas' => 'null', // Optional legacy field
                 'id_kelas' => $selectedClass,
                 'jurusan' => $major,
                 'angkatan' => $faker->randomElement(['2021', '2022', '2023']),

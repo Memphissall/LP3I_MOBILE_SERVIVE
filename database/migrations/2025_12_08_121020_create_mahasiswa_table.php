@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mahasiswa', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_mahasiswa');
             $table->string('nipd')->unique();
             $table->string('nama');
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('alamat');
             $table->string('agama');
-            $table->integer('no_tlp');
+            $table->bigInteger('no_tlp');
             $table->string('foto');
             $table->enum('status', ['Aktif', 'Tidak Aktif']);
             $table->timestamps();

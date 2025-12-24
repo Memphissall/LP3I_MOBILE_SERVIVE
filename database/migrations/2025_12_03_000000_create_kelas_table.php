@@ -8,12 +8,11 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('kelas', function (Blueprint $table) {
-            $table->bigIncrements('id_kelas');
-            $table->string('kode_mk');
+            $table->id('id_kelas');
             $table->string('nama_kelas');
-            $table->string('jurusan')->nullable();
-            $table->string('tahun_ajaran')->nullable();
-            $table->string('nama_pa')->nullable();
+            $table->string('jurusan');
+            $table->string('tahun_ajaran');
+            $table->string('nama_pa');
             $table->timestamps();
         });
     }

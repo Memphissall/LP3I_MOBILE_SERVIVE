@@ -9,10 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('dosen', function (Blueprint $table) {
-            $table->id();
-
-            $table->unsignedBigInteger('user_id')->unique();
-
+            $table->id('id_dosen');
+            $table->unsignedBigInteger('id_matkul');
+            $table->unsignedBigInteger('user_id');
             $table->string('nidn')->unique();
             $table->string('nama_dosen');
             $table->string('pendidikan');
@@ -44,6 +43,9 @@ return new class extends Migration
 
             $table->foreign('user_id')
                 ->references('id')->on('users')
+                ->onDelete('cascade');
+            $table->foreign('id_matkul')
+                ->references('id_matkul')->on('mata_kuliah')
                 ->onDelete('cascade');
         });
     }

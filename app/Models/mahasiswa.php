@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Mahasiswa extends Model
 {
     protected $table = 'mahasiswa';
+    protected $primaryKey = 'id_mahasiswa';
 
     protected $fillable = [
         'id_kelas',
-        'nipd',        // Changed from 'nidn' to match database
-        'nama',        // Changed from 'nama_mhs' to match database
+        'nipd',
+        'nama',
         'jenis_kelamin',
         'tempat_lahir',
         'tgl_lahir',
@@ -21,15 +22,16 @@ class Mahasiswa extends Model
         'periode',
         'email',
         'alamat',
-        'no_tlp',      // Changed from 'no_telp' to match database
-        'kelas',       // Legacy column
+        'no_tlp',
+        'kelas',
         'foto',
         'status'
     ];
 
-    // Relasi ke kelas (Renamed to dataKelas to avoid collision with 'kelas' string column)
-    public function dataKelas()
+    // Diubah menjadi data_kelas agar sinkron dengan JavaScript di Blade
+    public function data_kelas()
     {
-        return $this->belongsTo(Kelas::class, 'id_kelas');
+        // id_kelas adalah foreign key di tabel mahasiswa
+        return $this->belongsTo(Kelas::class, 'id_kelas', 'id_kelas');
     }
 }

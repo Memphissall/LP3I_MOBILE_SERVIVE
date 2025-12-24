@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('krs', function (Blueprint $table) {
             $table->id('id_krs');
-            $table->string('nipd');
-            $table->string('kode_mk');
+            $table->unsignedBigInteger('id_mahasiswa');
+            $table->unsignedBigInteger('id_matkul');
             $table->string('tahun_ajaran'); 
             $table->integer('semester'); 
             $table->timestamps();
-            $table->foreign('nipd')->references('nipd')->on('mahasiswa')->onDelete('cascade');
-            $table->foreign('kode_mk')->references('kode_mk')->on('matakuliah'); 
-            $table->unique(['nipd', 'kode_mk', 'tahun_ajaran', 'semester']);
+            $table->foreign('id_mahasiswa')->references('id_mahasiswa')->on('mahasiswa')->onDelete('cascade');
+            $table->foreign('id_matkul')->references('id_matkul')->on('mata_kuliah'); 
+            $table->unique(['tahun_ajaran', 'semester']);
         });
     }
 

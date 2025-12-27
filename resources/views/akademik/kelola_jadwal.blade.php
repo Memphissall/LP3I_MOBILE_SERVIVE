@@ -13,14 +13,14 @@
                 <line x1="8" y1="2" x2="8" y2="6"></line>
                 <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            <h1 class="text-3xl font-extrabold tracking-tight">Kelola Jadwal Kuliah</h1>
+            <h1 class="text-2xl font-extrabold tracking-tight">Kelola Jadwal</h1>
         </div>
         <button id="btn-open-tambah-jadwal-modal" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition flex items-center space-x-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            <span>Tambah Jadwal</span>
+            <span>Add Schedule</span>
         </button>
     </div>
 
@@ -57,8 +57,9 @@
             </div>
 
             <div class="flex items-end">
-                <button id="btn-filter" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    Tampilkan Data
+               <button id="btn-filter" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center justify-center space-x-2">
+                    <svg class="w-4 h-4 mr-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <span>Show Data</span>
                 </button>
             </div>
 
@@ -114,7 +115,51 @@ $(document).ready(function() {
     
     let dropdownData = {};
 
-    // LOAD DROPDOWN DATA
+    // 1. DATA MASTER WAKTU
+    const timeSlots = {
+        2: [
+            '08:00 - 09:40',
+            '09:50 - 11:30',
+            '13:00 - 14:40',
+            '14:50 - 16:30',
+            '16:40 - 18:20',
+            '18:30 - 20:10',
+            '20:20 - 22:00'
+        ],
+        3: [ // Penambahan 3 SKS jaga-jaga
+            '08:00 - 10:30',
+            '10:40 - 13:10',
+            '13:20 - 15:50'
+        ],
+        4: [
+            '08:00 - 11:30',
+            '13:00 - 16:30',
+            '16:40 - 20:10',
+            '20:20 - 22:00'
+        ]
+    };
+
+    // 2. FUNGSI UPDATE DROPDOWN WAKTU
+    function updateTimeSlots(modalPrefix, sks) {
+        const waktuSelector = `#${modalPrefix}-waktu`;
+        const $waktuDropdown = $(waktuSelector);
+        
+        $waktuDropdown.empty();
+        
+        console.log(`Update waktu untuk modal: ${modalPrefix}, SKS: ${sks}`);
+
+        if (!sks || !timeSlots[sks]) {
+            $waktuDropdown.append('<option value="">-- Pilih Mata Kuliah Dulu --</option>');
+            return;
+        }
+
+        $waktuDropdown.append('<option value="">-- Pilih Waktu --</option>');
+        timeSlots[sks].forEach(slot => {
+            $waktuDropdown.append(`<option value="${slot}">${slot}</option>`);
+        });
+    }
+
+    // 3. LOAD DROPDOWN DATA (Mata Kuliah, Kelas, Ruangan)
     function loadDropdownData() {
         $.ajax({
             url: "{{ route('admin.api.jadwal.dropdown') }}",
@@ -129,16 +174,12 @@ $(document).ready(function() {
         });
     }
 
-    // POPULATE FILTERS
     function populateFilters() {
-        // Filter Kelas
         if (dropdownData.kelas) {
             dropdownData.kelas.forEach(k => {
                 $('#filter-kelas').append(`<option value="${k.id_kelas}">${k.nama_kelas}</option>`);
             });
         }
-
-        // Filter Ruangan
         if (dropdownData.ruangan) {
             dropdownData.ruangan.forEach(r => {
                 $('#filter-ruangan').append(`<option value="${r.id_ruangan}">${r.nama_ruangan}</option>`);
@@ -146,32 +187,25 @@ $(document).ready(function() {
         }
     }
 
-    // POPULATE MODAL DROPDOWNS
     function populateModalDropdowns(modalPrefix = 'tambah') {
         const mkSelector = `#${modalPrefix}-kode-mk`;
         const kelasSelector = `#${modalPrefix}-id-kelas`;
         const ruanganSelector = `#${modalPrefix}-id-ruangan`;
 
-        // Clear existing options (except placeholder)
         $(mkSelector).find('option:not(:first)').remove();
         $(kelasSelector).find('option:not(:first)').remove();
         $(ruanganSelector).find('option:not(:first)').remove();
 
-        // Populate Mata Kuliah
         if (dropdownData.mata_kuliah) {
             dropdownData.mata_kuliah.forEach(mk => {
                 $(mkSelector).append(`<option value="${mk.kode_mk}">${mk.kode_mk} - ${mk.nama_mk}</option>`);
             });
         }
-
-        // Populate Kelas
         if (dropdownData.kelas) {
             dropdownData.kelas.forEach(k => {
                 $(kelasSelector).append(`<option value="${k.id_kelas}">${k.nama_kelas}</option>`);
             });
         }
-
-        // Populate Ruangan
         if (dropdownData.ruangan) {
             dropdownData.ruangan.forEach(r => {
                 $(ruanganSelector).append(`<option value="${r.id_ruangan}">${r.nama_ruangan}</option>`);
@@ -179,74 +213,46 @@ $(document).ready(function() {
         }
     }
 
-    // TIME SLOTS BASED ON SKS
-    const timeSlots = {
-        2: [
-            '08:00 - 09:40',
-            '09:50 - 11:30',
-            '13:00 - 14:40',
-            '14:50 - 16:30',
-            '16:40 - 18:20',
-            '18:30 - 20:10',
-            '20:20 - 22:00'
-        ],
-        4: [
-            '08:00 - 11:30',
-            '13:00 - 16:30',
-            '16:40 - 20:10',
-            '20:20 - 22:00'
-        ]
-    };
-
-    // UPDATE TIME SLOTS BASED ON SKS
-    function updateTimeSlots(modalPrefix, sks) {
-        const waktuSelector = `#${modalPrefix}-waktu`;
-        $(waktuSelector).find('option').remove();
-        
-        if (!sks || !timeSlots[sks]) {
-            $(waktuSelector).append('<option value="">-- Pilih Mata Kuliah Dulu --</option>');
-            return;
-        }
-
-        $(waktuSelector).append('<option value="">-- Pilih Waktu --</option>');
-        timeSlots[sks].forEach(slot => {
-            $(waktuSelector).append(`<option value="${slot}">${slot}</option>`);
-        });
-    }
-
-    // HANDLE MATA KULIAH CHANGE - TAMBAH MODAL
+    // 4. EVENT HANDLER CHANGE MATA KULIAH
     $(document).on('change', '#tambah-kode-mk', function() {
         const kodeMk = $(this).val();
-        if (!kodeMk) {
+        if (!kodeMk || !dropdownData.mata_kuliah) {
             $('#tambah-sks-info').addClass('hidden').text('');
             updateTimeSlots('tambah', null);
             return;
         }
 
-        const selectedMk = dropdownData.mata_kuliah.find(mk => mk.kode_mk === kodeMk);
+        const selectedMk = dropdownData.mata_kuliah.find(mk => 
+            String(mk.kode_mk).trim() === String(kodeMk).trim()
+        );
+
         if (selectedMk) {
             $('#tambah-sks-info').removeClass('hidden').text(`SKS: ${selectedMk.sks}`);
             updateTimeSlots('tambah', selectedMk.sks);
+        } else {
+            updateTimeSlots('tambah', null);
         }
     });
 
-    // HANDLE MATA KULIAH CHANGE - EDIT MODAL
     $(document).on('change', '#edit-kode-mk', function() {
         const kodeMk = $(this).val();
-        if (!kodeMk) {
+        if (!kodeMk || !dropdownData.mata_kuliah) {
             $('#edit-sks-info').addClass('hidden').text('');
             updateTimeSlots('edit', null);
             return;
         }
 
-        const selectedMk = dropdownData.mata_kuliah.find(mk => mk.kode_mk === kodeMk);
+        const selectedMk = dropdownData.mata_kuliah.find(mk => 
+            String(mk.kode_mk).trim() === String(kodeMk).trim()
+        );
+
         if (selectedMk) {
             $('#edit-sks-info').removeClass('hidden').text(`SKS: ${selectedMk.sks}`);
             updateTimeSlots('edit', selectedMk.sks);
         }
     });
 
-    // GET STATUS BADGE
+    // 5. RENDER TABLE & DATA LIST
     function getStatusBadge(status) {
         const badges = {
             'Offline': '<span class="inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-800">Offline</span>',
@@ -258,7 +264,6 @@ $(document).ready(function() {
         return badges[status] || status;
     }
 
-    // RENDER TABLE
     function renderTable() {
         const id_kelas = $('#filter-kelas').val();
         const hari = $('#filter-hari').val();
@@ -302,18 +307,15 @@ $(document).ready(function() {
                         $tbody.append(row);
                     });
                 }
-                
                 $('#jadwal-count').text(data.length);
             },
             error: function(xhr) {
                 alert('Gagal memuat data');
-                console.error(xhr);
             }
         });
     }
 
-
-    // TAMBAH JADWAL
+    // 6. TAMBAH JADWAL LOGIC
     $('#btn-open-tambah-jadwal-modal').click(function() {
         populateModalDropdowns('tambah');
         $('#tambah-jadwal-modal').removeClass('hidden');
@@ -322,11 +324,11 @@ $(document).ready(function() {
     $('.close-tambah-jadwal-modal').click(function() {
         $('#tambah-jadwal-modal').addClass('hidden');
         $('#tambah-jadwal-form')[0].reset();
+        $('#tambah-sks-info').addClass('hidden');
     });
 
     $('#tambah-jadwal-form').submit(function(e) {
         e.preventDefault();
-        
         const formData = $(this).serialize();
         $('#btn-tambah-jadwal').text('Menyimpan...').prop('disabled', true);
 
@@ -349,7 +351,7 @@ $(document).ready(function() {
         });
     });
 
-    // EDIT JADWAL
+    // 7. EDIT JADWAL LOGIC
     $(document).on('click', '.btn-edit-jadwal', function() {
         const jadwalId = $(this).data('id');
         const editUrl = "{{ route('admin.jadwal.edit', ':id') }}".replace(':id', jadwalId);
@@ -367,19 +369,18 @@ $(document).ready(function() {
                 $('#edit-hari').val(data.hari);
                 $('#edit-status').val(data.status || 'Belum Ada Konfirmasi');
                 
-                // Trigger change to populate time slots and SKS
+                // Trigger change MK agar dropdown waktu muncul sesuai SKS
                 $('#edit-kode-mk').trigger('change');
                 
-                // Then set the time value
+                // Delay sebentar agar dropdown waktu sudah terisi sebelum di-set valuenya
                 setTimeout(function() {
                     $('#edit-waktu').val(data.waktu);
-                }, 100);
+                }, 200);
 
                 $('#edit-jadwal-modal').removeClass('hidden');
             },
             error: function(xhr) {
                 alert('Gagal mengambil data');
-                console.error(xhr);
             }
         });
     });
@@ -390,7 +391,6 @@ $(document).ready(function() {
 
     $('#edit-jadwal-form').submit(function(e) {
         e.preventDefault();
-        
         const jadwalId = $('#edit-jadwal-id').val();
         const updateUrl = "{{ route('admin.jadwal.update', ':id') }}".replace(':id', jadwalId);
         const formData = $(this).serialize();
@@ -415,18 +415,13 @@ $(document).ready(function() {
         });
     });
 
-    // DELETE JADWAL
+    // 8. DELETE JADWAL LOGIC
     $(document).on('click', '.btn-delete-jadwal', function() {
         const jadwalId = $(this).data('id');
-
-        if (!confirm('Hapus jadwal ini?\n\nData tidak dapat dikembalikan!')) {
-            return;
-        }
-
-        const deleteUrl = "{{ route('admin.jadwal.destroy', ':id') }}".replace(':id', jadwalId);
+        if (!confirm('Hapus jadwal ini?\n\nData tidak dapat dikembalikan!')) return;
 
         $.ajax({
-            url: deleteUrl,
+            url: "{{ route('admin.jadwal.destroy', ':id') }}".replace(':id', jadwalId),
             method: 'DELETE',
             data: { _token: "{{ csrf_token() }}" },
             success: function(response) {
@@ -434,13 +429,12 @@ $(document).ready(function() {
                 renderTable();
             },
             error: function(xhr) {
-                const res = xhr.responseJSON;
-                alert('Gagal: ' + (res.message || 'Terjadi kesalahan'));
+                alert('Gagal menghapus data');
             }
         });
     });
 
-    // FILTER & PRINT
+    // 9. FILTER & PRINT LOGIC
     $('#btn-filter').click(function() {
         renderTable();
     });
@@ -451,14 +445,11 @@ $(document).ready(function() {
         const id_ruangan = $('#filter-ruangan').val();
 
         let printUrl = "{{ route('admin.jadwal.print') }}";
-        printUrl += `?id_kelas=${encodeURIComponent(id_kelas)}`;
-        printUrl += `&hari=${encodeURIComponent(hari)}`;
-        printUrl += `&id_ruangan=${encodeURIComponent(id_ruangan)}`;
-
+        printUrl += `?id_kelas=${encodeURIComponent(id_kelas)}&hari=${encodeURIComponent(hari)}&id_ruangan=${encodeURIComponent(id_ruangan)}`;
         window.open(printUrl, '_blank');
     });
 
-    // INIT
+    // INIT RUN
     loadDropdownData();
 
 });

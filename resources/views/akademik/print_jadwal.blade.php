@@ -3,69 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Jadwal Kuliah</title>
+    <title>Cetak Jadwal Kuliah - LP3I</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
-            font-size: 11px;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: white;
         }
+
+        .print-container {
+            padding: 0.5cm 1.5cm; /* DIET: Padding atas diperkecil */
+        }
+
+        /* KOP SURAT */
+        .kop-surat {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 3px solid #000080; 
+            padding-bottom: 8px; /* Lebih rapat */
+            margin-bottom: 8px; /* Lebih rapat */
+        }
+        .kop-text { text-align: center; }
+        .kop-text h1 { margin: 0; font-size: 24px; text-transform: uppercase; color: #000066; letter-spacing: 1px; }
+        .kop-text p { margin: 2px 0 0; font-size: 12px; font-style: italic; color: #555; }
+
+        .judul-laporan {
+            text-align: center;
+            text-transform: uppercase;
+            margin-top: 10px; 
+            margin-bottom: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .info-cetak {
+            text-align: right;
+            font-size: 10px;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        /* TABEL SETTINGS */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            table-layout: fixed;
         }
+        
         th, td {
-            border: 1px solid black;
-            padding: 6px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        h2 {
+            border: 1px solid #444;
+            padding: 4px 6px; /* DIET KETAT: Padding dikurangi agar baris tipis */
+            font-size: 11px;  /* DIET: Font diturunkan sedikit */
             text-align: center;
+            word-wrap: break-word;
         }
+
+        th {
+            background-color: #E6F0FF !important; 
+            color: #000066 !important;
+            text-transform: uppercase;
+            font-weight: bold;
+            -webkit-print-color-adjust: exact; 
+            print-color-adjust: exact;
+        }
+
+        /* TANDA TANGAN */
+        .signature-container {
+            margin-top: 15px; /* Jarak ke tabel dipersempit */
+            float: right; 
+            width: 300px;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        .signature-wrapper {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            margin-top: 50px; /* Jarak tanda tangan diperpendek */
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .line-inside {
+            border-bottom: 1.5px solid #000;
+            width: 200px;
+            margin: 0 5px;
+            height: 12px;
+        }
+
+        .signature-role {
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 0;
+        }
+
         @media print {
-            .no-print {
-                display: none;
+            @page {
+                margin: 0.3cm 1cm; 
+                size: landscape;
+            }
+
+            thead {
+                display: table-header-group; 
+            }
+
+            th {
+                background-color: #E6F0FF !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
         }
     </style>
-    <script type="text/javascript">
-        window.onload = function() {
-            window.print();
-        }
-    </script>
 </head>
 <body>
 
-    <h2>Laporan Jadwal Kuliah</h2>
-    <p>Tanggal Cetak: {{ date('d-m-Y') }}</p>
+    <div class="print-container">
+        <div class="kop-surat">
+            <div class="kop-text">
+                <h1>LP3I COLLEGE KARAWANG</h1>
+                <p>Jl. Arteri Galuh Mas, Telukjambe Timur, Karawang, Jawa Barat</p>
+                <p>Telp: (0267) 840xxxx | Website: www.lp3i.ac.id | Email: info@karawang.lp3i.ac.id</p>
+            </div>
+        </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Hari</th>
-                <th>Waktu</th>
-                <th>Mata Kuliah</th>
-                <th>Kelas</th>
-                <th>Ruangan</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($jadwal as $index => $j)
-            <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $j->hari }}</td>
-                <td>{{ $j->waktu }}</td>
-                <td>{{ $j->mataKuliah->nama_mk ?? '-' }}</td>
-                <td>{{ $j->kelas->nama_kelas ?? '-' }}</td>
-                <td>{{ $j->ruangan->nama_ruangan ?? '-' }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+        <div class="info-cetak" id="waktu-cetak">
+            Dicetak pada: Memuat waktu...
+        </div>
 
+        <h3 class="judul-laporan">LAPORAN JADWAL KULIAH</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th width="40">No</th>
+                    <th width="100">Hari</th>
+                    <th width="120">Waktu</th>
+                    <th width="80">Mata Kuliah</th>
+                    <th width="100">Kelas</th>
+                    <th width="120">Ruangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($jadwal as $index => $j)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $j->hari }}</td>
+                    <td>{{ $j->waktu }}</td>
+                    <td style="text-align: left;">{{ $j->mataKuliah->nama_mk ?? '-' }}</td>
+                    <td>{{ $j->kelas->nama_kelas ?? '-' }}</td>
+                    <td>{{ $j->ruangan->nama_ruangan ?? '-' }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6" style="padding: 20px;">Data jadwal tidak ditemukan.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+
+        <div class="signature-container">
+            <p id="tanggal-ttd">Karawang, ...</p>
+            <p>Staf Akademik,</p>
+            
+            <div class="signature-wrapper">
+                <span>(</span>
+                <div class="line-inside"></div>
+                <span>)</span>
+            </div>
+            
+            <p class="signature-role">LP3I College Karawang</p>
+        </div>
+
+        <div style="clear: both;"></div>
+    </div>
+
+    <script type="text/javascript">
+        function updateTime() {
+            const now = new Date();
+            const optionsDate = { day: '2-digit', month: 'long', year: 'numeric' };
+            const optionsTime = { hour: '2-digit', minute: '2-digit' };
+            
+            const tanggalIndo = now.toLocaleDateString('id-ID', optionsDate);
+            const waktuIndo = now.toLocaleTimeString('id-ID', optionsTime);
+
+            document.getElementById('waktu-cetak').innerHTML = `Dicetak pada: ${tanggalIndo}, ${waktuIndo} WIB`;
+            document.getElementById('tanggal-ttd').innerHTML = `Karawang, ${tanggalIndo}`;
+        }
+
+        window.onload = function() {
+            updateTime();
+            setTimeout(function() {
+                window.print();
+            }, 800); 
+        }
+    </script>
 </body>
 </html>

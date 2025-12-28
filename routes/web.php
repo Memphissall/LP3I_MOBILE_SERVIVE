@@ -64,7 +64,6 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::post('/api/kelas/add-students', [App\Http\Controllers\KelasController::class, 'addMahasiswaToKelas'])->name('api.kelas.add_students');
     Route::get('/mahasiswa/print', [App\Http\Controllers\MahasiswaController::class, 'printStudents'])->name('mahasiswa.print');
     Route::get('/api/filter-data', [App\Http\Controllers\MahasiswaController::class, 'getFilterData'])->name('api.filter.data');
-    Route::get('/api/mahasiswa-tanpa-kelas', [MahasiswaController::class, 'getMahasiswaTanpaKelas'])->name('api.mahasiswa.tanpa.kelas');
     
     // Mahasiswa CRUD Routes
     Route::get('/mahasiswa/{id}/edit', [App\Http\Controllers\MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
@@ -99,5 +98,6 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::put('/jadwal/{id}', [App\Http\Controllers\JadwalController::class, 'update'])->name('jadwal.update');
     Route::delete('/jadwal/{id}', [App\Http\Controllers\JadwalController::class, 'destroy'])->name('jadwal.destroy');
     Route::get('/jadwal/print', [App\Http\Controllers\JadwalController::class, 'printJadwal'])->name('jadwal.print');
+    Route::get('/get-waktu/{id}', [JadwalController::class, 'getWaktu']);
 
 });

@@ -139,6 +139,17 @@ class JadwalController extends Controller
     }
 
     /**
+     * Get available times for a given course
+     */
+
+    public function getWaktu($id)
+{
+    // Sesuaikan dengan nama tabel atau relasi di database kamu
+    $waktu = Jadwal::where('matkul_id', $id)->get(); 
+    return response()->json($waktu);
+}
+
+    /**
      * Print schedules based on filters
      */
     public function printJadwal(Request $request)

@@ -10,10 +10,13 @@ class Dosen extends Model
     use HasFactory;
 
     protected $table = 'dosen';
+    protected $primaryKey = 'id_dosen';
 
     protected $fillable = [
+        'id_matkul',
         'user_id',
         'nidn',
+        'id_dosen_internal',
         'nama_dosen',
         'pendidikan',
         'bidang',
@@ -27,9 +30,4 @@ class Dosen extends Model
         'status',
         'foto'
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

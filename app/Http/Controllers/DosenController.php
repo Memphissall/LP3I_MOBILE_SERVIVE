@@ -9,9 +9,17 @@ use Illuminate\Support\Facades\Validator;
 class DosenController extends Controller
 {
     /**
+     * Display the dosen management page
+     */
+    public function index()
+    {
+        return view('akademik.data_dosen');
+    }
+
+    /**
      * Get list of lecturers with filters (for AJAX)
      */
-    public function index(Request $request)
+    public function apiList(Request $request)
     {
         $query = Dosen::query();
 
@@ -29,41 +37,7 @@ class DosenController extends Controller
         return response()->json($dosens);
     }
 
-    /**
-     * Store new lecturer
-     */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'nidn' => 'required|string|unique:dosen,nidn',
-            'nama_dosen' => 'required|string|max:255',
-            'pendidikan' => 'required|in:S1,S2,S3',
-            'bidang' => 'required|string|max:255',
-            'tempat' => 'required|string',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'agama' => 'required|string',
-            'email' => 'required|email|unique:dosen,email',
-            'no_telp' => 'required|string',
-            'honor_per_sks' => 'required|integer|min:0',
-            'status' => 'required|in:aktif,tidak aktif,kontrak,tetap,honorer',
-            'foto' => 'nullable|string'
-        ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        try {
-            $dosen = Dosen::create($request->all());
-            return response()->json([
-                'message' => 'Data dosen berhasil ditambahkan',
-                'data' => $dosen
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
-        }
-    }
 
     /**
      * Get lecturer data for editing
@@ -80,7 +54,8 @@ class DosenController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nidn' => 'required|string|unique:dosen,nidn,' . $id,
+            'nidn' => 'required|string|unique:dosen,nidn,' . $id . ',id_dosen',
+            'id_dosen_internal' => 'nullable|string|unique:dosen,id_dosen_internal,' . $id . ',id_dosen',
             'nama_dosen' => 'required|string|max:255',
             'pendidikan' => 'required|in:S1,S2,S3',
             'bidang' => 'required|string|max:255',
@@ -88,7 +63,7 @@ class DosenController extends Controller
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'agama' => 'required|string',
-            'email' => 'required|email|unique:dosen,email,' . $id,
+            'email' => 'required|email|unique:dosen,email,' . $id . ',id_dosen',
             'no_telp' => 'required|string',
             'honor_per_sks' => 'required|integer|min:0',
             'status' => 'required|in:aktif,tidak aktif,kontrak,tetap,honorer',

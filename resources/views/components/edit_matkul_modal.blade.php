@@ -12,7 +12,7 @@
         </div>
 
         {{-- Modal Body --}}
-        <form id="edit-matkul-form" class="mt-4">
+        <form id="edit-matkul-form" class="mt-4" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
@@ -41,6 +41,14 @@
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
+                {{-- Bobot Kompetensi --}}
+                <div>
+                    <label for="edit-bobot-kompetensi" class="block text-sm font-medium text-gray-700">Bobot Kompetensi *</label>
+                    <input type="number" id="edit-bobot-kompetensi" name="bobot_kompetensi" required min="0" max="100"
+                        placeholder="0-100"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
                 {{-- Semester --}}
                 <div>
                     <label for="edit-semester" class="block text-sm font-medium text-gray-700">Semester *</label>
@@ -58,27 +66,27 @@
                     </select>
                 </div>
 
-                {{-- Jenis --}}
+                {{-- Bidang Keahlian --}}
                 <div>
-                    <label for="edit-jenis" class="block text-sm font-medium text-gray-700">Jenis *</label>
-                    <select id="edit-jenis" name="jenis" required
+                    <label for="edit-bidang-keahlian" class="block text-sm font-medium text-gray-700">Bidang Keahlian *</label>
+                    <select id="edit-bidang-keahlian" name="id_bidang_keahlian" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- Pilih Jenis --</option>
-                        <option value="Wajib">Wajib</option>
-                        <option value="Pilihan">Pilihan</option>
+                        <option value="">-- Pilih Bidang Keahlian --</option>
+                        {{-- Will be populated by JavaScript --}}
                     </select>
                 </div>
 
-                {{-- Jurusan --}}
-                <div>
-                    <label for="edit-jurusan" class="block text-sm font-medium text-gray-700">Jurusan *</label>
-                    <select id="edit-jurusan" name="jurusan" required
+                {{-- Current SAP File & Upload New --}}
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">File SAP Saat Ini</label>
+                    <div id="current-sap-display" class="mt-1 mb-2 text-sm text-gray-600">
+                        <span id="current-sap-name">Tidak ada file</span>
+                    </div>
+                    
+                    <label for="edit-sap-file" class="block text-sm font-medium text-gray-700 mt-3">Upload SAP Baru (PDF/DOC/DOCX, Max 10MB)</label>
+                    <input type="file" id="edit-sap-file" name="sap_file" accept=".pdf,.doc,.docx"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- Pilih Jurusan --</option>
-                        <option value="Teknik Informatika">Teknik Informatika</option>
-                        <option value="Sistem Informasi">Sistem Informasi</option>
-                        <option value="Akuntansi">Akuntansi</option>
-                    </select>
+                    <p class="mt-1 text-xs text-gray-500">Optional: Upload file baru untuk mengganti yang lama</p>
                 </div>
 
                 {{-- Deskripsi (Full Width) --}}

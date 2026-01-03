@@ -10,7 +10,8 @@ class Jadwal extends Model
     protected $primaryKey = 'id_jadwal';
     
     protected $fillable = [
-        'kode_mk',
+        'id_matkul',
+        'id_dosen',
         'id_kelas',
         'id_ruangan',
         'hari',
@@ -21,7 +22,13 @@ class Jadwal extends Model
     // Relationship to Mata Kuliah
     public function mataKuliah()
     {
-        return $this->belongsTo(MataKuliah::class, 'kode_mk', 'kode_mk');
+        return $this->belongsTo(MataKuliah::class, 'id_matkul', 'id_matkul');
+    }
+
+    // Relationship to Dosen
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class, 'id_dosen', 'id_dosen');
     }
 
     // Relationship to Kelas

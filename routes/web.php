@@ -64,6 +64,8 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::post('/api/kelas/add-students', [App\Http\Controllers\KelasController::class, 'addMahasiswaToKelas'])->name('api.kelas.add_students');
     Route::get('/mahasiswa/print', [App\Http\Controllers\MahasiswaController::class, 'printStudents'])->name('mahasiswa.print');
     Route::get('/api/filter-data', [App\Http\Controllers\MahasiswaController::class, 'getFilterData'])->name('api.filter.data');
+    Route::get('/api/dependent-filter-data', [App\Http\Controllers\MahasiswaController::class, 'getDependentFilterData'])->name('api.dependent.filter.data');
+    Route::get('/api/mahasiswa-tanpa-kelas', [MahasiswaController::class, 'getMahasiswaTanpaKelas'])->name('api.mahasiswa.tanpa.kelas');
     
     // Mahasiswa CRUD Routes
     Route::get('/mahasiswa/{id}/edit', [App\Http\Controllers\MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
@@ -75,14 +77,14 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::post('/mahasiswa/assign-class', [KelasController::class, 'assignClass'])->name('mahasiswa.assign');
     
     // Dosen CRUD Routes
-    Route::get('/api/dosen-list', [App\Http\Controllers\DosenController::class, 'index'])->name('api.dosen.list');
-    Route::post('/dosen', [App\Http\Controllers\DosenController::class, 'store'])->name('dosen.store');
+    Route::get('/api/dosen-list', [App\Http\Controllers\DosenController::class, 'apiList'])->name('api.dosen.list');
     Route::get('/dosen/{id}/edit', [App\Http\Controllers\DosenController::class, 'edit'])->name('dosen.edit');
     Route::put('/dosen/{id}', [App\Http\Controllers\DosenController::class, 'update'])->name('dosen.update');
     Route::delete('/dosen/{id}', [App\Http\Controllers\DosenController::class, 'destroy'])->name('dosen.destroy');
     Route::get('/dosen/print', [App\Http\Controllers\DosenController::class, 'printDosen'])->name('dosen.print');
     
     // Matkul CRUD Routes
+    Route::get('/api/bidang-keahlian-list', [App\Http\Controllers\MatkulController::class, 'getBidangKeahlianList'])->name('api.bidang_keahlian.list');
     Route::get('/api/matkul-list', [App\Http\Controllers\MatkulController::class, 'index'])->name('api.matkul.list');
     Route::post('/matkul', [App\Http\Controllers\MatkulController::class, 'store'])->name('matkul.store');
     Route::get('/matkul/{id}/edit', [App\Http\Controllers\MatkulController::class, 'edit'])->name('matkul.edit');
@@ -91,8 +93,12 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::get('/matkul/print', [App\Http\Controllers\MatkulController::class, 'printMatkul'])->name('matkul.print');
     
     // Jadwal CRUD Routes
+    Route::get('/api/jadwal/bidang-keahlian-list', [App\Http\Controllers\JadwalController::class, 'getBidangKeahlianList'])->name('api.jadwal.bidang_keahlian.list');
+    Route::get('/api/jadwal/matkul-filtered', [App\Http\Controllers\JadwalController::class, 'getMataKuliahByFilter'])->name('api.jadwal.matkul_filtered');
+    Route::get('/api/jadwal/kelas-filtered', [App\Http\Controllers\JadwalController::class, 'getKelasByBidangKeahlian'])->name('api.jadwal.kelas_filtered');
+    Route::get('/api/jadwal/dosen-filtered', [App\Http\Controllers\JadwalController::class, 'getDosenByMataKuliah'])->name('api.jadwal.dosen_filtered');
+    Route::get('/api/jadwal/dropdown', [App\Http\Controllers\JadwalController::class, 'getDropdownData'])->name('api.jadwal.dropdown');
     Route::get('/api/jadwal-list', [App\Http\Controllers\JadwalController::class, 'index'])->name('api.jadwal.list');
-    Route::get('/api/jadwal-dropdown', [App\Http\Controllers\JadwalController::class, 'getDropdownData'])->name('api.jadwal.dropdown');
     Route::post('/jadwal', [App\Http\Controllers\JadwalController::class, 'store'])->name('jadwal.store');
     Route::get('/jadwal/{id}/edit', [App\Http\Controllers\JadwalController::class, 'edit'])->name('jadwal.edit');
     Route::put('/jadwal/{id}', [App\Http\Controllers\JadwalController::class, 'update'])->name('jadwal.update');
@@ -100,4 +106,19 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::get('/jadwal/print', [App\Http\Controllers\JadwalController::class, 'printJadwal'])->name('jadwal.print');
     Route::get('/get-waktu/{id}', [JadwalController::class, 'getWaktu']);
 
+    // KHS Routes
+    Route::get('/khs', [App\Http\Controllers\KhsController::class, 'index'])->name('khs.index');
+    Route::get('/khs/print/{nipd}', [App\Http\Controllers\KhsController::class, 'printStudent'])->name('khs.print.student');
+    Route::get('/khs/print-batch', [App\Http\Controllers\KhsController::class, 'printBatch'])->name('khs.print.batch');
+    
+    // KRS Routes
+    Route::get('/krs', [App\Http\Controllers\KrsController::class, 'index'])->name('krs.index');
+    Route::get('/krs/print/{nipd}', [App\Http\Controllers\KrsController::class, 'printStudent'])->name('krs.print.student');
+    Route::get('/krs/print-batch', [App\Http\Controllers\KrsController::class, 'printBatch'])->name('krs.print.batch');
+    Route::post('/krs/batch', [App\Http\Controllers\KrsController::class, 'storeBatch'])->name('krs.store.batch');
+    
+    // KRS API Routes
+    Route::get('/api/krs/bidang-keahlian', [App\Http\Controllers\KrsController::class, 'getBidangKeahlianList'])->name('api.krs.bidang_keahlian');
+    Route::get('/api/krs/matkul-filtered', [App\Http\Controllers\KrsController::class, 'getMataKuliahFiltered'])->name('api.krs.matkul_filtered');
+    
 });

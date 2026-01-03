@@ -6,9 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Academia - Sistem Operasional Akademik</title>
     
-    {{-- TAILWIND & LUCIDE ICONS (Tetap menggunakan CDN) --}}
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    {{-- TAILWIND & LUCIDE (Local via Vite) --}}
     
     {{-- FONT POPPINS --}}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -32,6 +31,15 @@
             background-color: var(--light-bg);
             min-height: 100vh;
             margin: 0;
+            font-size: 15px; /* Perbesar dari default 14px */
+        }
+        
+        /* Table styling - fix column spacing */
+        table {
+            table-layout: auto; /* Allow natural column widths */
+        }
+        table th, table td {
+            white-space: nowrap; /* Prevent text wrapping in cells */
         }
         
         /* ---------------------------------------------------- */
@@ -89,7 +97,7 @@
         #sidebar-menu, #show-data-btn, #print-btn {
             background-color: #004269;
         }
-         #header-daftar-mahasiswa, #add-student-btn {
+         #header-table, #add-student-btn {
             background-color: #ff0000;
         }
 
@@ -166,7 +174,7 @@
             </div>
             {{-- Tombol close untuk mobile: Hanya terlihat di layar kecil (lg:hidden) --}}
             <button id="close-sidebar-btn" class="absolute top-4 right-4 lg:hidden text-gray-300 hover:text-white">
-                <i data-lucide="x" class="w-6 h-6"></i>
+                <x-heroicon-o-x-mark class="w-6 h-6" />
             </button>
         </div>
         
@@ -185,7 +193,7 @@
             <div class="flex items-center">
                 {{-- Tombol Hamburger: SELALU ADA --}}
                 <button id="toggle-sidebar-btn" class="mr-4 text-gray-500 hover:text-blue-500">
-                    <i data-lucide="menu" class="w-7 h-7"></i>
+                    <x-heroicon-o-bars-3 class="w-7 h-7" />
                 </button>
                 <h1 class="text-2xl font-semibold text-gray-800 hidden md:block">@yield('title', 'Dashboard')</h1>
             </div>
@@ -198,7 +206,7 @@
 
 {{-- SCRIPT PURE VANILLA JAVASCRIPT --}}
 <script>
-    lucide.createIcons();
+    // lucide.createIcons();
 
     document.addEventListener('DOMContentLoaded', function() {
         

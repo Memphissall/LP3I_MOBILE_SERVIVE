@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Laporan Mahasiswa - LP3I</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
@@ -137,7 +140,28 @@
             Dicetak pada: Memuat waktu...
         </div>
 
-        <h3 class="judul-laporan">LAPORAN DATA MAHASISWA</h3>
+    <h3 class="judul-laporan">
+        LAPORAN DATA MAHASISWA
+        @php
+            $filters = [];
+            if(request('jurusan') && request('jurusan') !== '' && !str_contains(request('jurusan'), 'Semua')) {
+                $filters[] = 'Jurusan: ' . request('jurusan');
+            }
+            if(request('angkatan') && request('angkatan') !== '' && !str_contains(request('angkatan'), 'Semua')) {
+                $filters[] = 'Angkatan: ' . request('angkatan');
+            }
+            if(request('periode') && request('periode') !== '' && !str_contains(request('periode'), 'Semua')) {
+                $filters[] = 'Periode: ' . request('periode');
+            }
+            if(request('kelas') && request('kelas') !== '' && !str_contains(request('kelas'), 'Semua')) {
+                $kelasName = \App\Models\Kelas::find(request('kelas'))?->nama_kelas ?? 'Kelas ' . request('kelas');
+                $filters[] = 'Kelas: ' . $kelasName;
+            }
+        @endphp
+        @if(count($filters) > 0)
+            <br><small style="font-size: 14px; font-weight: normal;">{{ implode(' | ', $filters) }}</small>
+        @endif
+    </h3>
 
         <table>
             <thead>

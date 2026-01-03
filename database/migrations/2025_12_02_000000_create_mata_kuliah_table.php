@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('semester');
             $table->enum('jenis', ['Wajib', 'Pilihan']);
             $table->string('jurusan');
-            $table->text('deskripsi');
+            $table->text('deskripsi')->nullable();
             $table->string('sap')->nullable();
             $table->timestamps();
         });

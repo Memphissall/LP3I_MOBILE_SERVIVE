@@ -27,6 +27,14 @@
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
+                {{-- ID Dosen Internal --}}
+                <div>
+                    <label for="edit-id-internal" class="block text-sm font-medium text-gray-700">ID Internal Kampus</label>
+                    <input type="text" id="edit-id-internal" name="id_dosen_internal"
+                        placeholder="Contoh: DSN-001"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
                 {{-- Nama Dosen --}}
                 <div>
                     <label for="edit-nama" class="block text-sm font-medium text-gray-700">Nama Lengkap *</label>

@@ -4,30 +4,22 @@
 
 @section('content')
 
-<div class="min-h-screen bg-gray-50 p-4 md:p-8 font-sans">
-    <div class="flex items-center justify-between space-x-4 text-gray-800 border-b border-gray-200 pb-4 mb-6">
-        <div class="flex items-center space-x-4">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20h-1.5"></path><path d="M14 6H9.5a2.5 2.5 0 0 0 0 5H17"></path><path d="M14 10H9.5a2.5 2.5 0 0 0 0 5H17"></path></svg>
-            <h1 class="text-3xl font-extrabold tracking-tight">
-                Sistem Manajemen Data Dosen
-            </h1>
-        </div>
-        {{-- Tombol Tambah Dosen --}}
-        <button id="btn-open-tambah-modal" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition flex items-center space-x-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            <span>Tambah Dosen</span>
-        </button>
+<div class="p-6">
+    {{-- Header --}}
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Kelola Data Dosen</h1>
+        {{-- Jika nanti ada tombol Tambah Dosen, gunakan warna Viridian Green (#009DA5) --}}
     </div>
 
     {{-- FILTER SECTION --}}
-    <div class="bg-white p-6 rounded-xl shadow-lg mb-6 border border-gray-100">
-        <h2 class="text-lg font-semibold text-gray-700 mb-4">Filter Data</h2>
+    <div class="bg-white p-6 rounded-xl shadow-lg mb-6 border-t-4 border-[#004269]"> {{-- Border atas Indigo Dye --}}
+        <h2 class="text-lg font-semibold text-[#004269] mb-4">Pencarian Data</h2>
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="filter-container">
             {{-- Dropdown Status --}}
             <div class="flex flex-col space-y-1">
-                <label for="filter-status" class="text-sm font-medium text-gray-700">Status</label>
-                <select id="filter-status" class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+                <label for="filter-status" class="text-sm font-medium text-gray-600">Status</label>
+                <select id="filter-status" class="p-2 border rounded-lg outline-none text-sm text-gray-700 bg-gray-50 focus:border-[#009DA5] focus:ring-1 focus:ring-[#009DA5]">
                     <option value="Semua Status">Semua Status</option>
                     <option value="Aktif">Aktif</option>
                     <option value="Tidak Aktif">Tidak Aktif</option>
@@ -39,8 +31,8 @@
             
             {{-- Dropdown Pendidikan --}}
             <div class="flex flex-col space-y-1">
-                <label for="filter-pendidikan" class="text-sm font-medium text-gray-700">Pendidikan</label>
-                <select id="filter-pendidikan" class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150">
+                <label for="filter-pendidikan" class="text-sm font-medium text-gray-600">Pendidikan</label>
+                <select id="filter-pendidikan" class="p-2 border rounded-lg outline-none text-sm text-gray-700 bg-gray-50 focus:border-[#009DA5] focus:ring-1 focus:ring-[#009DA5]">
                     <option value="Semua Pendidikan">Semua Pendidikan</option>
                     <option value="S1">S1</option>
                     <option value="S2">S2</option>
@@ -48,53 +40,53 @@
                 </select>
             </div>
 
-            {{-- Tombol Tampilkan --}}
-            <div class="flex items-end">
-                <button id="btn-filter" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    Tampilkan Data
-                </button>
-            </div>
-
-            {{-- Tombol Print --}}
-            <div class="flex items-end">
-                <button id="btn-print" class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition flex items-center justify-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                    <span>Print</span>
-                </button>
-            </div>
-
+        </div>
+        <div class="mt-6 flex justify-end space-x-3">
+            {{-- Tombol Show Data: Indigo Dye --}}
+            <button id="btn-filter" class="bg-[#004269] hover:bg-[#003350] text-white px-6 py-2 rounded-lg font-semibold transition shadow-md flex items-center">
+                <x-heroicon-o-magnifying-glass class="w-4 h-4 mr-2" />
+                Show Data
+            </button>
+            {{-- Tombol Print: Fiery Rose --}}
+            <button id="btn-print" class="bg-[#F15B67] hover:bg-[#d64551] text-white px-6 py-2 rounded-lg font-semibold transition shadow-md flex items-center">
+                <x-heroicon-o-printer class="w-4 h-4 mr-2" />
+                Print
+            </button>
         </div>
     </div>
 
     {{-- TABLE SECTION --}}
-    <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg border border-gray-100">
-        <h2 class="text-xl font-semibold text-gray-700 mb-4">Daftar Dosen (<span id="lecturer-count">0</span> data)</h2>
-        <div class="overflow-x-auto rounded-lg border border-gray-200">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 mb-6">
+        {{-- Header Tabel: Indigo Dye (#004269) --}}
+        <div id="header-daftar-dosen" class="p-4 border-b flex justify-between items-center bg-[#004269]">
+            <h3 class="font-bold text-white">Daftar Dosen (<span id="lecturer-count">0</span> data)</h3>
+        </div>
+        <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-100">
+                <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider w-[150px]">NIDN</th>
-                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider min-w-[250px]">Nama Dosen</th>
-                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Pendidikan</th>
-                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider min-w-[200px]">Bidang Keahlian</th>
-                        <th class="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider w-[120px]">Status</th>
-                        <th class="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider w-[100px]">Aksi</th>
+                        {{-- Text Header: Indigo Dye --}}
+                        <th class="px-6 py-3 text-left text-sm font-extrabold text-[#004269] uppercase">NIDN</th>
+                        <th class="px-6 py-3 text-left text-sm font-extrabold text-[#004269] uppercase">ID Internal</th>
+                        <th class="px-6 py-3 text-left text-sm font-extrabold text-[#004269] uppercase">Nama Dosen</th>
+                        <th class="px-6 py-3 text-left text-sm font-extrabold text-[#004269] uppercase">Pendidikan</th>
+                        <th class="px-6 py-3 text-left text-sm font-extrabold text-[#004269] uppercase">Bidang Keahlian</th>
+                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase">Status</th>
+                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200" id="lecturer-table-body">
-                    {{-- Data akan diisi oleh JavaScript --}}
+                <tbody id="lecturer-table-body" class="bg-white divide-y divide-gray-200 text-sm">
+                    <tr><td colspan="7" class="px-6 py-10 text-center text-gray-500 italic">Click "Show Data"...</td></tr>
                 </tbody>
             </table>
-            <div id="no-data-message" class="text-center py-10 text-gray-500 bg-gray-50 hidden">
+            <div id="no-data-message" class="text-center py-10 text-[#FF0000] italic hidden">
                 <p>Tidak ada data dosen yang sesuai dengan filter saat ini.</p>
-                <p class="mt-2 text-sm">Klik "Tampilkan Data" untuk melihat semua data atau ubah filter.</p>
             </div>
         </div>
     </div>
 </div>
 
 {{-- MODAL COMPONENTS --}}
-@include('components.tambah_dosen_modal')
 @include('components.edit_dosen_modal')
 
 @endsection
@@ -120,29 +112,32 @@ $(document).ready(function() {
                 $tbody.empty();
 
                 if (data.length === 0) {
-                    $('#no-data-message').show();
+                    $('#no-data-message').removeClass('hidden').show();
                     $tbody.closest('table').addClass('hidden');
                 } else {
-                    $('#no-data-message').hide();
+                    $('#no-data-message').addClass('hidden').hide();
                     $tbody.closest('table').removeClass('hidden');
                     
                     data.forEach(dosen => {
                         const statusBadge = getStatusBadge(dosen.status);
                         
                         const row = `
-                            <tr data-id="${dosen.id}" class="hover:bg-blue-50/50 transition duration-100">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${dosen.nidn}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${dosen.nama_dosen}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${dosen.pendidikan}</td>
-                                <td class="px-6 py-4 text-sm text-gray-700 max-w-xs truncate" title="${dosen.bidang}">${dosen.bidang}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center">${statusBadge}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex justify-center space-x-2">
-                                    <button data-id="${dosen.id}" class="btn-edit-dosen text-blue-600 hover:text-white bg-blue-100 p-2 rounded-full transition duration-150 hover:bg-blue-600 hover:shadow-md" title="Edit Data Dosen">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
-                                    </button>
-                                    <button data-id="${dosen.id}" class="btn-delete-dosen text-red-600 hover:text-white bg-red-100 p-2 rounded-full transition duration-150 hover:bg-red-600 hover:shadow-md" title="Hapus Data Dosen">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                                    </button>
+                            <tr data-id="${dosen.id_dosen}" class="hover:bg-gray-50 transition border-b">
+                                <td class="px-6 py-4 font-mono text-sm text-gray-600">${dosen.nidn}</td>
+                                <td class="px-6 py-4 font-mono text-sm text-gray-600">${dosen.id_dosen_internal || '-'}</td>
+                                <td class="px-6 py-4 font-bold text-gray-900">${dosen.nama_dosen}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600">${dosen.pendidikan}</td>
+                                <td class="px-6 py-4 text-sm text-gray-600" title="${dosen.bidang}">${dosen.bidang}</td>
+                                <td class="px-6 py-4 text-center">${statusBadge}</td>
+                                <td class="px-6 py-4 text-center">
+                                    <div class="flex justify-center space-x-2">
+                                        <button data-id="${dosen.id_dosen}" class="btn-edit-dosen p-2 bg-[#009DA5]/10 text-[#009DA5] rounded-full hover:bg-[#009DA5] hover:text-white transition shadow-sm">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                        </button>
+                                        <button data-id="${dosen.id_dosen}" class="btn-delete-dosen p-2 bg-[#FF0000]/10 text-[#FF0000] rounded-full hover:bg-[#FF0000] hover:text-white transition shadow-sm">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         `;
@@ -159,54 +154,34 @@ $(document).ready(function() {
         });
     }
 
-    function getStatusBadge(status) {
+    // Fungsi helper untuk badge warna sesuai brand
+    function getStatusBadge(statusRaw) {
+        const status = statusRaw.toLowerCase();
         let colorClass = 'bg-gray-100 text-gray-800';
-        if (status === 'aktif') colorClass = 'bg-green-100 text-green-800';
-        else if (status === 'tidak aktif') colorClass = 'bg-red-100 text-red-800';
-        else if (status === 'kontrak') colorClass = 'bg-yellow-100 text-yellow-800';
-        else if (status === 'tetap') colorClass = 'bg-blue-100 text-blue-800';
-        else if (status === 'honorer') colorClass = 'bg-purple-100 text-purple-800';
 
-        return `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full ${colorClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
+        if (status === 'aktif') {
+            // Viridian Green
+            colorClass = 'bg-[#009DA5]/10 text-[#009DA5]'; 
+        } 
+        else if (status === 'tidak aktif') {
+            // Red
+            colorClass = 'bg-[#FF0000]/10 text-[#FF0000]'; 
+        } 
+        else if (status === 'tetap') {
+            // Indigo Dye (Tetap = Identitas Perusahaan)
+            colorClass = 'bg-[#004269]/10 text-[#004269]'; 
+        }
+        else if (status === 'kontrak') {
+            // Fiery Rose (Warning/Temporary)
+            colorClass = 'bg-[#F15B67]/10 text-[#F15B67]';
+        }
+        else if (status === 'honorer') {
+             // Gray (Neutral) or same as Contract
+            colorClass = 'bg-gray-100 text-gray-800';
+        }
+
+        return `<span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full ${colorClass}">${statusRaw.charAt(0).toUpperCase() + statusRaw.slice(1)}</span>`;
     }
-
-    // =========================================================================
-    // TAMBAH DOSEN MODAL
-    // =========================================================================
-
-    $('#btn-open-tambah-modal').click(function() {
-        $('#tambah-dosen-modal').removeClass('hidden');
-    });
-
-    $('.close-tambah-modal').click(function() {
-        $('#tambah-dosen-modal').addClass('hidden');
-        $('#tambah-dosen-form')[0].reset();
-    });
-
-    $('#tambah-dosen-form').submit(function(e) {
-        e.preventDefault();
-        
-        const formData = $(this).serialize();
-        $('#btn-tambah-dosen').text('Menyimpan...').prop('disabled', true);
-
-        $.ajax({
-            url: "{{ route('admin.dosen.store') }}",
-            method: 'POST',
-            data: formData,
-            success: function(response) {
-                alert(response.message);
-                $('#tambah-dosen-modal').addClass('hidden');
-                $('#tambah-dosen-form')[0].reset();
-                renderTable();
-                $('#btn-tambah-dosen').text('Simpan Data').prop('disabled', false);
-            },
-            error: function(xhr) {
-                const res = xhr.responseJSON;
-                alert('Gagal menambah: ' + (res.message || 'Terjadi kesalahan'));
-                $('#btn-tambah-dosen').text('Simpan Data').prop('disabled', false);
-            }
-        });
-    });
 
     // =========================================================================
     // EDIT DOSEN MODAL
@@ -220,8 +195,9 @@ $(document).ready(function() {
             url: editUrl,
             method: 'GET',
             success: function(data) {
-                $('#edit-dosen-id').val(data.id);
+                $('#edit-dosen-id').val(data.id_dosen);
                 $('#edit-nidn').val(data.nidn);
+                $('#edit-id-internal').val(data.id_dosen_internal);
                 $('#edit-nama').val(data.nama_dosen);
                 $('#edit-pendidikan').val(data.pendidikan);
                 $('#edit-bidang').val(data.bidang);

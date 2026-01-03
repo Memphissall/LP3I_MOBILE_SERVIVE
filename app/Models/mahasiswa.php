@@ -2,36 +2,44 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Mahasiswa extends Model
 {
+    use HasFactory;
+
     protected $table = 'mahasiswa';
     protected $primaryKey = 'id_mahasiswa';
 
     protected $fillable = [
-        'id_kelas',
         'nipd',
         'nama',
+        'id_bidang_keahlian',
         'jenis_kelamin',
         'tempat_lahir',
         'tgl_lahir',
-        'agama',
-        'jurusan',
-        'angkatan',
-        'periode',
+        'kelas',
         'email',
         'alamat',
+        'agama',
         'no_tlp',
-        'kelas',
         'foto',
-        'status'
+        'status',
+        'id_kelas',
+        'angkatan',
+        'periode'
     ];
 
-    // Diubah menjadi data_kelas agar sinkron dengan JavaScript di Blade
+    // Relationship to Bidang Keahlian
+    public function bidangKeahlian()
+    {
+        return $this->belongsTo(BidangKeahlian::class, 'id_bidang_keahlian', 'id_bidang_keahlian');
+    }
+
+    // Relationship to Kelas
     public function data_kelas()
     {
-        // id_kelas adalah foreign key di tabel mahasiswa
         return $this->belongsTo(Kelas::class, 'id_kelas', 'id_kelas');
     }
 }

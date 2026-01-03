@@ -8,36 +8,63 @@
     {{-- 1. Dashboard --}}
     <a href="{{ route('admin.dashboard') ?? '#' }}" 
         class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-        <i data-lucide="layout-dashboard" class="w-5 h-5 mr-3"></i>
+        <x-heroicon-o-squares-2x2 class="w-5 h-5 mr-3" />
         Dashboard
     </a>
     
-    {{-- 2. Menu Kelola Mahasiswa --}}
-    <a href="{{ route('admin.mahasiswa.index') ?? '#' }}" 
-        class="nav-link {{ request()->routeIs('admin.mahasiswa.index') ? 'active' : '' }}">
-        <i data-lucide="users" class="w-5 h-5 mr-3"></i>
-        Kelola Mahasiswa
-    </a>
-    
-    {{-- 3. Menu Kelola Dosen --}}
-    <a href="{{ route('admin.dosen.index') ?? '#' }}" 
-        class="nav-link {{ request()->routeIs('admin.dosen.index') ? 'active' : '' }}">
-        <i data-lucide="graduation-cap" class="w-5 h-5 mr-3"></i>
-        Kelola Dosen
+    {{-- 2. Data Master (Parent with Submenu) --}}
+    <div class="menu-group">
+        <a href="#" 
+            class="nav-link submenu-toggle {{ request()->routeIs(['admin.mahasiswa.index', 'admin.dosen.index', 'admin.kelola_matkul']) ? 'active' : '' }}" 
+            data-target="data-master-submenu">
+            <x-heroicon-o-folder class="w-5 h-5 mr-3" />
+            Data Master
+            <x-heroicon-o-chevron-right class="w-4 h-4 ml-auto arrow-icon transition-transform duration-200" />
+        </a>
+        
+        <div id="data-master-submenu" class="submenu">
+            {{-- 2.1 Kelola Mahasiswa --}}
+            <a href="{{ route('admin.mahasiswa.index') ?? '#' }}" 
+                class="nav-link {{ request()->routeIs('admin.mahasiswa.index') ? 'active' : '' }}">
+                <x-heroicon-o-users class="w-5 h-5 mr-3" />
+                Mahasiswa
+            </a>
+            
+            {{-- 2.2 Kelola Dosen --}}
+            <a href="{{ route('admin.dosen.index') ?? '#' }}" 
+                class="nav-link {{ request()->routeIs('admin.dosen.index') ? 'active' : '' }}">
+                <x-heroicon-o-academic-cap class="w-5 h-5 mr-3" />
+                Dosen
+            </a>
+
+            {{-- 2.3 Kelola Mata Kuliah --}}
+            <a href="{{ route('admin.kelola_matkul') ?? '#' }}" 
+                class="nav-link {{ request()->routeIs('admin.kelola_matkul') ? 'active' : '' }}">
+                <x-heroicon-o-book-open class="w-5 h-5 mr-3" />
+                Mata Kuliah
+            </a>
+        </div>
+    </div>
+
+    {{-- 3. KRS --}}
+    <a href="{{ route('admin.krs.index') ?? '#' }}" 
+        class="nav-link {{ request()->routeIs('admin.krs.*') ? 'active' : '' }}">
+        <x-heroicon-o-document-text class="w-5 h-5 mr-3" />
+        KRS
     </a>
 
-    {{-- 4. Menu Kelola Mata Kuliah --}}
-    <a href="{{ route('admin.kelola_matkul') ?? '#' }}" 
-        class="nav-link {{ request()->routeIs('admin.kelola_matkul') ? 'active' : '' }}">
-        <i data-lucide="book-open" class="w-5 h-5 mr-3"></i>
-        Kelola Mata Kuliah
+    {{-- 4. KHS --}}
+    <a href="{{ route('admin.khs.index') ?? '#' }}" 
+        class="nav-link {{ request()->routeIs('admin.khs.*') ? 'active' : '' }}">
+        <x-heroicon-o-clipboard-document-check class="w-5 h-5 mr-3" />
+        KHS
     </a>
 
-    {{-- 5. Menu Kelola Jadwal --}}
+    {{-- 5. Kelola Jadwal --}}
     <a href="{{ route('admin.kelola_jadwal') ?? '#' }}" 
         class="nav-link {{ request()->routeIs('admin.kelola_jadwal') ? 'active' : '' }}">
-        <i data-lucide="calendar" class="w-5 h-5 mr-3"></i>
-        Kelola Jadwal
+        <x-heroicon-o-calendar class="w-5 h-5 mr-3" />
+        Jadwal
     </a>
 
 </nav>

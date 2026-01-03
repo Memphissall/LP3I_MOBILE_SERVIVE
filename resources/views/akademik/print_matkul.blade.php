@@ -150,11 +150,12 @@
             <thead>
                 <tr>
                     <th width="10">No</th>
-                    <th width="20">kode Mata kuliah</th>
+                    <th width="20">Kode Mata kuliah</th>
                     <th width="70">Nama Mata Kuliah</th>
-                    <th width=10">SKS</th>
+                    <th width="10">SKS</th>
+                    <th width="15">Bobot</th>
                     <th width="20">Semester</th>
-                    <th width="80">Jurusan</th>
+                    <th width="80">Bidang Keahlian</th>
                 </tr>
             </thead>
             <tbody>
@@ -166,12 +167,13 @@
                     <td>{{ $item->kode_mk ?? $item->nim ?? '' }}</td>
                     <td style="text-align: left;">{{ $item->nama_mk ?? $item->nama_mahasiswa ?? '' }}</td>
                     <td>{{ $item->sks ?? $item->jurusan ?? '' }}</td>
+                    <td>{{ $item->bobot_kompetensi ?? '-' }}</td>
                     <td>{{ $item->semester ?? $item->angkatan ?? '' }}</td>
-                    <td>{{ $item->jurusan ?? $item->kelas ?? '' }}</td>
+                    <td>{{ $item->bidang_keahlian ?? $item->kelas ?? '' }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" style="padding: 20px;">Data tidak ditemukan.</td>
+                    <td colspan="7" style="padding: 20px;">Data tidak ditemukan.</td>
                 </tr>
                 @endforelse
             </tbody>

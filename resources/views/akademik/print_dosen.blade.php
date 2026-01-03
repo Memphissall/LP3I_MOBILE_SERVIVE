@@ -13,42 +13,77 @@
             padding: 0;
             color: #333;
             background-color: white;
+            line-height: 1.2;
         }
 
         .print-container {
-            padding: 1cm 1.5cm; /* Diperkecil agar lebih efisien */
+            padding: 0.2cm 1cm;
         }
 
-        /* KOP SURAT */
+        /* --- KOP SURAT --- */
         .kop-surat {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 3px solid #000080; 
-            padding-bottom: 10px; /* Rapat sedikit */
-            margin-bottom: 10px;
+            text-align: center;
+            padding-bottom: 5px; 
+            margin-bottom: 0; /* Kita atur jarak lewat garis pemisah */
         }
-        .kop-text { text-align: center; }
-        .kop-text h1 { margin: 0; font-size: 26px; text-transform: uppercase; color: #000066; letter-spacing: 1px; }
-        .kop-text p { margin: 2px 0 0; font-size: 13px; font-style: italic; color: #555; }
 
+        /* --- TRICK GARIS GANDA PISAH (TEBAL ATAS, TIPIS BAWAH) --- */
+        .line-bold {
+            border-bottom: 4px solid #000;
+            width: 100%;
+            margin-bottom: 2px; /* Jarak celah putih antar garis */
+        }
+
+        .line-thin {
+            border-bottom: 1.5px solid #000;
+            width: 100%;
+            margin-bottom: 15px; /* Jarak ke judul laporan */
+        }
+
+        .kop-text h1 { 
+            margin: 0; 
+            font-size: 24px; 
+            text-transform: uppercase; 
+            color: #000066; 
+            line-height: 1.1;
+        }
+
+        .kop-text p { 
+            margin: 2px 0 0; 
+            font-size: 11px; 
+            font-style: italic; 
+            color: #555;
+        }
+
+         /* REVISI: Logo sekarang mengunci ke pojok kiri kop-surat */
+        .kop-text img { 
+            position: absolute; 
+            left: 40px; 
+            top: 55px; 
+            transform: translateY(-50%); 
+            width: 50px; 
+            height: auto; 
+            padding: 0; 
+            margin: 0;
+        }
+
+        /* --- JUDUL & INFO --- */
         .judul-laporan {
             text-align: center;
             text-transform: uppercase;
-            margin-top: 15px; /* Lebih naik */
-            margin-bottom: 8px;
-            font-size: 18px;
+            margin: 10px 0 5px 0; 
+            font-size: 16px;
             font-weight: bold;
         }
 
         .info-cetak {
             text-align: right;
-            font-size: 11px;
+            font-size: 9px;
             margin-bottom: 5px;
             color: #666;
         }
 
-        /* TABEL SETTINGS */
+        /* --- TABEL --- */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -57,68 +92,57 @@
         
         th, td {
             border: 1px solid #444;
-            padding: 6px 8px; /* DIET: Lebih tipis agar muat banyak */
-            font-size: 12px;
+            padding: 6px 8px;
+            font-size: 11px;
             text-align: center;
-            word-wrap: break-word;
         }
 
-        th {
+        th { 
             background-color: #E6F0FF !important; 
-            color: #000066 !important;
-            text-transform: uppercase;
-            font-weight: bold;
-            -webkit-print-color-adjust: exact; 
-            print-color-adjust: exact;
+            color: #000066 !important; 
+            -webkit-print-color-adjust: exact;
         }
 
-        /* TANDA TANGAN */
+        /* --- LOGIKA 5 DATA IKUT TTD --- */
+        .keep-together {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            display: block;
+            width: 100%;
+        }
+
         .signature-container {
-            margin-top: 20px; /* Jarak atas dikurangi */
+            margin-top: 25px;
             float: right; 
-            width: 350px; 
+            width: 250px; 
             text-align: center;
-            page-break-inside: avoid;
         }
 
         .signature-wrapper {
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            margin-top: 60px; /* DIET: Jarak tanda tangan diperpendek */
-            margin-bottom: 5px;
+            margin-top: 45px; 
+            margin-bottom: 2px;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 14px;
         }
 
         .line-inside {
             border-bottom: 1.5px solid #000;
-            width: 250px; 
+            width: 200px; 
             margin: 0 5px;
-            height: 14px;
+            height: 12px;
         }
 
-        .signature-role {
-            font-size: 14px;
-            font-weight: bold;
-            margin-top: 0;
-        }
+        .signature-role { font-size: 11px; font-weight: bold; }
 
         @media print {
-            @page {
-                margin: 0.5cm 1.5cm; 
-                size: landscape;
+            @page { 
+                margin: 0.5cm 0.8cm; 
+                size: landscape; 
             }
-
-            thead {
-                display: table-header-group; 
-            }
-
-            th {
-                background-color: #E6F0FF !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
+            thead { display: table-header-group; }
         }
     </style>
 </head>
@@ -127,82 +151,92 @@
     <div class="print-container">
         <div class="kop-surat">
             <div class="kop-text">
+                <img src="{{ asset('images/lp3i_krw.png') }}" alt="logo LP3I"> 
                 <h1>LP3I COLLEGE KARAWANG</h1>
-                <p>Jl. Arteri Galuh Mas, Telukjambe Timur, Karawang, Jawa Barat</p>
-                <p>Telp: (0267) 840xxxx | Website: www.lp3i.ac.id | Email: info@karawang.lp3i.ac.id</p>
+                <p>Gedung Karawang Hijau, Ruko Karawang Hijau, Jl. Tarumanagara No.4-6, Desa Purwadana</p>
+                <p>Kecamatan Telukjambe Timur, Kabupaten Karawang, Jawa Barat 41361</p>
+                <p>Telp: (0267) 411286 | Website: www.lp3i.ac.id | Email: info@lp3i.id</p>
             </div>
         </div>
+        
+        <div class="line-bold"></div>
+        <div class="line-thin"></div>
 
-        <div class="info-cetak" id="waktu-cetak">
-            Dicetak pada: Memuat waktu...
-        </div>
+        <div class="info-cetak" id="waktu-cetak">Memuat waktu...</div>
 
         <h3 class="judul-laporan">LAPORAN DATA DOSEN</h3>
+
+        @php
+            $totalData = count($dosens);
+            $limitAwal = $totalData - 5; 
+        @endphp
 
         <table>
             <thead>
                 <tr>
-                    <th width="40">No</th>
+                    <th width="35">No</th>
                     <th width="120">NIDN / NIP</th>
-                    <th width="80">Nama Dosen</th>
-                    <th width="100">Pendidikan</th>
-                    <th width="150">No. Telepon</th>
+                    <th width="180">Nama Dosen</th>
+                    <th width="150">Pendidikan</th>
+                    <th width="120">No. Telepon</th>
                     <th width="100">Status</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($dosens as $index => $d)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td><b>{{ $d->nidn }}</b></td>
-                    <td style="text-align: left; padding-left: 15px;">{{ $d->nama_dosen }}</td>
-                    <td>{{ $d->pendidikan }}</td>
-                    <td>{{ $d->no_telp }}</td>
-                    <td style="text-transform: capitalize;">{{ $d->status }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6" style="padding: 20px;">Data dosen tidak ditemukan.</td>
-                </tr>
-                @endforelse
+                @foreach($dosens as $index => $d)
+                    @if($index < $limitAwal)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td><b>{{ $d->nidn }}</b></td>
+                        <td style="text-align: left; padding-left: 10px;">{{ $d->nama_dosen }}</td>
+                        <td style="text-align: left;">{{ $d->pendidikan }}</td>
+                        <td>{{ $d->no_telp }}</td>
+                        <td style="text-transform: capitalize;">{{ $d->status }}</td>
+                    </tr>
+                    @endif
+                @endforeach
             </tbody>
         </table>
 
-        <div class="signature-container">
-            <p id="tanggal-ttd">Karawang, ...</p>
-            <p>Staf Akademik,</p>
-            
-            <div class="signature-wrapper">
-                <span>(</span>
-                <div class="line-inside"></div>
-                <span>)</span>
-            </div>
-            
-            <p class="signature-role">LP3I College Karawang</p>
-        </div>
+        <div class="keep-together">
+            <table style="margin-top: -1px;">
+                <tbody>
+                    @foreach($dosens as $index => $d)
+                        @if($index >= $limitAwal)
+                        <tr>
+                            <td width="35">{{ $index + 1 }}</td>
+                            <td width="120"><b>{{ $d->nidn }}</b></td>
+                            <td width="180" style="text-align: left; padding-left: 10px;">{{ $d->nama_dosen }}</td>
+                            <td width="150" style="text-align: left;">{{ $d->pendidikan }}</td>
+                            <td width="120">{{ $d->no_telp }}</td>
+                            <td width="100" style="text-transform: capitalize;">{{ $d->status }}</td>
+                        </tr>
+                        @endif
+                    @endforeach
+                </tbody>
+            </table>
 
-        <div style="clear: both;"></div>
+            <div class="signature-container">
+                <p id="tanggal-ttd">Karawang, ...</p>
+                <p>Staf Akademik,</p>
+                <div class="signature-wrapper">
+                    <span>(</span><div class="line-inside"></div><span>)</span>
+                </div>
+                <p class="signature-role">LP3I College Karawang</p>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
     </div>
 
     <script type="text/javascript">
         function updateTime() {
             const now = new Date();
             const optionsDate = { day: '2-digit', month: 'long', year: 'numeric' };
-            const optionsTime = { hour: '2-digit', minute: '2-digit'};
-            
-            const tanggalIndo = now.toLocaleDateString('id-ID', optionsDate);
-            const waktuIndo = now.toLocaleTimeString('id-ID', optionsTime);
-
-            document.getElementById('waktu-cetak').innerHTML = `Dicetak pada: ${tanggalIndo}, ${waktuIndo} WIB`;
-            document.getElementById('tanggal-ttd').innerHTML = `Karawang, ${tanggalIndo}`;
+            const optionsTime = { hour: '2-digit', minute: '2-digit' };
+            document.getElementById('waktu-cetak').innerHTML = `Dicetak pada: ${now.toLocaleDateString('id-ID', optionsDate)}, ${now.toLocaleTimeString('id-ID', optionsTime)} WIB`;
+            document.getElementById('tanggal-ttd').innerHTML = `Karawang, ${now.toLocaleDateString('id-ID', optionsDate)}`;
         }
-
-        window.onload = function() {
-            updateTime();
-            setTimeout(function() {
-                window.print();
-            }, 800); 
-        }
+        window.onload = function() { updateTime(); setTimeout(() => window.print(), 800); }
     </script>
 </body>
 </html>

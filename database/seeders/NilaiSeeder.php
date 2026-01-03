@@ -16,11 +16,13 @@ class NilaiSeeder extends Seeder
         // Clear existing nilai
         DB::table('nilai')->truncate();
 
-        // Get all mahasiswa from database
-        $mahasiswaList = Mahasiswa::with('data_kelas')->get();
+        // REVISI DI SINI: Tambahkan whereNotNull agar id_kelas tidak kosong saat di-insert
+        $mahasiswaList = Mahasiswa::with('data_kelas')
+            ->whereNotNull('id_kelas')
+            ->get();
         
         if ($mahasiswaList->isEmpty()) {
-            $this->command->info('No mahasiswa found in database. Skipping nilai seeder.');
+            $this->command->info('No mahasiswa with class found in database. Skipping nilai seeder.');
             return;
         }
 
@@ -66,7 +68,7 @@ class NilaiSeeder extends Seeder
                     'nidn' => $nidn,
                     'nipd' => $mhs->nipd,
                     'nama_mhs' => $mhs->nama,
-                    'id_kelas' => $mhs->id_kelas,
+                    'id_kelas' => $mhs->id_kelas, // Sekarang aman tidak akan null
                     'kode_mk' => $mk->kode_mk,
                     'semester' => 1,
                     'periode' => 'Ganjil',

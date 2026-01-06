@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($submissi as $index => $s)
+            @forelse($submissions as $index => $s)
             <tr>
                 <td class="border px-2 py-1">{{ $index + 1 }}</td>
                 <td class="border px-2 py-1">{{ $s->nama_mahasiswa }}</td>

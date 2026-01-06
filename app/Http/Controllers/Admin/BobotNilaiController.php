@@ -14,7 +14,7 @@ class BobotNilaiController extends Controller
         // data bobot (untuk tabel bawah)
         $bobot = BobotNilai::with('matakuliah')->get();
 
-        // ⬅️ INI YANG KURANG DARI KEMARIN
+       
         // data mata kuliah (untuk dropdown)
         $matakuliah = Matakuliah::orderBy('nama_mk')->get();
 

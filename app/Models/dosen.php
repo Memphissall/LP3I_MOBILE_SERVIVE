@@ -10,6 +10,7 @@ class Dosen extends Model
     use HasFactory;
 
     protected $table = 'dosen';
+
     protected $primaryKey = 'nidn';
     public $incrementing = false;
     protected $keyType = 'string';
@@ -31,8 +32,17 @@ class Dosen extends Model
         'foto'
     ];
 
+    // =====================
+    // RELASI
+    // =====================
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function materi()
+    {
+        return $this->hasMany(Materi::class, 'nidn', 'nidn');
     }
 }

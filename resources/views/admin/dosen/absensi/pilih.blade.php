@@ -5,7 +5,7 @@
     <div class="bg-white rounded-2xl shadow-md p-8">
 
         <h2 class="text-xl font-semibold mb-8">
-            Filter Data Nilai
+            Filter Data Absensi & LKM
         </h2>
 
         <div class="space-y-5">
@@ -36,89 +36,103 @@
                 <select id="kelas" class="w-80 border rounded-lg px-4 py-2">
                     <option value="">-- Pilih Kelas --</option>
                     @foreach ($kelas as $k)
-                        <option value="{{ $k->id_kelas }}">{{ $k->nama_kelas }}</option>
+                        <option value="{{ $k->id_kelas }}">
+                            {{ $k->nama_kelas }}
+                        </option>
                     @endforeach
                 </select>
             </div>
 
             {{-- MATA KULIAH --}}
             <div class="flex items-center gap-6">
-                <label class="w-32 font-medium">Mata Kuliah</label>
+                <label class="w-32 font-medium">Materi Ajar</label>
                 <select id="matkul" disabled class="w-80 border rounded-lg px-4 py-2">
-                    <option value="">-- Pilih Mata Kuliah --</option>
+                    <option value="">-- Pilih Materi Ajar --</option>
                 </select>
             </div>
-
         </div>
 
         {{-- BUTTON --}}
         <div class="mt-10 flex justify-center gap-5">
-            <button id="btnInput" disabled
+
+            {{-- INPUT ABSENSI --}}
+            <button
+                type="button"
+                id="btnInput"
+                disabled
                 class="px-7 py-2 rounded-lg font-semibold text-white
                        bg-blue-500 opacity-50 cursor-not-allowed">
-                Input Score
+                Input Absensi
             </button>
 
-            <button id="btnLihat" disabled
+            {{-- VIEW LKM --}}
+            <button
+                type="button"
+                id="btnLihat"
+                disabled
                 class="px-7 py-2 rounded-lg font-semibold text-white
-                       bg-red-500 opacity-50 cursor-not-allowed">
-                View Score
+                       bg-green-500 opacity-50 cursor-not-allowed">
+                Lihat Riwayat LKM
             </button>
         </div>
 
     </div>
 </div>
 
+{{-- JQUERY --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$(function () {
+$(document).ready(function () {
 
     function loadMatkul() {
         let semester = $('#semester').val();
         let id_kelas = $('#kelas').val();
 
-        // reset matkul & tombol
-        $('#matkul').prop('disabled', true).html('<option value="">-- Pilih Mata Kuliah --</option>');
-        $('#btnInput, #btnLihat').prop('disabled', true)
+        $('#matkul')
+            .prop('disabled', true)
+            .html('<option value="">-- Pilih Mata Kuliah --</option>');
+
+        $('#btnInput, #btnLihat')
+            .prop('disabled', true)
             .addClass('opacity-50 cursor-not-allowed');
 
         if (!semester || !id_kelas) return;
 
-        $.get("{{ route('nilai.getMatkul') }}", { semester, id_kelas }, function(res) {
-            $('#matkul').prop('disabled', false);
-            res.forEach(mk => {
-                $('#matkul').append(`<option value="${mk.kode_mk}">${mk.kode_mk} - ${mk.nama_mk}</option>`);
-            });
-        });
+        $.get("{{ route('absensi.getMatkul') }}",
+            { semester: semester, id_kelas: id_kelas },
+            function (res) {
+                $('#matkul').prop('disabled', false);
+                res.forEach(mk => {
+                    $('#matkul').append(`
+                        <option value="${mk.kode_mk}">
+                            ${mk.kode_mk} - ${mk.nama_mk}
+                        </option>
+                    `);
+                });
+            }
+        );
     }
 
-    $('#semester, #kelas').change(loadMatkul);
+    $('#semester, #kelas').on('change', loadMatkul);
 
-    $('#matkul').change(function () {
+    $('#matkul').on('change', function () {
         let aktif = $(this).val() !== '';
-        $('#btnInput, #btnLihat').prop('disabled', !aktif)
+        $('#btnInput, #btnLihat')
+            .prop('disabled', !aktif)
             .toggleClass('opacity-50 cursor-not-allowed', !aktif);
     });
 
-    // ✅ INPUT NILAI
-    $('#btnInput').click(function () {
+    // INPUT ABSENSI
+    $('#btnInput').on('click', function () {
         window.location.href =
-            "{{ url('nilai') }}/" +
-            $('#kelas').val() + "/" +
-            $('#matkul').val() + "/" +
-            $('#semester').val() +
-            "/input";
+            `/dosen/absensi/create/${$('#kelas').val()}/${$('#matkul').val()}/${$('#semester').val()}`;
     });
 
-    // ✅ LIHAT NILAI
-    $('#btnLihat').click(function () {
+    // VIEW LIST LKM (SESUI TUJUAN KAMU)
+    $('#btnLihat').on('click', function () {
         window.location.href =
-            "{{ url('nilai') }}/" +
-            $('#kelas').val() + "/" +
-            $('#matkul').val() + "/" +
-            $('#semester').val() +
-            "/view";
+            `/dosen/absensi/list/${$('#kelas').val()}/${$('#matkul').val()}`;
     });
 
 });

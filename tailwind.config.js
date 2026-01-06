@@ -12,7 +12,9 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                // Kita ganti Figtree menjadi Times New Roman
+                // Gunakan tanda kutip dua di dalam tanda kutip satu karena nama font pakai spasi
+                sans: ['"Times New Roman"', 'Times', 'serif', ...defaultTheme.fontFamily.serif],
             },
         },
     },

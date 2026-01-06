@@ -29,7 +29,7 @@ return new class extends Migration {
 
             $table->timestamps();
 
-            // 🔗 RELASI
+            // RELASI
             $table->foreign('kode_mk')
                   ->references('kode_mk')
                   ->on('matakuliah')

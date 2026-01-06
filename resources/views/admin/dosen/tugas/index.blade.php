@@ -60,21 +60,26 @@
                         {{ $t->deadline->timezone('Asia/Jakarta')->format('d-m-Y H:i') }} WIB
                     </td>
 
-                    <td class="px-4 py-2">
-                            <span class="px-3 py-1 rounded-full text-white text-sm font-semibold
-                         {{ $t->isAktif() ? 'bg-green-600' : 'bg-red-600' }}">
-                                 {{ $t->isAktif() ? 'aktif' : 'nonaktif' }}
-                             </span>
-                            </td>
+                    <td class="px-4 py-2 align-middle">
+    <span
+        class="inline-flex items-center justify-center
+               w-24 h-9
+               rounded-full text-white text-sm font-semibold
+               {{ $t->isAktif() ? 'bg-green-600' : 'bg-red-600' }}">
+        {{ $t->isAktif() ? 'aktif' : 'nonaktif' }}
+    </span>
+</td>
+
 
 
                     <td class="px-4 py-2 space-x-2 flex flex-wrap">
 
                         {{-- EDIT --}}
                         <a href="{{ route('tugas.edit', $t->id_tugas) }}"
-                           class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition">
-                           Edit
+                             class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
+                            <i class="fa-solid fa-pen"></i>
                         </a>
+                       
 
                         {{-- HAPUS --}}
                         <form action="{{ route('tugas.destroy', $t->id_tugas) }}" method="POST">
@@ -82,16 +87,21 @@
                             @method('DELETE')
                             <button type="submit"
                                     onclick="return confirm('Yakin ingin menghapus tugas ini?')"
-                                    class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition">
-                                Hapus
+                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                                <i class="fa-solid fa-trash"></i>
                             </button>
                         </form>
 
                         {{-- LIHAT JAWABAN --}}
-                        <a href="{{ route('submissi.index', [$t->id_kelas, $t->kode_mk]) }}"
-                           class="px-3 py-1 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700 transition">
-                           Lihat Jawaban
+                        <a href="{{ route('submissi.index', [
+                            $t->id_kelas,
+                            $t->kode_mk,
+                            $t->id_tugas
+                        ]) }}"
+                        class="px-3 py-1 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700 transition">
+                            Lihat Jawaban
                         </a>
+
 
                     </td>
                 </tr>

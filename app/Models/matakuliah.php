@@ -19,13 +19,17 @@ class Matakuliah extends Model
         'tipe_matakuliah'
     ];
 
+    // =====================
+    // RELASI
+    // =====================
+
     public function kelas()
     {
         return $this->belongsToMany(
             Kelas::class,
             'kelas_matakuliah',
-            'kode_mk',      // FK di pivot
-            'id_kelas'      // FK di pivot
+            'kode_mk',
+            'id_kelas'
         );
     }
 
@@ -37,5 +41,10 @@ class Matakuliah extends Model
     public function nilai()
     {
         return $this->hasMany(Nilai::class, 'kode_mk', 'kode_mk');
+    }
+
+    public function materi()
+    {
+        return $this->hasMany(Materi::class, 'kode_mk', 'kode_mk');
     }
 }

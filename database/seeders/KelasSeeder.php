@@ -11,23 +11,23 @@ class KelasSeeder extends Seeder
     {
         DB::table('kelas')->insert([
             [
-                'nama_kelas' => 'A - Pemrograman Web',
-                'jurusan' => 'Teknik Informatika',
-                'nama_pa' => 'Dr. Budi',
+                'nama_kelas' => 'AIS',
+                'bidang_keahlian' => 'Accounting Information System',
+                'nama_pa' => 'MR YUGA',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama_kelas' => 'B - Basis Data',
-                'jurusan' => 'Sistem Informasi',
-                'nama_pa' => 'Ibu Sari',
+                'nama_kelas' => 'ASE-10',
+                'bidang_keahlian' => 'Application Software Engineering',
+                'nama_pa' => 'MR EKO',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama_kelas' => 'C - Jaringan Komputer',
-                'jurusan' => 'Teknik Komputer',
-                'nama_pa' => 'Pak Andi',
+                'nama_kelas' => 'OAA13-A',
+                'bidang_keahlian' => 'Office Administration Automatizion',
+                'nama_pa' => 'MISS NISA',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

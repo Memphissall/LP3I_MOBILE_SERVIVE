@@ -173,4 +173,23 @@ class TugasController extends Controller
             'tugas'
         ));
     }
+
+    public function lihatSubmissi($id_kelas, $kode_mk, $tugas_id)
+{
+    $tugas = \App\Models\Tugas::findOrFail($tugas_id);
+
+    $submissions = \App\Models\Submission::where('tugas_id', $tugas_id)
+        ->with('mahasiswa') // nanti relasi
+        ->get();
+
+    return view('admin.dosen.tugas.submissi.index', compact(
+        'tugas',
+        'submissions',
+        'id_kelas',
+        'kode_mk'
+    ));
 }
+
+}
+
+

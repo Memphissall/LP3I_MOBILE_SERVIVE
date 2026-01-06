@@ -9,6 +9,7 @@ use App\Models\Nilai;
 use App\Models\Mahasiswa;
 use App\Models\BobotNilai;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class NilaiController extends Controller
 {
@@ -46,147 +47,212 @@ class NilaiController extends Controller
     // =======================
     // FORM INPUT NILAI
     // =======================
-    public function input($id_kelas, $kode_mk, Request $request)
-    {
-        $semester = $request->semester;
+   public function input($id_kelas, $kode_mk, Request $request)
+{
+    $semester = $request->semester;
 
-        // hitung periode & tahun akademik
-        $periode = $semester % 2 == 1 ? 'Ganjil' : 'Genap';
-        $tahun   = now()->year;
+    //  TENTUKAN TAHUN AKADEMIK (HARUS SAMA DENGAN STORE)
+    $periode  = $semester % 2 == 1 ? 'Ganjil' : 'Genap';
+    $tahun    = now()->year;
 
-        $tahunAkademik = $periode == 'Ganjil'
-            ? "$tahun/" . ($tahun + 1)
-            : ($tahun - 1) . "/$tahun";
+    $tahunAkademik = $periode == 'Ganjil'
+        ? "$tahun/" . ($tahun + 1)
+        : ($tahun - 1) . "/$tahun";
 
-        // 🔥 AMBIL NIPD YANG SUDAH ADA NILAI
-        $nipdSudahDinilai = Nilai::where('id_kelas', $id_kelas)
-            ->where('kode_mk', $kode_mk)
-            ->where('semester', $semester)
-            ->where('tahun_akademik', $tahunAkademik)
-            ->pluck('nipd')
-            ->toArray();
+    /**
+     * =====================================
+     * AMBIL NIPD YANG SUDAH PUNYA NILAI
+     * =====================================
+     */
+    $nipdSudahInput = Nilai::where('id_kelas', $id_kelas)
+        ->where('kode_mk', $kode_mk)
+        ->where('semester', $semester)
+        ->where('tahun_akademik', $tahunAkademik)
+        ->pluck('nipd');
 
-        // 🔥 AMBIL MAHASISWA YANG BELUM DINILAI
-        $mahasiswa = Mahasiswa::where('id_kelas', $id_kelas)
-            ->whereNotIn('nipd', $nipdSudahDinilai)
-            ->orderBy('nama')
-            ->get();
+    /**
+     * =====================================
+     * AMBIL MAHASISWA YANG BELUM PUNYA NILAI
+     * =====================================
+     */
+    $mahasiswa = Mahasiswa::where('id_kelas', $id_kelas)
+        ->whereNotIn('nipd', $nipdSudahInput)
+        ->orderBy('nama_mhs')
+        ->get();
 
-        return view('admin.dosen.nilai.input', compact(
-            'mahasiswa',
-            'id_kelas',
-            'kode_mk',
-            'semester',
-            'periode',
-            'tahunAkademik'
-        ));
+    /**
+     * =====================================
+     * HITUNG ALPHA (TETAP)
+     * =====================================
+     */
+    $alphaCount = DB::table('absensi_lkm')
+        ->where('kode_mk', $kode_mk)
+        ->where('status', 'Alpha')
+        ->groupBy('nipd')
+        ->pluck(DB::raw('COUNT(*)'), 'nipd');
+
+    // $nilaiKehadiran = [];
+    // foreach ($mahasiswa as $mhs) {
+    //     $alpha = $alphaCount[$mhs->nipd] ?? 0;
+    //     $nilai = 100 - ($alpha * 5);
+    //     $nilaiKehadiran[$mhs->nipd] = max($nilai, 0);
+    // }
+$totalPertemuan = 14;
+$nilaiPerPertemuan = 100 / $totalPertemuan;
+
+$nilaiKehadiran = [];
+
+foreach ($mahasiswa as $mhs) {
+    $alpha = $alphaCount[$mhs->nipd] ?? 0;
+
+    $nilai = 100 - ($alpha * $nilaiPerPertemuan);
+
+    if ($nilai < 0) {
+        $nilai = 0;
     }
+
+    $nilaiKehadiran[$mhs->nipd] = round($nilai, 2);
+}
+
+    return view('admin.dosen.nilai.input', compact(
+        'mahasiswa',
+        'id_kelas',
+        'kode_mk',
+        'semester',
+        'nilaiKehadiran'
+    ));
+}
 
     // =======================
     // SIMPAN NILAI
     // =======================
     public function store(Request $request)
-    {
-        $request->validate([
-            'id_kelas' => 'required',
-            'kode_mk'  => 'required',
-            'semester' => 'required',
-            'nipd'     => 'required|array'
-        ]);
+{
+    $request->validate([
+        'id_kelas' => 'required',
+        'kode_mk'  => 'required',
+        'semester' => 'required',
+        'nipd'     => 'required|array'
+    ]);
 
-        // NIDN DOSEN LOGIN
-        $nidn = auth()->user()->dosen->nidn;
+    $nidn = auth()->user()->dosen->nidn;
 
-        // periode & tahun akademik
-        $semester = $request->semester;
-        $periode  = $semester % 2 == 1 ? 'Ganjil' : 'Genap';
-        $tahun    = now()->year;
+    $semester = $request->semester;
+    $periode  = $semester % 2 == 1 ? 'Ganjil' : 'Genap';
+    $tahun    = now()->year;
 
-        $tahunAkademik = $periode == 'Ganjil'
-            ? "$tahun/" . ($tahun + 1)
-            : ($tahun - 1) . "/$tahun";
+    $tahunAkademik = $periode == 'Ganjil'
+        ? "$tahun/" . ($tahun + 1)
+        : ($tahun - 1) . "/$tahun";
 
-        // bobot nilai
-        $bobot = BobotNilai::where('kode_mk', $request->kode_mk)->firstOrFail();
+    foreach ($request->nipd as $i => $nipd) {
 
-        foreach ($request->nipd as $i => $nipd) {
-            // skip baris kosong
-            if (
-                $request->nilai_kehadiran[$i] === null &&
-                $request->nilai_sikap[$i] === null &&
-                $request->nilai_formatif[$i] === null &&
-                $request->nilai_tugas[$i] === null &&
-                $request->nilai_uts[$i] === null &&
-                $request->nilai_uas[$i] === null
-            ) {
-                continue;
-            }
+        /**
+         * ===============================
+         *  HITUNG JUMLAH ALPHA
+         * ===============================
+         */
+        $jumlahAlpha = DB::table('absensi_lkm')
+            ->where('nipd', $nipd)
+            ->where('kode_mk', $request->kode_mk)
+            ->where('status', 'Alpha')
+            ->count();
 
-            // hitung nilai akhir
-            $nilaiAkhir =
-                ($request->nilai_kehadiran[$i] * $bobot->kehadiran / 100) +
-                ($request->nilai_sikap[$i]     * $bobot->sikap / 100) +
-                ($request->nilai_formatif[$i] * $bobot->formatif / 100) +
-                ($request->nilai_tugas[$i]    * $bobot->tugas / 100) +
-                ($request->nilai_uts[$i]      * $bobot->uts / 100) +
-                ($request->nilai_uas[$i]      * $bobot->uas / 100);
+        /**
+         * ===============================
+         *  NILAI KEHADIRAN (DEFAULT 100)
+         * ===============================
+         */
+        // $nilaiKehadiran = 100 - ($jumlahAlpha * 7.14);
+        // if ($nilaiKehadiran < 0) {
+        //     $nilaiKehadiran = 0;
+        // }
+        $nilaiPerPertemuan = 100 / 14; // 7.14
+        $nilaiKehadiran = 100 - ($jumlahAlpha * $nilaiPerPertemuan);
 
-            // konversi mutu
-            if ($nilaiAkhir >= 85)      { $mutu = 'A';  $ip = 4; }
-            elseif ($nilaiAkhir >= 80)  { $mutu = 'A-'; $ip = 3.75; }
-            elseif ($nilaiAkhir >= 75)  { $mutu = 'B+'; $ip = 3.5; }
-            elseif ($nilaiAkhir >= 70)  { $mutu = 'B';  $ip = 3; }
-            elseif ($nilaiAkhir >= 65)  { $mutu = 'C+'; $ip = 2.5; }
-            elseif ($nilaiAkhir >= 60)  { $mutu = 'C';  $ip = 2; }
-            elseif ($nilaiAkhir >= 50)  { $mutu = 'D';  $ip = 1; }
-            else                        { $mutu = 'E';  $ip = 0; }
-
-            Nilai::create([
-                'nidn'           => $nidn,
-                'nipd'           => $nipd,
-                'nama_mhs'       => $request->nama_mhs[$i],
-                'id_kelas'       => $request->id_kelas,
-                'kode_mk'        => $request->kode_mk,
-                'semester'       => $semester,
-                'periode'        => $periode,
-                'tahun_akademik' => $tahunAkademik,
-                'nilai_kehadiran'=> $request->nilai_kehadiran[$i],
-                'nilai_sikap'    => $request->nilai_sikap[$i],
-                'nilai_formatif' => $request->nilai_formatif[$i],
-                'nilai_tugas'    => $request->nilai_tugas[$i],
-                'nilai_uts'      => $request->nilai_uts[$i],
-                'nilai_uas'      => $request->nilai_uas[$i],
-                'nilai_akhir'    => round($nilaiAkhir, 2),
-                'mutu'           => $mutu,
-                'bobot_ip'       => $ip,
-            ]);
+        if ($nilaiKehadiran < 0) {
+            $nilaiKehadiran = 0;
         }
 
-        // 🔥 REDIRECT BENAR (BUKAN /nilai/store)
-        return redirect()
-    ->route('nilai.input', [
-        'id_kelas' => $request->id_kelas,
-        'kode_mk'  => $request->kode_mk,
-        'semester' => $request->semester
-    ])
-    ->with('success', 'Nilai berhasil disimpan');
 
+        /**
+         * ===============================
+         * NILAI AKHIR
+         * ===============================
+         */
+        $nilaiAkhir =
+            ($nilaiKehadiran                 * 0.05) +
+            ($request->nilai_sikap[$i]       * 0.05) +
+            ($request->nilai_tugas[$i]       * 0.15) +
+            ($request->nilai_formatif[$i]   * 0.20) +
+            ($request->nilai_uts[$i]         * 0.25) +
+            ($request->nilai_uas[$i]         * 0.30);
+
+        /**
+         * ===============================
+         *  KONVERSI MUTU
+         * ===============================
+         */
+        if ($nilaiAkhir >= 85)      { $mutu = 'A';  $ip = 4.00; }
+        elseif ($nilaiAkhir >= 80)  { $mutu = 'A-'; $ip = 3.60; }
+        elseif ($nilaiAkhir >= 75)  { $mutu = 'B+'; $ip = 3.30; }
+        elseif ($nilaiAkhir >= 70)  { $mutu = 'B';  $ip = 3.00; }
+        elseif ($nilaiAkhir >= 65)  { $mutu = 'B-'; $ip = 2.60; }
+        elseif ($nilaiAkhir >= 60)  { $mutu = 'C+'; $ip = 2.30; }
+        elseif ($nilaiAkhir >= 55)  { $mutu = 'C';  $ip = 2.00; }
+        elseif ($nilaiAkhir >= 50)  { $mutu = 'C-'; $ip = 1.60; }
+        elseif ($nilaiAkhir >= 45)  { $mutu = 'D';  $ip = 1.30; }
+        else                        { $mutu = 'E';  $ip = 1.00; }
+
+        Nilai::create([
+            'nidn'           => $nidn,
+            'nipd'           => $nipd,
+            'nama_mhs'       => $request->nama_mhs[$i],
+            'id_kelas'       => $request->id_kelas,
+            'kode_mk'        => $request->kode_mk,
+            'semester'       => $semester,
+            'periode'        => $periode,
+            'tahun_akademik' => $tahunAkademik,
+            'nilai_kehadiran'=> $nilaiKehadiran,
+            'nilai_sikap'    => $request->nilai_sikap[$i],
+            'nilai_tugas'    => $request->nilai_tugas[$i],
+            'nilai_formatif' => $request->nilai_formatif[$i],
+            'nilai_uts'      => $request->nilai_uts[$i],
+            'nilai_uas'      => $request->nilai_uas[$i],
+            'nilai_akhir'    => round($nilaiAkhir, 2),
+            'mutu'           => $mutu,
+            'bobot_ip'       => $ip,
+        ]);
     }
+
+    return redirect()
+        ->route('nilai.input', [
+            'id_kelas' => $request->id_kelas,
+            'kode_mk'  => $request->kode_mk,
+            'semester' => $semester
+        ])
+        ->with('success', 'Nilai berhasil disimpan');
+}
+
 
     public function view($id_kelas, $kode_mk, $semester)
 {
-    $nilai = \App\Models\Nilai::where('id_kelas', $id_kelas)
+    $nilai = Nilai::where('id_kelas', $id_kelas)
         ->where('kode_mk', $kode_mk)
         ->where('semester', $semester)
         ->get();
 
+    $matakuliah = Matakuliah::where('kode_mk', $kode_mk)->first();
+
     return view('admin.dosen.nilai.view', compact(
         'nilai',
+        'matakuliah',
         'id_kelas',
         'kode_mk',
         'semester'
     ));
 }
+
 
 public function edit($id_nilai)
 {
@@ -201,38 +267,40 @@ public function update(Request $request, $id_nilai)
     $request->validate([
         'nilai_kehadiran' => 'required|numeric|min:0|max:100',
         'nilai_sikap'     => 'required|numeric|min:0|max:100',
-        'nilai_formatif' => 'required|numeric|min:0|max:100',
         'nilai_tugas'    => 'required|numeric|min:0|max:100',
+        'nilai_formatif' => 'required|numeric|min:0|max:100',
         'nilai_uts'      => 'required|numeric|min:0|max:100',
         'nilai_uas'      => 'required|numeric|min:0|max:100',
     ]);
 
     $nilai = Nilai::findOrFail($id_nilai);
 
-    $bobot = BobotNilai::where('kode_mk', $nilai->kode_mk)->firstOrFail();
-
+    //  HITUNG NILAI AKHIR (FIX)
     $nilaiAkhir =
-        ($request->nilai_kehadiran * $bobot->kehadiran / 100) +
-        ($request->nilai_sikap     * $bobot->sikap / 100) +
-        ($request->nilai_formatif * $bobot->formatif / 100) +
-        ($request->nilai_tugas    * $bobot->tugas / 100) +
-        ($request->nilai_uts      * $bobot->uts / 100) +
-        ($request->nilai_uas      * $bobot->uas / 100);
+        ($request->nilai_kehadiran * 0.05) +
+        ($request->nilai_sikap     * 0.05) +
+        ($request->nilai_tugas    * 0.15) +
+        ($request->nilai_formatif * 0.20) +
+        ($request->nilai_uts      * 0.25) +
+        ($request->nilai_uas      * 0.30);
 
-    if ($nilaiAkhir >= 85)      { $mutu = 'A';  $ip = 4; }
-    elseif ($nilaiAkhir >= 80)  { $mutu = 'A-'; $ip = 3.75; }
-    elseif ($nilaiAkhir >= 75)  { $mutu = 'B+'; $ip = 3.5; }
-    elseif ($nilaiAkhir >= 70)  { $mutu = 'B';  $ip = 3; }
-    elseif ($nilaiAkhir >= 65)  { $mutu = 'C+'; $ip = 2.5; }
-    elseif ($nilaiAkhir >= 60)  { $mutu = 'C';  $ip = 2; }
-    elseif ($nilaiAkhir >= 50)  { $mutu = 'D';  $ip = 1; }
-    else                        { $mutu = 'E';  $ip = 0; }
+    //  KONVERSI MUTU
+    if ($nilaiAkhir >= 85)      { $mutu = 'A';  $ip = 4.00; }
+    elseif ($nilaiAkhir >= 80)  { $mutu = 'A-'; $ip = 3.60; }
+    elseif ($nilaiAkhir >= 75)  { $mutu = 'B+'; $ip = 3.30; }
+    elseif ($nilaiAkhir >= 70)  { $mutu = 'B';  $ip = 3.00; }
+    elseif ($nilaiAkhir >= 65)  { $mutu = 'B-'; $ip = 2.60; }
+    elseif ($nilaiAkhir >= 60)  { $mutu = 'C+'; $ip = 2.30; }
+    elseif ($nilaiAkhir >= 55)  { $mutu = 'C';  $ip = 2.00; }
+    elseif ($nilaiAkhir >= 50)  { $mutu = 'C-'; $ip = 1.60; }
+    elseif ($nilaiAkhir >= 45)  { $mutu = 'D';  $ip = 1.30; }
+    else                        { $mutu = 'E';  $ip = 1.00; }
 
     $nilai->update([
         'nilai_kehadiran'=> $request->nilai_kehadiran,
         'nilai_sikap'    => $request->nilai_sikap,
-        'nilai_formatif' => $request->nilai_formatif,
         'nilai_tugas'    => $request->nilai_tugas,
+        'nilai_formatif' => $request->nilai_formatif,
         'nilai_uts'      => $request->nilai_uts,
         'nilai_uas'      => $request->nilai_uas,
         'nilai_akhir'    => round($nilaiAkhir, 2),

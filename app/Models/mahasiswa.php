@@ -10,12 +10,12 @@ class Mahasiswa extends Model
     
 protected $fillable = [
     'nipd',
-    'nama',
+    'nama_mhs',
     'jenis_kelamin',
     'tempat_lahir',
     'tgl_lahir',
     'id_kelas',
-    'jurusan',
+    'bidang_keahlian',
     'email',
     'alamat',
     'agama',

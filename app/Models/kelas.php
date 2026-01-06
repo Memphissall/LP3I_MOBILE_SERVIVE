@@ -13,7 +13,7 @@ class Kelas extends Model
 
     protected $fillable = [
         'nama_kelas',
-        'jurusan',
+        'bidang_keahlian',
         'tahun_ajaran',
         'nama_pa'
 
@@ -28,4 +28,10 @@ class Kelas extends Model
             'kode_mk'
         );
     }
+
+    public function materi()
+{
+    return $this->hasMany(Materi::class, 'id_kelas', 'id_kelas');
+}
+
 }

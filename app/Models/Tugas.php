@@ -29,7 +29,7 @@ class Tugas extends Model
         'tanggal_upload' => 'datetime',
     ];
 
-    // ⬇️ TAMBAHKAN INI
+   
     public function isAktif()
     {
         return Carbon::now('Asia/Jakarta')->lessThanOrEqualTo($this->deadline);

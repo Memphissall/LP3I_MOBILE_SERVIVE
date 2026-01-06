@@ -12,7 +12,10 @@ use App\Http\Controllers\Admin\MahasiswaController;
 use App\Http\Controllers\Admin\BobotNilaiController;
 use App\Http\Controllers\ELecturer\TugasController;
 use App\Http\Controllers\ELecturer\NilaiController;
-
+use App\Http\Controllers\ELecturer\MateriController;
+use App\Http\Controllers\ELecturer\AbsensiLkmController;
+use App\Http\Controllers\ELecturer\DashboardController;
+use App\Http\Controllers\ELecturer\HonorController;
 
 
 // ==========================
@@ -36,13 +39,56 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])
 // ==========================
 Route::middleware(['auth'])->group(function () {
 
-    // Dashboard user
-    Route::get('/dashboard', fn() => view('dashboard'))
+    Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('user.dashboard');
-    
+
     // Jadwal dosen
     Route::get('/dosen/jadwal', [\App\Http\Controllers\ELecturer\JadwalController::class, 'index'])
         ->name('dosen.jadwal.index');
+
+    // ==========================================================
+    // BAGIAN FITUR ABSENSI & LKM DOSEN (DIPERBAIKI)
+    // ==========================================================
+    Route::prefix('dosen')->group(function () {
+        // 1. Halaman Pilih (Sudah Oke)
+        Route::get('/absen', [AbsensiLkmController::class, 'pilihKelasMK'])
+            ->name('dosen.absen');
+        // 2. get matakuliah
+       Route::get('/absensi/get-matkul',[AbsensiLkmController::class, 'getMatkulBySemester'])->name('absensi.getMatkul');
+
+        // 3. Halaman Input Absen Mahasiswa (TAMBAHKAN parameter {semester})
+        Route::get('/absensi/create/{id_kelas}/{kode_mk}/{semester}', [AbsensiLkmController::class, 'create'])
+            ->name('admin.dosen.absen.create');
+
+        // 4. Simpan Absen
+        Route::post('/absensi/store/{id_kelas}/{kode_mk}', [AbsensiLkmController::class, 'storeAbsen'])
+            ->name('admin.dosen.absen.store');
+
+        // 5. Halaman Form LKM (Tambahkan semester agar alur tidak putus)
+        Route::get('/lkm/form/{id_kelas}/{kode_mk}/{semester}', [AbsensiLkmController::class, 'createLkm'])
+            ->name('admin.dosen.lkm.form');
+
+        // 6. Simpan LKM
+        Route::post('/lkm/store/{id_kelas}/{kode_mk}', [AbsensiLkmController::class, 'storeLkm'])
+            ->name('dosen.lkm.store');
+
+        // 7. Riwayat LKM
+        Route::get('/absensi/list/{id_kelas}/{kode_mk}', [AbsensiLkmController::class, 'listLkm'])
+            ->name('dosen.lkm.list');
+
+        // --- FITUR BARU: ROUTE UNTUK EDIT LKM ---
+        Route::get('/lkm/edit/{id_kelas}/{kode_mk}/{id_pertemuan}', [AbsensiLkmController::class, 'editLkm'])
+            ->name('admin.dosen.lkm.edit');
+        
+        
+
+        // hapus lkm
+        Route::delete('/lkm/delete/{id_kelas}/{kode_mk}/{id_pertemuan}',[AbsensiLkmController::class, 'destroy'])->name('dosen.lkm.delete');
+
+        Route::get('/dosen/lkm/detail/{id_kelas}/{kode_mk}/{id_pertemuan}',[AbsensiLkmController::class, 'detailAbsensi'])->name('dosen.lkm.detail');
+
+    });
+
 
     // ==========================
     // FITUR TUGAS DOSEN
@@ -88,24 +134,24 @@ Route::middleware(['auth'])->group(function () {
             ->name('tugas.store');
         
         // Lihat submissi mahasiswa untuk tugas tertentu
-    Route::get('/tugas/{id_kelas}/{kode_mk}/submissi', [TugasController::class, 'lihatSubmissi'])
-            ->name('submissi.index');
+    
 
+    Route::get('/tugas/{id_kelas}/{kode_mk}/{tugas_id}/submissi', [TugasController::class, 'lihatSubmissi'])
+            ->name('submissi.index');
 
     });
 
     // Ajax get matkul
     
-
     // ==========================
 // CRUD NILAI DOSEN
 // ==========================
-Route::prefix('nilai')->group(function () {
+    Route::prefix('nilai')->group(function () {
 
     Route::get('/pilih', [NilaiController::class, 'index'])
         ->name('nilai.index');
 
-    // ✅ SATU-SATUNYA AJAX MATKUL
+    // AJAX MATKUL
     Route::get('/get-matkul', [NilaiController::class, 'getMatkulBySemester'])
         ->name('nilai.getMatkul');
 
@@ -132,6 +178,64 @@ Route::prefix('nilai')->group(function () {
         //ajak nilai
     Route::get('/ajax/view', [NilaiController::class, 'ajaxView'])
         ->name('nilai.ajax.view');
+});
+
+
+// ==========================
+// HONOR / GAJI DOSEN
+// ==========================
+Route::middleware(['auth'])->prefix('dosen')->group(function () {
+
+    Route::get(
+        '/honor/hitung/{semester}/{tahun}',
+        [HonorController::class, 'hitungGajiDosen']
+    )->name('dosen.honor.hitung');
+
+    Route::get(
+        '/honor/rekap/{semester}/{tahun}',
+        [HonorController::class, 'rekap']
+    )->name('dosen.honor.rekap');
+
+});
+
+
+
+// ==========================
+// FITUR MATERI DOSEN
+// ==========================
+Route::prefix('materi')->group(function () {
+
+    // Pilih kelas & matkul
+    Route::get('/pilih', [MateriController::class, 'pilihKelasMK'])
+        ->name('materi.pilih');
+
+    // Ajax get matkul by kelas
+    Route::post('/get-matkul', [MateriController::class, 'getMatkul'])
+        ->name('materi.getMatkul');
+
+    // EDIT (harus di atas)
+    Route::get('/{id}/edit', [MateriController::class, 'edit'])
+        ->name('materi.edit');
+
+    // UPDATE
+    Route::put('/{id}', [MateriController::class, 'update'])
+        ->name('materi.update');
+
+    // DELETE
+    Route::delete('/{id}', [MateriController::class, 'destroy'])
+        ->name('materi.destroy');
+
+    // LIST materi per kelas & mk
+    Route::get('/{id_kelas}/{kode_mk}', [MateriController::class, 'index'])
+        ->name('materi.index');
+
+    // FORM TAMBAH
+    Route::get('/{id_kelas}/{kode_mk}/tambah', [MateriController::class, 'create'])
+        ->name('materi.tambah');
+
+    // SIMPAN
+    Route::post('/{id_kelas}/{kode_mk}', [MateriController::class, 'store'])
+        ->name('materi.store');
 });
 
 

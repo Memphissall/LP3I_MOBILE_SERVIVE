@@ -12,7 +12,7 @@ return new class extends Migration {
     $table->string('nama_mk');
     $table->integer('sks');
     $table->integer('semester');
-    $table->boolean('tipe_matakuliah')->default(false); // true = umum
+    $table->boolean('tipe_matakuliah')->default(false);
     $table->timestamps();
 });
 

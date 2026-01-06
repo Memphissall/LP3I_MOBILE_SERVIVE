@@ -11,13 +11,13 @@ return new class extends Migration {
             $table->id();
 
             $table->string('nipd')->unique();
-            $table->string('nama');
+            $table->string('nama_mhs');
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
             $table->string('tempat_lahir');
             $table->date('tgl_lahir');
 
             $table->unsignedBigInteger('id_kelas');
-            $table->string('jurusan');
+            $table->string('bidang_keahlian');
             $table->string('email');
             $table->string('alamat');
             $table->string('agama');

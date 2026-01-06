@@ -103,8 +103,8 @@
                 <button type="button" class="close-edit-matkul-modal px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition">
                     Batal
                 </button>
-                <button type="submit" id="btn-update-matkul" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-                    Simpan Perubahan
+                <button type="submit" id="btn-update-matkul" class="px-4 py-2 bg-[#009DA5] text-white rounded-md hover:bg-[#00888f] transition shadow-sm">
+                    Simpan
                 </button>
             </div>
         </form>

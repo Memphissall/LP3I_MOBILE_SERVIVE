@@ -49,13 +49,20 @@ class KrsController extends Controller
 
         // Get kelas list for filter
         $kelasList = Kelas::with('bidangKeahlian')->get();
+        
+        // Get distinct tahun akademik from krs table
+        $tahunAkademikList = Krs::select('tahun_akademik')
+            ->distinct()
+            ->orderBy('tahun_akademik', 'desc')
+            ->pluck('tahun_akademik');
 
         return view('akademik.krs', compact(
             'mahasiswaList',
             'id_kelas',
             'semester',
             'tahun_akademik',
-            'kelasList'
+            'kelasList',
+            'tahunAkademikList'
         ));
     }
 

@@ -53,13 +53,21 @@ class KhsController extends Controller
 
         // Get kelas list for filter
         $kelasList = Kelas::with('bidangKeahlian')->get();
+        
+        // Get distinct tahun akademik from mahasiswa periode (same as angkatan logic)
+        $tahunAkademikList = Mahasiswa::select('periode')
+            ->whereNotNull('periode')
+            ->distinct()
+            ->orderBy('periode', 'desc')
+            ->pluck('periode');
 
         return view('akademik.khs', compact(
             'mahasiswaList',
             'id_kelas',
             'semester',
             'tahun_akademik',
-            'kelasList'
+            'kelasList',
+            'tahunAkademikList'
         ));
     }
 

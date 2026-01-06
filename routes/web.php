@@ -29,8 +29,11 @@ Route::get('/', function () {
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 
-// ROUTE LOGOUT
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+// ROUTE LOGOUT (POST method for form submission)
+Route::post('/logout', function () {
+    session()->flush();
+    return redirect()->route('login')->with('success', 'Logout berhasil!');
+})->name('logout');
 
 
 // =========================================================================
@@ -120,5 +123,13 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     // KRS API Routes
     Route::get('/api/krs/bidang-keahlian', [App\Http\Controllers\KrsController::class, 'getBidangKeahlianList'])->name('api.krs.bidang_keahlian');
     Route::get('/api/krs/matkul-filtered', [App\Http\Controllers\KrsController::class, 'getMataKuliahFiltered'])->name('api.krs.matkul_filtered');
+    
+    // Transkrip Nilai Routes
+    Route::get('/transkrip', [App\Http\Controllers\TranskripController::class, 'index'])->name('transkrip.index');
+    Route::get('/transkrip/print/{nipd}', [App\Http\Controllers\TranskripController::class, 'printStudent'])->name('transkrip.print.student');
+    Route::get('/transkrip/print-batch', [App\Http\Controllers\TranskripController::class, 'printBatch'])->name('transkrip.print.batch');
+    
+    // Pengumuman Routes
+    Route::resource('pengumuman', App\Http\Controllers\PengumumanController::class);
     
 });

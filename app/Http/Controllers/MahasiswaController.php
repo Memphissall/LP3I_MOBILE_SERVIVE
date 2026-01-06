@@ -175,17 +175,49 @@ class MahasiswaController extends Controller
         'nama' => 'required',
         'id_bidang_keahlian' => 'required',
         'angkatan' => 'required',
-        'id_kelas' => 'nullable' 
+        'id_kelas' => 'nullable',
+        'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        'jenis_kelamin' => 'nullable|in:L,P',
+        'tempat_lahir' => 'nullable|string',
+        'tgl_lahir' => 'nullable|date',
+        'agama' => 'nullable|string',
+        'email' => 'nullable|email',
+        'no_tlp' => 'nullable|string',
+        'alamat' => 'nullable|string',
+        'status' => 'nullable|string'
     ]);
 
-    // UPDATE SEMUA KOLOM TERMASUK KELAS
+    // UPDATE SEMUA KOLOM
     $mahasiswa->nama = $request->nama;
     $mahasiswa->nipd = $request->nipd; 
     $mahasiswa->id_bidang_keahlian = $request->id_bidang_keahlian;
     $mahasiswa->angkatan = $request->angkatan;
-    $mahasiswa->periode = $request->periode; // Jangan lupa periode juga ya
-    $mahasiswa->id_kelas = $request->id_kelas; 
+    $mahasiswa->periode = $request->periode;
+    $mahasiswa->id_kelas = $request->id_kelas;
     
+    // Personal data
+    $mahasiswa->jenis_kelamin = $request->jenis_kelamin;
+    $mahasiswa->tempat_lahir = $request->tempat_lahir;
+    $mahasiswa->tgl_lahir = $request->tgl_lahir;
+    $mahasiswa->agama = $request->agama;
+    $mahasiswa->email = $request->email;
+    $mahasiswa->no_tlp = $request->no_tlp;
+    $mahasiswa->alamat = $request->alamat;
+    $mahasiswa->status = $request->status;
+
+    // Handle foto upload
+    if ($request->hasFile('foto')) {
+        // Delete old foto if exists
+        if ($mahasiswa->foto && file_exists(public_path($mahasiswa->foto))) {
+            unlink(public_path($mahasiswa->foto));
+        }
+        
+        $file = $request->file('foto');
+        $filename = time() . '_' . $mahasiswa->nipd . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('uploads/mahasiswa'), $filename);
+        $mahasiswa->foto = 'uploads/mahasiswa/' . $filename;
+    }
+
     $mahasiswa->save();
 
     return response()->json([

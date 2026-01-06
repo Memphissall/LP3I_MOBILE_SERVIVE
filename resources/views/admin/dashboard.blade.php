@@ -1,206 +1,161 @@
 @extends('layouts.app')
 
-{{-- Menentukan Title untuk halaman ini --}}
-@section('title', 'Dashboard Staf Akademik') 
+@section('title', 'Dashboard Akademik')
 
-{{-- Bagian konten utama --}}
 @section('content')
-    <header class="flex justify-between items-center mb-6">
-        <div>
-            <p class="text-sm font-medium text-gray-500">
-                Selamat datang kembali, Bu Rina! 👋
-            </p>
-            <h1 class="text-3xl font-bold text-gray-900 mt-1">
-                Dashboard Staf Akademik
-            </h1>
-        </div>
-        {{-- Bagian Profil dan Notifikasi --}}
-        <div class="flex items-center space-x-4">
-            <i data-lucide="search" class="w-6 h-6 text-gray-500 cursor-pointer hover:text-blue-500"></i>
-            <i data-lucide="bell" class="w-6 h-6 text-gray-500 cursor-pointer hover:text-blue-500"></i>
-            <div class="flex items-center space-x-2 p-1.5 bg-gray-100 rounded-full cursor-pointer">
-                <img src="https://placehold.co/40x40/3b82f6/ffffff?text=RS" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover border-2 border-white">
-                <span class="font-semibold text-gray-800 hidden md:block pr-2">Bu Rina Sari (Staf)</span>
-            </div>
-        </div>
-    </header>
+    {{-- Welcome Header --}}
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-900">Dashboard Akademik</h2>
+        <p class="text-gray-600 mt-2">Selamat datang kembali di sistem E-Academic LP3I</p>
+    </div>
 
-    {{-- KONTEN GRID DASHBOARD --}}
-    <div class="dashboard-grid">
-        
-        {{-- Card 1: Aktivitas Mendatang --}}
-        <div class="card col-span-2 lg:col-span-1">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-700">Aktivitas Mendatang</h2>
-                <a href="#" class="text-sm font-medium text-blue-500 hover:text-blue-600">Lihat Kalender</a>
-            </div>
-            <div class="bg-blue-50 p-4 rounded-xl flex flex-col space-y-3">
-                <p class="text-sm text-blue-600 font-medium">
-                    <i data-lucide="users" class="w-4 h-4 inline-block mr-1"></i> Rapat Staf Akademik
-                </p>
-                <p class="text-xl font-bold text-gray-800">
-                    Senin, 20 Desember 2025
-                </p>
-                
-                <div class="flex items-center justify-between pt-2 border-t border-blue-200/50">
-                    <div class="flex items-center space-x-3">
-                        <div class="p-2 bg-white rounded-lg shadow-sm">
-                            <i data-lucide="bar-chart-3" class="w-6 h-6 text-gray-700"></i>
-                        </div>
-                        <div>
-                            <p class="text-base font-semibold text-gray-800">Evaluasi Akhir Semester</p>
-                            <p class="text-xs text-gray-500">Ruang Rapat Utama</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-lg font-bold text-gray-800">09:00 - 11:00 WIB</span>
-                    </div>
+    {{-- Statistics Cards --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {{-- Card Mahasiswa --}}
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#009DA5]">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">Total Mahasiswa</p>
+                    <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $stats['total_mahasiswa'] }}</h3>
+                    <p class="text-xs text-[#009DA5] mt-1">{{ $stats['mahasiswa_aktif'] }} Aktif</p>
+                </div>
+                <div class="bg-[#009DA5]/10 p-4 rounded-full">
+                    <x-heroicon-o-users class="w-8 h-8 text-[#009DA5]" />
                 </div>
             </div>
         </div>
 
-        {{-- Card 2: Status Penginputan Nilai Dosen --}}
-        <div class="card col-span-2 lg:col-span-1">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-700">Status Penginputan Nilai Dosen</h2>
-                <a href="#" class="text-sm font-medium text-blue-500 hover:text-blue-600">Lihat Semua Data</a>
+        {{-- Card Dosen --}}
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#004269]">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">Total Dosen</p>
+                    <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $stats['total_dosen'] }}</h3>
+                    <p class="text-xs text-[#004269] mt-1">{{ $stats['dosen_aktif'] }} Aktif</p>
+                </div>
+                <div class="bg-[#004269]/10 p-4 rounded-full">
+                    <x-heroicon-o-academic-cap class="w-8 h-8 text-[#004269]" />
+                </div>
+            </div>
+        </div>
+
+        {{-- Card Mata Kuliah --}}
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#F15B67]">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">Mata Kuliah</p>
+                    <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $stats['total_matkul'] }}</h3>
+                    <p class="text-xs text-[#F15B67] mt-1">Terdaftar</p>
+                </div>
+                <div class="bg-[#F15B67]/10 p-4 rounded-full">
+                    <x-heroicon-o-book-open class="w-8 h-8 text-[#F15B67]" />
+                </div>
+            </div>
+        </div>
+
+        {{-- Card Kelas --}}
+        <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#009DA5]">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">Total Kelas</p>
+                    <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $stats['total_kelas'] }}</h3>
+                    <p class="text-xs text-[#009DA5] mt-1">Tersedia</p>
+                </div>
+                <div class="bg-[#009DA5]/10 p-4 rounded-full">
+                    <x-heroicon-o-building-library class="w-8 h-8 text-[#009DA5]" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {{-- Recent Mahasiswa --}}
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">Mahasiswa Terbaru</h3>
+                <a href="{{ route('admin.mahasiswa.index') }}" class="text-sm text-[#009DA5] hover:text-[#007a81] font-medium">
+                    Lihat Semua →
+                </a>
             </div>
             <div class="space-y-4">
-                <div class="flex justify-between font-semibold text-gray-800">
-                    <span>Progres Nilai (Total 85 Mata Kuliah)</span>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-3 text-center">
-                    <div class="p-3 rounded-xl bg-green-50">
-                        <p class="text-2xl font-bold text-green-600">55</p>
-                        <p class="text-xs text-green-500 mt-1">Selesai (Finalized)</p>
+                @forelse($stats['recent_mahasiswa'] as $mhs)
+                    <div class="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#004269] to-[#009DA5] flex items-center justify-center text-white font-bold">
+                            {{ strtoupper(substr($mhs->nama, 0, 1)) }}
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-gray-900">{{ $mhs->nama }}</p>
+                            <p class="text-sm text-gray-500">{{ $mhs->nipd }} • {{ $mhs->data_kelas->nama_kelas ?? 'Belum ada kelas' }}</p>
+                        </div>
+                        <span class="text-xs px-2 py-1 rounded-full {{ $mhs->status == 'Aktif' ? 'bg-[#009DA5]/10 text-[#009DA5]' : 'bg-gray-100 text-gray-600' }}">
+                            {{ $mhs->status }}
+                        </span>
                     </div>
-                    <div class="p-3 rounded-xl bg-blue-50">
-                        <p class="text-2xl font-bold text-blue-600">20</p>
-                        <p class="text-xs text-blue-500 mt-1">Pending (Draft)</p>
-                    </div>
-                    <div class="p-3 rounded-xl bg-red-50">
-                        <p class="text-2xl font-bold text-red-600">10</p>
-                        <p class="text-xs text-red-500 mt-1">Belum Input</p>
-                    </div>
-                </div>
-
-                <div class="pt-4 space-y-2">
-                    <p class="text-sm font-medium text-gray-600">Rata-rata Progres Nilai</p>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-blue-500 h-2.5 rounded-full" style="width: 65%"></div>
-                    </div>
-                    <p class="text-sm text-gray-500 text-right">65% Nilai Telah Ditetapkan</p>
-                </div>
+                @empty
+                    <p class="text-gray-500 text-center py-4">Belum ada data mahasiswa</p>
+                @endforelse
             </div>
         </div>
-        
-        {{-- Card 3: Rekap Progres Input Nilai Dosen (Tabel) --}}
-        <div class="card col-span-3 lg:col-span-2">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-700">Rekap Progres Input Nilai Dosen</h2>
-                <a href="#" class="text-sm font-medium text-blue-500 hover:text-blue-600">Kirim Notifikasi Massal</a>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead>
-                        <tr class="text-xs font-semibold tracking-wider text-gray-500 uppercase bg-gray-50">
-                            <th class="px-3 py-3 text-left">#</th>
-                            <th class="px-3 py-3 text-left">Mata Kuliah</th>
-                            <th class="px-3 py-3 text-left">Dosen Pengampu</th>
-                            <th class="px-3 py-3 text-center">SKS</th>
-                            <th class="px-3 py-3 text-center">Tgl Deadline</th>
-                            <th class="px-3 py-3 text-center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-sm">
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-3 py-3 font-medium text-gray-900">1</td>
-                            <td class="px-3 py-3 font-medium text-blue-600">Pemrograman Web Dasar</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Dr. Alya Zahra</td>
-                            <td class="px-3 py-3 text-center">3</td>
-                            <td class="px-3 py-3 text-center">15 Des</td>
-                            <td class="px-3 py-3 text-center">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Finalized</span>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-3 py-3 font-medium text-gray-900">2</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Basis Data Lanjut</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Prof. Bima Sakti</td>
-                            <td class="px-3 py-3 text-center">4</td>
-                            <td class="px-3 py-3 text-center">15 Des</td>
-                            <td class="px-3 py-3 text-center">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Submitted</span>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-3 py-3 font-medium text-gray-900">3</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Struktur Data</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Dr. Candra Kirana</td>
-                            <td class="px-3 py-3 text-center">3</td>
-                            <td class="px-3 py-3 text-center">15 Des</td>
-                            <td class="px-3 py-3 text-center">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-3 py-3 font-medium text-gray-900">4</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Kewirausahaan IT</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Ms. Dewi Persada</td>
-                            <td class="px-3 py-3 text-center">2</td>
-                            <td class="px-3 py-3 text-center">15 Des</td>
-                            <td class="px-3 py-3 text-center">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Belum Input</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
-        {{-- Card 4: Ringkasan Statistik dan Reminder --}}
-        <div class="col-span-3 lg:col-span-1 flex flex-col space-y-4">
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div class="card p-4 bg-white text-center">
-                    <i data-lucide="alert-triangle" class="w-6 h-6 text-red-500 mx-auto mb-2"></i>
-                    <h3 class="text-3xl font-bold text-gray-800">10</h3>
-                    <p class="text-xs text-gray-500 mt-1">Input Nilai Tertunda (MK)</p>
-                </div>
 
-                <div class="card p-4 bg-white text-center">
-                    <i data-lucide="users-2" class="w-6 h-6 text-purple-500 mx-auto mb-2"></i>
-                    <h3 class="text-3xl font-bold text-gray-800">452</h3>
-                    <p class="text-xs text-gray-500 mt-1">Total Mahasiswa Aktif</p>
-                </div>
-
-                <div class="card p-4 bg-white text-center">
-                    <i data-lucide="file-warning" class="w-6 h-6 text-orange-500 mx-auto mb-2"></i>
-                    <h3 class="text-3xl font-bold text-gray-800">5</h3>
-                    <p class="text-xs text-gray-500 mt-1">Pengajuan Cuti/Pindah</p>
-                </div>
-                
-                <div class="card p-4 bg-white text-center">
-                    <i data-lucide="percent" class="w-6 h-6 text-sky-500 mx-auto mb-2"></i>
-                    <h3 class="text-3xl font-bold text-gray-800">65%</h3>
-                    <p class="text-xs text-gray-500 mt-1">Rata-rata Progres Nilai</p>
-                </div>
-            </div>
-
-            {{-- Card Reminder --}}
-            <div class="card p-6 reminder-card-bg text-white shadow-xl">
-                <h3 class="text-lg font-bold text-white mb-2">
-                    JANGAN LUPA!
-                </h3>
-                <p class="text-sm font-medium mb-4">
-                    Batas akhir input nilai Mahasiswa Semester Ganjil 2025/2026.
-                </p>
-                <a href="#" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg bg-white text-green-600 shadow-md hover:bg-gray-100 transition duration-150">
-                    <i data-lucide="log-in" class="w-4 h-4 mr-2"></i>
-                    Menuju Portal Nilai Dosen
+        {{-- Recent Dosen --}}
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">Dosen Terbaru</h3>
+                <a href="{{ route('admin.dosen.index') }}" class="text-sm text-[#009DA5] hover:text-[#007a81] font-medium">
+                    Lihat Semua →
                 </a>
+            </div>
+            <div class="space-y-4">
+                @forelse($stats['recent_dosen'] as $dosen)
+                    <div class="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#004269] to-[#009DA5] flex items-center justify-center text-white font-bold">
+                            {{ strtoupper(substr($dosen->nama_dosen, 0, 1)) }}
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-gray-900">{{ $dosen->nama_dosen }}</p>
+                            <p class="text-sm text-gray-500">NIDN: {{ $dosen->nidn }} • {{ $dosen->pendidikan }}</p>
+                        </div>
+                        <span class="text-xs px-2 py-1 rounded-full {{ strtolower($dosen->status) == 'aktif' ? 'bg-[#009DA5]/10 text-[#009DA5]' : 'bg-gray-100 text-gray-600' }}">
+                            {{ ucfirst($dosen->status) }}
+                        </span>
+                    </div>
+                @empty
+                    <p class="text-gray-500 text-center py-4">Belum ada data dosen</p>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    {{-- Additional Stats --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div class="bg-gradient-to-br from-[#004269] to-[#009DA5] rounded-xl shadow-sm p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-white/80 text-sm font-medium">Total KRS</p>
+                    <h3 class="text-3xl font-bold mt-2">{{ $stats['total_krs'] }}</h3>
+                    <p class="text-xs text-white/70 mt-1">Registrasi</p>
+                </div>
+                <x-heroicon-o-document-text class="w-12 h-12 text-white/30" />
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-[#F15B67] to-[#ff7682] rounded-xl shadow-sm p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-white/80 text-sm font-medium">Total Nilai</p>
+                    <h3 class="text-3xl font-bold mt-2">{{ $stats['total_nilai'] }}</h3>
+                    <p class="text-xs text-white/70 mt-1">Terdata</p>
+                </div>
+                <x-heroicon-o-clipboard-document-check class="w-12 h-12 text-white/30" />
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 border-2 border-dashed border-gray-300">
+            <div class="text-center">
+                <x-heroicon-o-chart-bar class="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                <p class="text-sm text-gray-600">Sistem Akademik</p>
+                <p class="text-2xl font-bold text-gray-900 mt-2">LP3I</p>
+                <p class="text-xs text-gray-500 mt-1">E-Academic Platform</p>
             </div>
         </div>
     </div>

@@ -2,175 +2,325 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>KRS - {{ $nipd }}</title>
+    <title>KRS - {{ $mahasiswa->nama }}</title>
     <style>
         @page {
             size: A4;
-            margin: 15mm;
+            margin: 20mm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
             font-family: Arial, sans-serif;
             font-size: 11pt;
-            margin: 0;
-            padding: 20px;
+            line-height: 1.4;
+            color: #000;
         }
         
+        .container {
+            width: 100%;
+            max-width: 210mm;
+            margin: 0 auto;
+        }
+        
+        /* Header Section */
         .header {
-            text-align: center;
+            display: flex;
+            align-items: flex-start;
             margin-bottom: 20px;
             border-bottom: 2px solid #000;
             padding-bottom: 10px;
         }
         
         .logo {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 5px;
+            width: 80px;
+            height: 80px;
+            margin-right: 15px;
         }
         
-        .title {
-            font-size: 16px;
+        .college-info {
+            flex: 1;
+        }
+        
+        .college-info h2 {
+            font-size: 16pt;
             font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .college-info p {
+            font-size: 9pt;
+            margin: 2px 0;
+        }
+        
+        .academic-year {
+            font-weight: bold;
+            font-size: 10pt;
             margin-top: 5px;
         }
         
-        .student-info {
+        /* Title */
+        .title {
+            text-align: center;
+            font-size: 14pt;
+            font-weight: bold;
             margin: 20px 0;
+            text-transform: uppercase;
+        }
+        
+        /* Student Info */
+        .student-info {
+            margin-bottom: 20px;
         }
         
         .student-info table {
             width: 100%;
+            border-collapse: collapse;
         }
         
         .student-info td {
             padding: 3px 0;
+            font-size: 10pt;
         }
         
-        .student-info .label {
+        .student-info td:first-child {
             width: 150px;
-            font-weight: normal;
+            font-weight: bold;
         }
         
-        .schedule-table {
+        .student-info td:nth-child(2) {
+            width: 10px;
+        }
+        
+        /* KRS Table */
+        .krs-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-bottom: 10px;
         }
         
-        .schedule-table th,
-        .schedule-table td {
+        .krs-table thead {
+            background-color: #808080;
+            color: white;
+        }
+        
+        .krs-table th,
+        .krs-table td {
             border: 1px solid #000;
             padding: 8px;
             text-align: left;
         }
         
-        .schedule-table th {
-            background-color: #f0f0f0;
+        .krs-table th {
             font-weight: bold;
             text-align: center;
             font-size: 10pt;
         }
         
-        .schedule-table td {
+        .krs-table td {
             font-size: 10pt;
         }
         
-        .semester-header {
-            background-color: #e0e0e0;
+        .krs-table tbody tr:nth-child(even) {
+            background-color: #d3d3d3;
+        }
+        
+        .krs-table tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+        
+        .col-no {
+            width: 40px;
+            text-align: center !important;
+        }
+        
+        .col-kode {
+            width: 100px;
+        }
+        
+        .col-matkul {
+            width: auto;
+        }
+        
+        .col-bk {
+            width: 60px;
+            text-align: center !important;
+        }
+        
+        .total-row {
             font-weight: bold;
-            padding: 8px;
+            background-color: #808080 !important;
+            color: white;
         }
         
-        .text-center {
-            text-align: center;
+        .total-row td {
+            text-align: right;
+            padding-right: 10px;
         }
         
-        .footer {
-            margin-top: 30px;
-            text-align: center;
+        /* Note */
+        .note {
             font-size: 9pt;
             font-style: italic;
+            margin: 15px 0;
+        }
+        
+        /* Signature Section */
+        .signature-section {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .signature-box {
+            width: 45%;
+        }
+        
+        .signature-box p {
+            margin: 3px 0;
+            font-size: 10pt;
+        }
+        
+        .signature-space {
+            height: 60px;
+            margin: 10px 0;
+        }
+        
+        .signature-name {
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            display: inline-block;
+            min-width: 200px;
+            text-align: center;
         }
         
         @media print {
-            button {
-                display: none !important;
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
             }
             
             .no-print {
-                display: none !important;
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <button onclick="window.print()" class="no-print" style="position: fixed; top: 10px; right: 10px; padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 5px; cursor: pointer; z-index: 1000;">
-        Print
-    </button>
-
-    <div class="header">
-        <div class="logo">[LP3I]</div>
-        <div style="font-size: 18px; font-weight: bold;">LP3I COLLEGE</div>
-        <div class="title">TEMPORARY STUDY PLAN CARD</div>
-    </div>
-
-    <div class="student-info">
-        <table>
-            <tr>
-                <td class="label">NIM :</td>
-                <td style="font-weight: bold;">{{ $mahasiswa->nipd }}</td>
-                <td style="width: 100px;">Class :</td>
-                <td style="font-weight: bold;">{{ $mahasiswa->data_kelas->nama_kelas ?? '-' }}-{{ $mahasiswa->data_kelas->bidangKeahlian->kode ?? '' }}</td>
-            </tr>
-            <tr>
-                <td class="label">Full Name :</td>
-                <td style="font-weight: bold;">{{ $mahasiswa->nama }}</td>
-                <td>Academic Counselors :</td>
-                <td style="font-weight: bold;">-</td>
-            </tr>
-        </table>
-    </div>
-
-    <table class="schedule-table">
-        <thead>
-            <tr>
-                <th rowspan="2">NO</th>
-                <th rowspan="2">COURSES CODE</th>
-                <th rowspan="2">COURSES</th>
-                <th rowspan="2">SKS</th>
-                <th colspan="4">SCHEDULE</th>
-            </tr>
-            <tr>
-                <th>DAY</th>
-                <th>TIME</th>
-                <th>CLASS</th>
-                <th>ROOM</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="8" class="semester-header">Semesters : {{ $semester }}</td>
-            </tr>
-            @foreach($krsList as $index => $krs)
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="10" width="80" height="80" fill="none" stroke="#000" stroke-width="3"/>
+                <text x="50" y="60" font-size="40" font-weight="bold" text-anchor="middle" fill="#000">LP3I</text>
+            </svg>
+            <div class="college-info">
+                <h2>LP3I COLLEGE</h2>
+                <p>Cabang Karawang : Jl. Tarumanegara, Komplek Karawang Hijau Blok B. 4-6, Kab. Karawang</p>
+                <p class="academic-year">TAHUN AKADEMIK {{ $tahun_akademik ?? '2024/2025' }}</p>
+            </div>
+        </div>
+        
+        <!-- Title -->
+        <div class="title">
+            KARTU RENCANA STUDI (KRS)
+        </div>
+        
+        <!-- Student Info -->
+        <div class="student-info">
+            <table>
                 <tr>
-                    <td class="text-center">{{ $loop->iteration }}</td>
-                    <td>{{ $krs->mataKuliah->kode_mk ?? '-' }}</td>
-                    <td>{{ $krs->mataKuliah->nama_mk ?? '-' }}</td>
-                    <td class="text-center">{{ $krs->mataKuliah->sks ?? '-' }}</td>
-                    <td class="text-center" colspan="4">-</td>
+                    <td>NIPD</td>
+                    <td>:</td>
+                    <td>{{ $mahasiswa->nipd }}</td>
                 </tr>
-            @endforeach
-            <tr>
-                <td colspan="3" style="text-align: right; font-weight: bold;">TOTAL SKS:</td>
-                <td class="text-center" style="font-weight: bold;">{{ $totalSKS }}</td>
-                <td colspan="4"></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="footer">
-        This Page is only temporary and for theyself (the student)
+                <tr>
+                    <td>NAMA LENGKAP</td>
+                    <td>:</td>
+                    <td>{{ $mahasiswa->nama }}</td>
+                </tr>
+                <tr>
+                    <td>SEMESTER</td>
+                    <td>:</td>
+                    <td>{{ $semester ? 'Ganjil ( ' . $semester . ' )' : '-' }}</td>
+                </tr>
+                <tr>
+                    <td>BIDANG KEAHLIAN</td>
+                    <td>:</td>
+                    <td>{{ $mahasiswa->data_kelas->bidangKeahlian->nama ?? '-' }}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- KRS Table -->
+        <table class="krs-table">
+            <thead>
+                <tr>
+                    <th class="col-no">NO</th>
+                    <th class="col-kode">KODE</th>
+                    <th class="col-matkul">MATERI AJAR</th>
+                    <th class="col-bk">BK</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $no = 1;
+                    $totalSks = 0;
+                @endphp
+                @forelse($krsList as $krs)
+                    <tr>
+                        <td class="col-no">{{ $no++ }}</td>
+                        <td class="col-kode">{{ $krs->mataKuliah->kode_mk ?? '-' }}</td>
+                        <td class="col-matkul">{{ $krs->mataKuliah->nama_mk ?? '-' }}</td>
+                        <td class="col-bk">{{ $krs->mataKuliah->sks ?? 0 }}</td>
+                    </tr>
+                    @php
+                        $totalSks += $krs->mataKuliah->sks ?? 0;
+                    @endphp
+                @empty
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 20px;">Tidak ada data KRS</td>
+                    </tr>
+                @endforelse
+                
+                <!-- Total Row -->
+                <tr class="total-row">
+                    <td colspan="3">TOTAL JUMLAH BK</td>
+                    <td class="col-bk">{{ $totalSks }}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Note -->
+        <div class="note">
+            Note : Waktu dan Tempat lihat jadwal di Sistem Informasi Akademik (e-student)
+        </div>
+        
+        <!-- Signature Section -->
+        <div class="signature-section">
+            <div class="signature-box">
+                <p>Pembimbing Akademik (PA)</p>
+                <div class="signature-space"></div>
+                <p class="signature-name">...................................</p>
+            </div>
+            <div class="signature-box" style="text-align: right;">
+                <p>Karawang, {{ date('d-M-Y') }}</p>
+                <p>PD yang bersangkutan,</p>
+                <div class="signature-space"></div>
+                <p class="signature-name">{{ $mahasiswa->nama }}</p>
+            </div>
+        </div>
     </div>
+    
+    <script>
+        window.onload = function() {
+            window.print();
+        }
+    </script>
 </body>
 </html>

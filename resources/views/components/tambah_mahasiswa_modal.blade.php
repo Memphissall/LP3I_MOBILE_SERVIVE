@@ -29,8 +29,8 @@
                 <div class="mt-6 flex justify-center">
                     <div class="flex items-center w-full max-w-xs">
                         <div class="flex items-center relative w-full">
-                            <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white bg-blue-600 transition-colors duration-300" id="step-indicator-1">1</div>
-                            <div class="absolute top-10 w-32 -ml-12 text-center text-xs font-semibold text-blue-600" id="step-label-1">Pilih Mahasiswa</div>
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white bg-[#004269] transition-colors duration-300" id="step-indicator-1">1</div>
+                            <div class="absolute top-10 w-32 -ml-12 text-center text-xs font-semibold text-[#004269]" id="step-label-1">Pilih Mahasiswa</div>
                             
                             <div class="flex-auto border-t-2 transition duration-500 ease-in-out border-gray-300" id="step-line-1"></div>
                             
@@ -75,7 +75,7 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            <input type="checkbox" id="select-all-students" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                            <input type="checkbox" id="select-all-students" class="rounded border-gray-300 text-[#004269] focus:ring-[#009DA5]">
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIPD</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
@@ -159,10 +159,10 @@
 
                 <!-- Footer -->
                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button type="button" id="btn-next" class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto">
+                    <button type="button" id="btn-next" class="inline-flex w-full justify-center rounded-md bg-[#004269] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#003350] sm:ml-3 sm:w-auto transition">
                         Lanjut (Step 2)
                     </button>
-                    <button type="submit" id="btn-submit" class="hidden inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto">
+                    <button type="submit" id="btn-submit" class="hidden inline-flex w-full justify-center rounded-md bg-[#009DA5] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#00888f] sm:ml-3 sm:w-auto transition">
                         Simpan Perubahan
                     </button>
                     <button type="button" id="btn-prev" class="hidden mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">

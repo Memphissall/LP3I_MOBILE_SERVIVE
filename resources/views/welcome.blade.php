@@ -35,16 +35,16 @@
             </h1>
             
             <div class="bg-blue-600/90 border-l-4 border-yellow-300 p-4 mb-8 max-w-xl rounded-lg shadow-xl">
-                <h2 class="text-2xl font-bold mb-2">E-Management</h2>
+                <h2 class="text-2xl font-bold mb-2">E-Academia</h2>
                 <p class="text-sm text-gray-100">
-                    E-Management merupakan aplikasi yang saling terintegrasi antara bidang *E-Management* di LP3I. E-Management berfungsi untuk melayani kebutuhan yang diperlukan oleh programmer, kepala akademik, dan tidak hanya di Mahasiswa, untuk kalangan civitas akademika (manajemen).
+                    E-Academia merupakan aplikasi yang saling terintegrasi antara bidang *E-Academia* di LP3I. E-Academia berfungsi untuk melayani kebutuhan yang diperlukan oleh programmer, kepala akademik, dan tidak hanya di Mahasiswa, untuk kalangan civitas akademika (manajemen).
                 </p>
                 <p class="text-xs font-semibold text-yellow-300 mt-2">
                     *Himbauan: Masuk untuk dapat melakukan update data user login melalui administrator cabang untuk meningkatkan keamanan akun, Terima Kasih.*
                 </p>
             </div>
             <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl">
-                Platform E-Management, E-Lecture, dan E-Student dalam satu kendali, mempermudah proses belajar mengajar dan administrasi kampus.
+                Platform E-Academia, E-Lecture, dan E-Student dalam satu kendali, mempermudah proses belajar mengajar dan administrasi kampus.
             </p>
 
         </div>
@@ -60,7 +60,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="p-6 border border-gray-200 rounded-xl shadow-lg hover:shadow-2xl transition duration-300">
                     <div class="text-4xl text-red-500 mb-4"><i class="fas fa-desktop"></i></div>
-                    <h3 class="text-xl font-semibold mb-3">E-Management (Akademik)</h3>
+                    <h3 class="text-xl font-semibold mb-3">E-Academia (Akademik)</h3>
                     <p class="text-gray-600">Fokus pada validasi data, kelola jadwal induk, data master (Dosen, Mahasiswa, Ruangan), dan pelaporan akhir.</p>
                 </div>
                 

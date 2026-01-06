@@ -143,7 +143,7 @@
                 <button type="button" class="close-edit-dosen-modal px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition">
                     Batal
                 </button>
-                <button type="submit" id="btn-update-dosen" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                <button type="submit" id="btn-update-dosen" class="px-4 py-2 bg-[#009DA5] text-white rounded-md hover:bg-[#00888f] transition shadow-sm">
                     Simpan Perubahan
                 </button>
             </div>

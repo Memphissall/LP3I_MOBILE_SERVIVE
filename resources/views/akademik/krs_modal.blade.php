@@ -2,7 +2,7 @@
 <div id="batch-add-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-4 border-b pb-4">
-            <h3 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+            <h3 class="text-xl font-bold text-[#004269]">
                 Tambah Paket KRS (Satu Kelas)
             </h3>
             <button id="close-batch-modal" class="text-gray-500 hover:text-gray-700">
@@ -12,8 +12,8 @@
             </button>
         </div>
 
-        <div class="mb-4 bg-blue-50 p-4 rounded-md">
-            <p class="text-sm text-blue-800">
+        <div class="mb-4 bg-[#004269]/10 p-4 rounded-md">
+            <p class="text-sm text-[#004269]">
                 <span class="font-bold">Info:</span> Mata kuliah yang dipilih akan ditambahkan ke KRS seluruh mahasiswa di kelas ini.
             </p>
         </div>
@@ -44,7 +44,7 @@
 
             <div class="mb-4">
                 <label class="flex items-center">
-                    <input type="checkbox" id="check-all" class="mr-2 rounded text-blue-600 focus:ring-blue-500">
+                    <input type="checkbox" id="check-all" class="mr-2 rounded text-[#004269] focus:ring-[#009DA5]">
                     <span class="font-bold text-gray-700">Pilih Semua Mata Kuliah</span>
                 </label>
             </div>
@@ -59,7 +59,7 @@
                 <button type="button" id="btn-cancel-batch" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
                     Batal
                 </button>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-bold shadow-lg">
+                <button type="submit" class="px-4 py-2 bg-[#009DA5] text-white rounded-md hover:bg-[#00888f] font-bold shadow-lg transition">
                     Simpan Paket KRS
                 </button>
             </div>
@@ -75,7 +75,7 @@ $(document).ready(function() {
     // Batch Add Modal
     $('#btn-batch-add').click(function() {
         if (!id_kelas) {
-            alert('Pilih kelas terlebih dahulu pada filter!');
+            Swal.fire({ icon: 'warning', title: 'Perhatian!', text: 'Pilih kelas terlebih dahulu pada filter!', confirmButtonColor: '#004269' });
             return;
         }
         $('#batch-add-modal').removeClass('hidden');
@@ -104,7 +104,7 @@ $(document).ready(function() {
                 });
             },
             error: function() {
-                alert('Gagal memuat bidang keahlian');
+                Swal.fire({ icon: 'error', title: 'Gagal!', text: 'Gagal memuat bidang keahlian', confirmButtonColor: '#004269' });
             }
         });
     }
@@ -155,13 +155,13 @@ $(document).ready(function() {
         mataKuliah.forEach(mk => {
             const row = $(`
                 <label class="flex items-center p-3 border rounded hover:bg-gray-50 cursor-pointer transition">
-                    <input type="checkbox" name="matkul_ids[]" value="${mk.id_matkul}" class="matkul-checkbox mr-3 h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
+                    <input type="checkbox" name="matkul_ids[]" value="${mk.id_matkul}" class="matkul-checkbox mr-3 h-5 w-5 text-[#004269] rounded focus:ring-[#009DA5]">
                     <div class="flex-1">
                         <div class="font-bold text-gray-800">${mk.kode_mk} - ${mk.nama_mk}</div>
                         <div class="text-xs text-gray-500 mt-1">
-                            <span class="mr-4">📚 SKS: ${mk.sks}</span>
-                            <span class="mr-4">📖 Semester: ${mk.semester}</span>
-                            <span>📌 Bobot: ${mk.bobot_kompetensi || '-'}</span>
+                            <span class="mr-4">SKS: ${mk.sks}</span>
+                            <span class="mr-4">Semester: ${mk.semester}</span>
+                            <span>Bobot: ${mk.bobot_kompetensi || '-'}</span>
                         </div>
                     </div>
                 </label>
@@ -175,7 +175,7 @@ $(document).ready(function() {
         e.preventDefault();
         
         if ($('.matkul-checkbox:checked').length === 0) {
-            alert('Pilih minimal satu mata kuliah!');
+            Swal.fire({ icon: 'warning', title: 'Perhatian!', text: 'Pilih minimal satu mata kuliah!', confirmButtonColor: '#004269' });
             return;
         }
 
@@ -190,11 +190,24 @@ $(document).ready(function() {
             method: 'POST',
             data: formData,
             success: function(response) {
-                alert(response.message);
-                location.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: response.message || 'Data KRS berhasil disimpan!',
+                    confirmButtonColor: '#004269',
+                    timer: 2000,
+                    timerProgressBar: true
+                }).then(() => {
+                    location.reload();
+                });
             },
             error: function(xhr) {
-                alert('Error: ' + (xhr.responseJSON?.error || xhr.responseText));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: xhr.responseJSON?.error || xhr.responseText || 'Terjadi kesalahan',
+                    confirmButtonColor: '#004269'
+                });
                 btn.prop('disabled', false).text(originalText);
             }
         });

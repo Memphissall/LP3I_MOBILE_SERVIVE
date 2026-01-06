@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>KRS Batch Print</title>
+    <title>Transkrip Nilai - {{ $mahasiswa->nama }}</title>
     <style>
         @page {
             size: A4;
@@ -17,13 +17,9 @@
         
         body {
             font-family: Arial, sans-serif;
-            font-size: 11pt;
+            font-size: 10pt;
             line-height: 1.4;
             color: #000;
-        }
-        
-        .page-break {
-            page-break-after: always;
         }
         
         .container {
@@ -42,8 +38,8 @@
         }
         
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             margin-right: 15px;
         }
         
@@ -52,34 +48,34 @@
         }
         
         .college-info h2 {
-            font-size: 16pt;
+            font-size: 14pt;
             font-weight: bold;
             margin-bottom: 3px;
         }
         
         .college-info p {
-            font-size: 9pt;
+            font-size: 8pt;
             margin: 2px 0;
         }
         
         .academic-year {
             font-weight: bold;
-            font-size: 10pt;
+            font-size: 9pt;
             margin-top: 5px;
         }
         
         /* Title */
         .title {
             text-align: center;
-            font-size: 14pt;
+            font-size: 12pt;
             font-weight: bold;
-            margin: 20px 0;
+            margin: 15px 0;
             text-transform: uppercase;
         }
         
         /* Student Info */
         .student-info {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         .student-info table {
@@ -88,12 +84,12 @@
         }
         
         .student-info td {
-            padding: 3px 0;
-            font-size: 10pt;
+            padding: 2px 0;
+            font-size: 9pt;
         }
         
         .student-info td:first-child {
-            width: 150px;
+            width: 130px;
             font-weight: bold;
         }
         
@@ -101,82 +97,90 @@
             width: 10px;
         }
         
-        /* KRS Table */
-        .krs-table {
+        /* Transcript Table */
+        .transkrip-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
-        .krs-table thead {
+        .transkrip-table thead {
             background-color: #808080;
             color: white;
         }
         
-        .krs-table th,
-        .krs-table td {
+        .transkrip-table th,
+        .transkrip-table td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 6px;
             text-align: left;
         }
         
-        .krs-table th {
+        .transkrip-table th {
             font-weight: bold;
             text-align: center;
-            font-size: 10pt;
+            font-size: 9pt;
         }
         
-        .krs-table td {
-            font-size: 10pt;
+        .transkrip-table td {
+            font-size: 9pt;
         }
         
-        .krs-table tbody tr:nth-child(even) {
+        .semester-header {
             background-color: #d3d3d3;
-        }
-        
-        .krs-table tbody tr:nth-child(odd) {
-            background-color: #ffffff;
+            font-weight: bold;
+            font-size: 9pt;
         }
         
         .col-no {
-            width: 40px;
+            width: 30px;
             text-align: center !important;
         }
         
         .col-kode {
-            width: 100px;
+            width: 80px;
         }
         
         .col-matkul {
             width: auto;
         }
         
-        .col-bk {
-            width: 60px;
+        .col-sks {
+            width: 40px;
             text-align: center !important;
         }
         
-        .total-row {
-            font-weight: bold;
-            background-color: #808080 !important;
-            color: white;
+        .col-nilai {
+            width: 50px;
+            text-align: center !important;
         }
         
-        .total-row td {
-            text-align: right;
-            padding-right: 10px;
+        .col-mutu {
+            width: 40px;
+            text-align: center !important;
+        }
+        
+        .semester-summary {
+            font-weight: bold;
+            background-color: #e8e8e8;
+        }
+        
+        .grand-total {
+            font-weight: bold;
+            background-color: #808080;
+            color: white;
         }
         
         /* Note */
         .note {
-            font-size: 9pt;
+            font-size: 8pt;
             font-style: italic;
-            margin: 15px 0;
+            margin: 10px 0;
         }
         
         /* Signature Section */
         .signature-section {
-            margin-top: 40px;
+            margin-top: 30px;
             display: flex;
             justify-content: space-between;
         }
@@ -187,11 +191,11 @@
         
         .signature-box p {
             margin: 3px 0;
-            font-size: 10pt;
+            font-size: 9pt;
         }
         
         .signature-space {
-            height: 60px;
+            height: 50px;
             margin: 10px 0;
         }
         
@@ -199,7 +203,7 @@
             font-weight: bold;
             border-bottom: 1px solid #000;
             display: inline-block;
-            min-width: 200px;
+            min-width: 180px;
             text-align: center;
         }
         
@@ -216,8 +220,7 @@
     </style>
 </head>
 <body>
-    @foreach($batchData as $data)
-    <div class="container {{ !$loop->last ? 'page-break' : '' }}">
+    <div class="container">
         <!-- Header -->
         <div class="header">
             <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -227,13 +230,13 @@
             <div class="college-info">
                 <h2>LP3I COLLEGE</h2>
                 <p>Cabang Karawang : Jl. Tarumanegara, Komplek Karawang Hijau Blok B. 4-6, Kab. Karawang</p>
-                <p class="academic-year">TAHUN AKADEMIK {{ $tahun_akademik ?? '2024/2025' }}</p>
+                <p class="academic-year">TRANSKRIP NILAI AKADEMIK</p>
             </div>
         </div>
         
         <!-- Title -->
         <div class="title">
-            KARTU RENCANA STUDI (KRS)
+            TRANSKRIP NILAI
         </div>
         
         <!-- Student Info -->
@@ -242,82 +245,86 @@
                 <tr>
                     <td>NIPD</td>
                     <td>:</td>
-                    <td>{{ $data['mahasiswa']->nipd }}</td>
+                    <td>{{ $mahasiswa->nipd }}</td>
                 </tr>
                 <tr>
                     <td>NAMA LENGKAP</td>
                     <td>:</td>
-                    <td>{{ $data['mahasiswa']->nama }}</td>
-                </tr>
-                <tr>
-                    <td>SEMESTER</td>
-                    <td>:</td>
-                    <td>{{ $semester ? 'Ganjil ( ' . $semester . ' )' : '-' }}</td>
+                    <td>{{ $mahasiswa->nama }}</td>
                 </tr>
                 <tr>
                     <td>BIDANG KEAHLIAN</td>
                     <td>:</td>
-                    <td>{{ $data['mahasiswa']->data_kelas->bidangKeahlian->nama ?? '-' }}</td>
+                    <td>{{ $mahasiswa->data_kelas->bidangKeahlian->nama ?? '-' }}</td>
                 </tr>
             </table>
         </div>
         
-        <!-- KRS Table -->
-        <table class="krs-table">
+        <!-- Transcript Table -->
+        <table class="transkrip-table">
             <thead>
                 <tr>
                     <th class="col-no">NO</th>
-                    <th class="col-kode">KODE</th>
-                    <th class="col-matkul">MATERI AJAR</th>
-                    <th class="col-bk">BK</th>
+                    <th class="col-kode">KODE MK</th>
+                    <th class="col-matkul">MATA KULIAH</th>
+                    <th class="col-sks">SKS</th>
+                    <th class="col-nilai">NILAI</th>
+                    <th class="col-mutu">MUTU</th>
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $no = 1;
-                @endphp
-                @forelse($data['krsList'] as $krs)
-                    <tr>
-                        <td class="col-no">{{ $no++ }}</td>
-                        <td class="col-kode">{{ $krs->mataKuliah->kode_mk ?? '-' }}</td>
-                        <td class="col-matkul">{{ $krs->mataKuliah->nama_mk ?? '-' }}</td>
-                        <td class="col-bk">{{ $krs->mataKuliah->sks ?? 0 }}</td>
+                @php $globalNo = 1; @endphp
+                @foreach($semesterData as $semester => $nilaiList)
+                    <tr class="semester-header">
+                        <td colspan="6">SEMESTER {{ $semester }}</td>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" style="text-align: center; padding: 20px;">Tidak ada data KRS</td>
+                    @foreach($nilaiList as $nilai)
+                        <tr>
+                            <td class="col-no">{{ $globalNo++ }}</td>
+                            <td class="col-kode">{{ $nilai->mataKuliah->kode_mk ?? '-' }}</td>
+                            <td class="col-matkul">{{ $nilai->mataKuliah->nama_mk ?? '-' }}</td>
+                            <td class="col-sks">{{ $nilai->mataKuliah->sks ?? 0 }}</td>
+                            <td class="col-nilai">{{ number_format($nilai->nilai_akhir ?? 0, 0) }}</td>
+                            <td class="col-mutu">{{ $nilai->mutu ?? '-' }}</td>
+                        </tr>
+                    @endforeach
+                    <tr class="semester-summary">
+                        <td colspan="3" style="text-align: right; padding-right: 10px;">Total SKS Semester {{ $semester }}</td>
+                        <td class="col-sks">{{ $ipsPerSemester[$semester]['sks'] }}</td>
+                        <td colspan="2">IPS: {{ number_format($ipsPerSemester[$semester]['value'], 2) }}</td>
                     </tr>
-                @endforelse
+                @endforeach
                 
-                <!-- Total Row -->
-                <tr class="total-row">
-                    <td colspan="3">TOTAL JUMLAH BK</td>
-                    <td class="col-bk">{{ $data['totalSKS'] ?? 0 }}</td>
+                <!-- Grand Total -->
+                <tr class="grand-total">
+                    <td colspan="3" style="text-align: right; padding-right: 10px;">TOTAL SKS KUMULATIF</td>
+                    <td class="col-sks">{{ $totalSksKumulatif }}</td>
+                    <td colspan="2">IPK: {{ number_format($ipk, 2) }}</td>
                 </tr>
             </tbody>
         </table>
         
         <!-- Note -->
         <div class="note">
-            Note : Waktu dan Tempat lihat jadwal di Sistem Informasi Akademik (e-student)
+            Note : Transkrip nilai ini adalah dokumen resmi akademik mahasiswa
         </div>
         
         <!-- Signature Section -->
         <div class="signature-section">
             <div class="signature-box">
-                <p>Pembimbing Akademik (PA)</p>
+                <p>Karawang, {{ date('d-M-Y') }}</p>
+                <p>Direktur LP3I Karawang,</p>
                 <div class="signature-space"></div>
                 <p class="signature-name">...................................</p>
             </div>
             <div class="signature-box" style="text-align: right;">
-                <p>Karawang, {{ date('d-M-Y') }}</p>
-                <p>PD yang bersangkutan,</p>
+                <p>&nbsp;</p>
+                <p>Mahasiswa,</p>
                 <div class="signature-space"></div>
-                <p class="signature-name">{{ $data['mahasiswa']->nama }}</p>
+                <p class="signature-name">{{ $mahasiswa->nama }}</p>
             </div>
         </div>
     </div>
-    @endforeach
     
     <script>
         window.onload = function() {

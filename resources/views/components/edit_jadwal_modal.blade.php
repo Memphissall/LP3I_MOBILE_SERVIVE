@@ -20,7 +20,7 @@
 
                     {{-- CASCADING SECTION 1: Bidang Keahlian --}}
                     <div>
-                        <label for="edit-bidang-keahlian" class="block text-sm font-medium text-gray-700">Bidang Keahlian (Prodi) *</label>
+                        <label for="edit-bidang-keahlian" class="block text-sm font-medium text-gray-700">Bidang Keahlian *</label>
                         <select id="edit-bidang-keahlian" name="bidang_keahlian_filter" required 
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                             <option value="">-- Pilih Bidang Keahlian --</option>

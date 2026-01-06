@@ -5,86 +5,142 @@
 @section('content')
 
 <div class="p-6">
-    {{-- Header & Tombol Tambah --}}
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Kelola Mata Kuliah</h1>
-        {{-- Tombol Tambah: Viridian Green (#009DA5) --}}
-        <button id="btn-open-tambah-matkul-modal" class="bg-[#009DA5] hover:bg-[#00888f] text-white px-6 py-2 rounded-lg flex items-center shadow-md transition font-semibold">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Tambah Mata Kuliah
-        </button>
+    {{-- Header Page --}}
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Mata Kuliah</h1>
+            <p class="text-sm text-gray-500 mt-1">Manajemen kurikulum, bobot SKS, dan SAP pembelajaran.</p>
+        </div>
     </div>
 
-    {{-- FILTER SECTION --}}
-    <div class="bg-white p-6 rounded-xl shadow-lg mb-6 border-t-4 border-[#004269]"> {{-- Border atas Indigo Dye --}}
-        <h2 class="text-lg font-semibold text-[#004269] mb-4">Filter Data</h2>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="flex flex-col space-y-1">
-                <label for="filter-bidang-keahlian" class="text-sm font-medium text-gray-600">Bidang Keahlian</label>
-                <select id="filter-bidang-keahlian" class="p-2 border rounded-lg outline-none text-sm text-gray-700 bg-gray-50 focus:border-[#009DA5] focus:ring-1 focus:ring-[#009DA5]">
-                    <option value="all">Semua Bidang Keahlian</option>
-                    {{-- Populated by JS --}}
-                </select>
-            </div>
-            
-            <div class="flex flex-col space-y-1">
-                <label for="filter-semester" class="text-sm font-medium text-gray-600">Semester</label>
-                <select id="filter-semester" class="p-2 border rounded-lg outline-none text-sm text-gray-700 bg-gray-50 focus:border-[#009DA5] focus:ring-1 focus:ring-[#009DA5]">
-                    <option value="Semua Semester">Semua Semester</option>
-                    <option value="1">Semester 1</option>
-                    <option value="2">Semester 2</option>
-                    <option value="3">Semester 3</option>
-                    <option value="4">Semester 4</option>
-                    <option value="5">Semester 5</option>
-                    <option value="6">Semester 6</option>
-                    <option value="7">Semester 7</option>
-                    <option value="8">Semester 8</option>
-                </select>
+    {{-- 1. Container Filter Utama (REMASTERED) --}}
+    <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 mb-8 overflow-hidden relative border border-gray-100">
+        {{-- Decorative Top Bar --}}
+        <div class="h-1.5 w-full bg-gradient-to-r from-[#004269] via-[#00536e] to-[#009DA5]"></div>
+
+        <div class="p-6 md:p-8">
+            {{-- Header Filter --}}
+            <div class="flex items-center space-x-3 mb-6 border-b border-gray-100 pb-4">
+                <div class="bg-[#004269]/10 p-2.5 rounded-xl text-[#004269]">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-800">Filter Data</h2>
+                    <p class="text-xs text-gray-400 font-medium">Cari mata kuliah berdasarkan kriteria</p>
+                </div>
             </div>
 
-            <div class="flex items-end">
-                {{-- Tombol Tampilkan: Indigo Dye --}}
-                <button id="btn-filter" class="w-full px-4 py-2 bg-[#004269] hover:bg-[#003350] text-white rounded-lg transition font-semibold shadow-md flex items-center justify-center">
-                    <x-heroicon-o-magnifying-glass class="w-4 h-4 mr-2" />
-                    Tampilkan Data
-                </button>
+            {{-- Grid Input --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                {{-- Filter Bidang Keahlian --}}
+                <div class="group">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center">
+                        <svg class="w-4 h-4 mr-1.5 text-[#009DA5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                        Bidang Keahlian
+                    </label>
+                    <div class="relative">
+                        <select id="filter-bidang-keahlian" class="w-full p-3 pl-4 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-[#009DA5] focus:ring-4 focus:ring-[#009DA5]/10 transition-all duration-200 appearance-none cursor-pointer hover:border-gray-300">
+                            <option value="all">Semua Bidang Keahlian</option>
+                            {{-- Populated by JS --}}
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-400 group-hover:text-[#004269] transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                    </div>
+                </div>
+                
+                {{-- Filter Semester --}}
+                <div class="group">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center">
+                        <svg class="w-4 h-4 mr-1.5 text-[#009DA5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        Semester
+                    </label>
+                    <div class="relative">
+                        <select id="filter-semester" class="w-full p-3 pl-4 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-[#009DA5] focus:ring-4 focus:ring-[#009DA5]/10 transition-all duration-200 appearance-none cursor-pointer hover:border-gray-300">
+                            <option value="Semua Semester">Semua Semester</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
+                            <option value="5">Semester 5</option>
+                            <option value="6">Semester 6</option>
+                            <option value="7">Semester 7</option>
+                            <option value="8">Semester 8</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-400 group-hover:text-[#004269] transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Action Button --}}
+                <div class="flex items-end">
+                    <button id="btn-filter" class="w-full relative overflow-hidden group bg-[#004269] hover:bg-[#003350] text-white py-3 rounded-xl font-bold transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,66,105,0.39)] hover:shadow-[0_6px_20px_rgba(0,66,105,0.23)] hover:-translate-y-1 active:translate-y-0 flex items-center justify-center">
+                        <span class="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+                        <svg class="w-5 h-5 mr-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        Tampilkan Data
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    {{-- TABLE SECTION --}}
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 mb-6">
-        {{-- Header Tabel: Indigo Dye (#004269) --}}
-        <div class="p-4 border-b flex justify-between items-center bg-[#004269]">
-            <h3 class="font-bold text-white">Daftar Mata Kuliah (<span id="matkul-count">0</span> data)</h3>
+    {{-- 2. TABLE SECTION (COMPACT & BOLD) --}}
+    <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 overflow-hidden mb-6 border border-gray-100">
+        {{-- Header Tabel with Gradient --}}
+        <div class="p-5 border-b bg-gradient-to-r from-[#004269] to-[#009DA5]">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white tracking-wide">Daftar Mata Kuliah <span class="bg-white/20 px-2 py-0.5 rounded text-sm font-mono ml-2" id="matkul-count">0</span></h3>
+                </div>
+
+                {{-- BUTTON GROUP --}}
+                <div class="flex space-x-3">
+                    <button id="btn-open-tambah-matkul-modal" class="bg-white text-[#004269] px-4 py-2 rounded-lg font-bold hover:bg-gray-50 transition-all duration-200 shadow-lg shadow-black/10 flex items-center transform hover:scale-105 active:scale-95 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Tambah Data
+                    </button>
+                </div>
+            </div>
         </div>
         
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        {{-- Text Header: Indigo Dye --}}
-                        <th class="px-6 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[120px]">Kode MK</th>
-                        <th class="px-6 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[300px]">Nama Mata Kuliah</th>
-                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[80px]">SKS</th>
-                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px]">Bobot</th>
-                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px]">Semester</th>
-                        <th class="px-6 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[180px]">Bidang Keahlian</th>
-                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[80px]">SAP</th>
-                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px]">Aksi</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-12 border-b-2 border-gray-200">No</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[120px] border-b-2 border-gray-200">Kode MK</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[250px] border-b-2 border-gray-200">Nama Mata Kuliah</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[80px] border-b-2 border-gray-200">SKS</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Bobot</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Semester</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[180px] border-b-2 border-gray-200">Bidang Keahlian</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">SAP</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200 text-sm" id="matkul-table-body">
-                    <tr><td colspan="8" class="px-6 py-10 text-center text-gray-500 italic">Click "Tampilkan Data"...</td></tr>
+                <tbody class="bg-white divide-y divide-gray-100 text-sm" id="matkul-table-body">
+                    <tr>
+                        <td colspan="9" class="px-6 py-10 text-center text-gray-500 italic">
+                             <div class="flex flex-col items-center justify-center">
+                                <span class="text-sm font-medium text-gray-400">Silakan klik tombol "Tampilkan Data" untuk memuat.</span>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-            <div id="no-data-message" class="text-center py-10 text-[#FF0000] italic hidden">
-                <p>Tidak ada mata kuliah yang sesuai dengan filter.</p>
-            </div>
+        </div>
+        <div class="bg-gray-50 px-6 py-3 border-t border-gray-100 flex justify-between items-center">
+            <span class="text-xs text-gray-500 font-medium">Menampilkan data mata kuliah aktif.</span>
         </div>
     </div>
 </div>
@@ -145,52 +201,83 @@ $(document).ready(function() {
         const id_bidang_keahlian = $('#filter-bidang-keahlian').val();
         const semester = $('#filter-semester').val();
 
+        const $tbody = $('#matkul-table-body');
+        
+        // Loading State
+        $tbody.html('<tr><td colspan="9" class="px-6 py-16 text-center"><div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-[#004269] transition ease-in-out duration-150 cursor-not-allowed"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Sedang memuat data...</div></td></tr>');
+        $('#btn-filter').prop('disabled', true).addClass('opacity-75');
+
         $.ajax({
             url: "{{ route('admin.api.matkul.list') }}",
             method: 'GET',
             data: { id_bidang_keahlian, semester },
             success: function(data) {
-                const $tbody = $('#matkul-table-body');
                 $tbody.empty();
 
                 if (data.length === 0) {
-                    $('#no-data-message').removeClass('hidden').show();
-                    $tbody.closest('table').addClass('hidden');
+                     // Empty State
+                     const emptyHtml = `
+                    <tr>
+                        <td colspan="9" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center justify-center">
+                                <div class="bg-gray-50 rounded-full p-6 mb-4">
+                                    <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                                </div>
+                                <h3 class="text-lg font-medium text-gray-900">Data Mata Kuliah Kosong</h3>
+                                <p class="text-gray-500 mt-1">Coba sesuaikan filter pencarian Anda.</p>
+                            </div>
+                        </td>
+                    </tr>`;
+                    $tbody.html(emptyHtml);
                 } else {
-                    $('#no-data-message').addClass('hidden').hide();
-                    $tbody.closest('table').removeClass('hidden');
-                    
-                    data.forEach(mk => {
+                    data.forEach((mk, index) => {
                         const bidangKeahlianNama = mk.bidang_keahlian ? mk.bidang_keahlian.nama : '-';
                         
-                        // SAP Badge: Menggunakan style Indigo Dye soft agar terlihat formal
+                        // SAP Badge
                         const sapCell = mk.sap 
-                            ? `<a href="/${mk.sap}" target="_blank" class="inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full bg-[#004269]/10 text-[#004269] hover:bg-[#004269] hover:text-white transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-1">
+                            ? `<a href="/${mk.sap}" target="_blank" class="inline-flex items-center px-2 py-1 text-[10px] font-bold rounded-lg bg-[#004269]/10 text-[#004269] hover:bg-[#004269] hover:text-white transition uppercase tracking-wide border border-[#004269]/20">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="mr-1">
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                     <polyline points="14 2 14 8 20 8"></polyline>
                                 </svg>
-                                Lihat
+                                FILE SAP
                                </a>`
-                            : '<span class="text-gray-400 text-xs">-</span>';
+                            : `<span class="inline-flex items-center px-2 py-1 text-[10px] font-bold rounded-lg bg-gray-100 text-gray-400 uppercase tracking-wide border border-gray-200">
+                                No File
+                               </span>`;
                         
                         const row = `
-                            <tr class="hover:bg-gray-50 transition border-b">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">${mk.kode_mk}</td>
-                                <td class="px-6 py-4 text-sm font-bold text-gray-900">${mk.nama_mk}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">${mk.sks}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">${mk.bobot_kompetensi}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-700">${mk.semester}</td>
-                                <td class="px-6 py-4 text-sm text-gray-700">${bidangKeahlianNama}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-center">${sapCell}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
-                                    <div class="flex justify-center space-x-2">
-                                        {{-- Tombol Edit: Viridian Green (#009DA5) --}}
-                                        <button data-id="${mk.id_matkul}" class="btn-edit-matkul p-2 bg-[#009DA5]/10 text-[#009DA5] rounded-full hover:bg-[#009DA5] hover:text-white transition shadow-sm">
+                            <tr class="hover:bg-gray-50 transition-colors duration-200 group border-b border-gray-100 last:border-b-0">
+                                <td class="px-3 py-3 text-center font-bold text-gray-500">
+                                    ${index + 1}
+                                </td>
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    <span class="font-mono text-xs text-[#004269] font-bold bg-[#004269]/5 px-1.5 py-0.5 rounded border border-[#004269]/10">${mk.kode_mk}</span>
+                                </td>
+                                <td class="px-3 py-3">
+                                    <div class="text-xs font-bold text-gray-800 group-hover:text-[#004269] transition-colors">${mk.nama_mk}</div>
+                                </td>
+                                <td class="px-3 py-3 text-center">
+                                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#009DA5]/10 text-[#009DA5] text-xs font-bold border border-[#009DA5]/20">
+                                        ${mk.sks}
+                                    </span>
+                                </td>
+                                <td class="px-3 py-3 text-center text-xs font-bold text-gray-600">
+                                    ${mk.bobot_kompetensi}%
+                                </td>
+                                <td class="px-3 py-3 text-center">
+                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-600 uppercase tracking-wide border border-amber-100">
+                                        SMT ${mk.semester}
+                                    </span>
+                                </td>
+                                <td class="px-3 py-3 text-xs text-gray-600 font-medium">${bidangKeahlianNama}</td>
+                                <td class="px-3 py-3 whitespace-nowrap text-center">${sapCell}</td>
+                                <td class="px-3 py-3 whitespace-nowrap text-center text-xs font-medium">
+                                    <div class="flex justify-center space-x-1">
+                                        <button data-id="${mk.id_matkul}" title="Edit" class="btn-edit-matkul p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded transition-all duration-200">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
                                         </button>
-                                        {{-- Tombol Delete: Red (#FF0000) --}}
-                                        <button data-id="${mk.id_matkul}" class="btn-delete-matkul p-2 bg-[#FF0000]/10 text-[#FF0000] rounded-full hover:bg-[#FF0000] hover:text-white transition shadow-sm">
+                                        <button data-id="${mk.id_matkul}" title="Hapus" class="btn-delete-matkul p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition-all duration-200">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
                                         </button>
                                     </div>
@@ -206,6 +293,10 @@ $(document).ready(function() {
             error: function(xhr) {
                 alert('Gagal memuat data');
                 console.error(xhr);
+                $tbody.html('<tr><td colspan="9" class="px-6 py-10 text-center text-red-500 italic">Terjadi kesalahan saat memuat data.</td></tr>');
+            },
+            complete: function() {
+                $('#btn-filter').prop('disabled', false).removeClass('opacity-75');
             }
         });
     }
@@ -268,7 +359,7 @@ $(document).ready(function() {
                 // Display current SAP file
                 if (data.sap) {
                     const fileName = data.sap.split('/').pop();
-                    $('#current-sap-name').html(`<a href="/${data.sap}" target="_blank" class="text-[#004269] hover:underline font-semibold">${fileName}</a>`);
+                    $('#current-sap-name').html(`<a href="/${data.sap}" target="_blank" class="text-[#004269] hover:underline font-semibold flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>${fileName}</a>`);
                 } else {
                     $('#current-sap-name').text('Tidak ada file');
                 }
@@ -322,7 +413,7 @@ $(document).ready(function() {
     $(document).on('click', '.btn-delete-matkul', function() {
         const matkulId = $(this).data('id');
         const matkulRow = $(this).closest('tr');
-        const matkulName = matkulRow.find('td:eq(1)').text();
+        const matkulName = matkulRow.find('td:eq(2) div').text(); // Adjust index based on column position (0=No, 1=Kode, 2=Nama)
 
         if (!confirm(`Hapus mata kuliah "${matkulName}"?\n\nData tidak dapat dikembalikan!`)) {
             return;

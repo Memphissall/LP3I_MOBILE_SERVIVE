@@ -1,207 +1,257 @@
 @extends('layouts.app')
 
-{{-- Menentukan Title untuk halaman ini --}}
-@section('title', 'Dashboard Staf Akademik') 
+@section('title', 'Dashboard - Sistem Informasi Akademik LP3I')
 
-{{-- Bagian konten utama --}}
 @section('content')
-    <header class="flex justify-between items-center mb-6">
+<div class="bg-gray-50 min-h-screen p-6">
+    
+    {{-- 1. TOP BAR: Status Akademik & Identitas User (Style SIAKAD) --}}
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-            <p class="text-sm font-medium text-gray-500">
-                Selamat datang kembali, Bu Rina! 👋
-            </p>
-            <h1 class="text-3xl font-bold text-gray-900 mt-1">
-                Dashboard Staf Akademik
-            </h1>
-        </div>
-        {{-- Bagian Profil dan Notifikasi --}}
-        <div class="flex items-center space-x-4">
-            <i data-lucide="search" class="w-6 h-6 text-gray-500 cursor-pointer hover:text-blue-500"></i>
-            <i data-lucide="bell" class="w-6 h-6 text-gray-500 cursor-pointer hover:text-blue-500"></i>
-            <div class="flex items-center space-x-2 p-1.5 bg-gray-100 rounded-full cursor-pointer">
-                <img src="https://placehold.co/40x40/3b82f6/ffffff?text=RS" alt="Foto Profil" class="w-10 h-10 rounded-full object-cover border-2 border-white">
-                <span class="font-semibold text-gray-800 hidden md:block pr-2">Bu Rina Sari (Staf)</span>
-            </div>
-        </div>
-    </header>
-
-    {{-- KONTEN GRID DASHBOARD --}}
-    <div class="dashboard-grid">
-        
-        {{-- Card 1: Aktivitas Mendatang --}}
-        <div class="card col-span-2 lg:col-span-1">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-700">Aktivitas Mendatang</h2>
-                <a href="#" class="text-sm font-medium text-blue-500 hover:text-blue-600">Lihat Kalender</a>
-            </div>
-            <div class="bg-blue-50 p-4 rounded-xl flex flex-col space-y-3">
-                <p class="text-sm text-blue-600 font-medium">
-                    <i data-lucide="users" class="w-4 h-4 inline-block mr-1"></i> Rapat Staf Akademik
-                </p>
-                <p class="text-xl font-bold text-gray-800">
-                    Senin, 20 Desember 2025
-                </p>
-                
-                <div class="flex items-center justify-between pt-2 border-t border-blue-200/50">
-                    <div class="flex items-center space-x-3">
-                        <div class="p-2 bg-white rounded-lg shadow-sm">
-                            <i data-lucide="bar-chart-3" class="w-6 h-6 text-gray-700"></i>
-                        </div>
-                        <div>
-                            <p class="text-base font-semibold text-gray-800">Evaluasi Akhir Semester</p>
-                            <p class="text-xs text-gray-500">Ruang Rapat Utama</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-lg font-bold text-gray-800">09:00 - 11:00 WIB</span>
-                    </div>
-                </div>
-            </div>
+            <h1 class="text-2xl font-bold text-gray-800 tracking-tight">Dashboard Akademik</h1>
+            <nav class="flex text-sm text-gray-500 mt-1">
+                <span class="hover:text-[#004269]">Home</span>
+                <span class="mx-2">/</span>
+                <span class="text-[#004269] font-semibold">Dashboard</span>
+            </nav>
         </div>
 
-        {{-- Card 2: Status Penginputan Nilai Dosen --}}
-        <div class="card col-span-2 lg:col-span-1">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-700">Status Penginputan Nilai Dosen</h2>
-                <a href="#" class="text-sm font-medium text-blue-500 hover:text-blue-600">Lihat Semua Data</a>
+        {{-- Widget Status Semester (Khas Kampus) --}}
+        <div class="bg-white px-5 py-3 rounded-lg shadow-sm border border-gray-200 flex items-center space-x-6">
+            <div class="text-right border-r border-gray-200 pr-6">
+                <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Tahun Akademik</p>
+                <p class="text-lg font-bold text-[#004269]">2025/2026</p>
             </div>
-            <div class="space-y-4">
-                <div class="flex justify-between font-semibold text-gray-800">
-                    <span>Progres Nilai (Total 85 Mata Kuliah)</span>
+            <div>
+                <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Semester</p>
+                <div class="flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                    <p class="text-lg font-bold text-gray-800">Ganjil (Aktif)</p>
                 </div>
-                
-                <div class="grid grid-cols-3 gap-3 text-center">
-                    <div class="p-3 rounded-xl bg-green-50">
-                        <p class="text-2xl font-bold text-green-600">55</p>
-                        <p class="text-xs text-green-500 mt-1">Selesai (Finalized)</p>
-                    </div>
-                    <div class="p-3 rounded-xl bg-blue-50">
-                        <p class="text-2xl font-bold text-blue-600">20</p>
-                        <p class="text-xs text-blue-500 mt-1">Pending (Draft)</p>
-                    </div>
-                    <div class="p-3 rounded-xl bg-red-50">
-                        <p class="text-2xl font-bold text-red-600">10</p>
-                        <p class="text-xs text-red-500 mt-1">Belum Input</p>
-                    </div>
-                </div>
-
-                <div class="pt-4 space-y-2">
-                    <p class="text-sm font-medium text-gray-600">Rata-rata Progres Nilai</p>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-blue-500 h-2.5 rounded-full" style="width: 65%"></div>
-                    </div>
-                    <p class="text-sm text-gray-500 text-right">65% Nilai Telah Ditetapkan</p>
-                </div>
-            </div>
-        </div>
-        
-        {{-- Card 3: Rekap Progres Input Nilai Dosen (Tabel) --}}
-        <div class="card col-span-3 lg:col-span-2">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-700">Rekap Progres Input Nilai Dosen</h2>
-                <a href="#" class="text-sm font-medium text-blue-500 hover:text-blue-600">Kirim Notifikasi Massal</a>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead>
-                        <tr class="text-xs font-semibold tracking-wider text-gray-500 uppercase bg-gray-50">
-                            <th class="px-3 py-3 text-left">#</th>
-                            <th class="px-3 py-3 text-left">Mata Kuliah</th>
-                            <th class="px-3 py-3 text-left">Dosen Pengampu</th>
-                            <th class="px-3 py-3 text-center">SKS</th>
-                            <th class="px-3 py-3 text-center">Tgl Deadline</th>
-                            <th class="px-3 py-3 text-center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 text-sm">
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-3 py-3 font-medium text-gray-900">1</td>
-                            <td class="px-3 py-3 font-medium text-blue-600">Pemrograman Web Dasar</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Dr. Alya Zahra</td>
-                            <td class="px-3 py-3 text-center">3</td>
-                            <td class="px-3 py-3 text-center">15 Des</td>
-                            <td class="px-3 py-3 text-center">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Finalized</span>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-3 py-3 font-medium text-gray-900">2</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Basis Data Lanjut</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Prof. Bima Sakti</td>
-                            <td class="px-3 py-3 text-center">4</td>
-                            <td class="px-3 py-3 text-center">15 Des</td>
-                            <td class="px-3 py-3 text-center">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Submitted</span>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-3 py-3 font-medium text-gray-900">3</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Struktur Data</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Dr. Candra Kirana</td>
-                            <td class="px-3 py-3 text-center">3</td>
-                            <td class="px-3 py-3 text-center">15 Des</td>
-                            <td class="px-3 py-3 text-center">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-3 py-3 font-medium text-gray-900">4</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Kewirausahaan IT</td>
-                            <td class="px-3 py-3 font-medium text-gray-800">Ms. Dewi Persada</td>
-                            <td class="px-3 py-3 text-center">2</td>
-                            <td class="px-3 py-3 text-center">15 Des</td>
-                            <td class="px-3 py-3 text-center">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Belum Input</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
-        {{-- Card 4: Ringkasan Statistik dan Reminder --}}
-        <div class="col-span-3 lg:col-span-1 flex flex-col space-y-4">
-            
-            <div class="grid grid-cols-2 gap-4">
-                <div class="card p-4 bg-white text-center">
-                    <i data-lucide="alert-triangle" class="w-6 h-6 text-red-500 mx-auto mb-2"></i>
-                    <h3 class="text-3xl font-bold text-gray-800">10</h3>
-                    <p class="text-xs text-gray-500 mt-1">Input Nilai Tertunda (MK)</p>
-                </div>
-
-                <div class="card p-4 bg-white text-center">
-                    <i data-lucide="users-2" class="w-6 h-6 text-purple-500 mx-auto mb-2"></i>
-                    <h3 class="text-3xl font-bold text-gray-800">452</h3>
-                    <p class="text-xs text-gray-500 mt-1">Total Mahasiswa Aktif</p>
-                </div>
-
-                <div class="card p-4 bg-white text-center">
-                    <i data-lucide="file-warning" class="w-6 h-6 text-orange-500 mx-auto mb-2"></i>
-                    <h3 class="text-3xl font-bold text-gray-800">5</h3>
-                    <p class="text-xs text-gray-500 mt-1">Pengajuan Cuti/Pindah</p>
-                </div>
-                
-                <div class="card p-4 bg-white text-center">
-                    <i data-lucide="percent" class="w-6 h-6 text-sky-500 mx-auto mb-2"></i>
-                    <h3 class="text-3xl font-bold text-gray-800">65%</h3>
-                    <p class="text-xs text-gray-500 mt-1">Rata-rata Progres Nilai</p>
-                </div>
-            </div>
-
-            {{-- Card Reminder --}}
-            <div class="card p-6 reminder-card-bg text-white shadow-xl">
-                <h3 class="text-lg font-bold text-white mb-2">
-                    JANGAN LUPA!
-                </h3>
-                <p class="text-sm font-medium mb-4">
-                    Batas akhir input nilai Mahasiswa Semester Ganjil 2025/2026.
-                </p>
-                <a href="#" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg bg-white text-green-600 shadow-md hover:bg-gray-100 transition duration-150">
-                    <i data-lucide="log-in" class="w-4 h-4 mr-2"></i>
-                    Menuju Portal Nilai Dosen
-                </a>
             </div>
         </div>
     </div>
+
+    {{-- 2. MAIN LAYOUT GRID --}}
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+        {{-- LEFT COLUMN (3/4 Width): Statistik & Shortcut --}}
+        <div class="lg:col-span-3 space-y-6">
+            
+            {{-- A. STATISTIK REAL-TIME (Cards Minimalis) --}}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {{-- Mahasiswa --}}
+                <div class="bg-white p-5 rounded-lg border-l-4 border-[#004269] shadow-sm flex justify-between items-center">
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase">Mahasiswa Aktif</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $stats['mahasiswa_aktif'] ?? '1,240' }}</h3>
+                        <p class="text-xs text-gray-500 mt-1">Total: {{ $stats['total_mahasiswa'] ?? '1,500' }}</p>
+                    </div>
+                    <div class="bg-blue-50 p-2 rounded text-[#004269]">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    </div>
+                </div>
+
+                {{-- Dosen --}}
+                <div class="bg-white p-5 rounded-lg border-l-4 border-[#009DA5] shadow-sm flex justify-between items-center">
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase">Dosen Pengampu</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $stats['total_dosen'] ?? '85' }}</h3>
+                        <p class="text-xs text-green-600 mt-1 flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Absensi Hari Ini Lengkap
+                        </p>
+                    </div>
+                    <div class="bg-teal-50 p-2 rounded text-[#009DA5]">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    </div>
+                </div>
+
+                {{-- Kelas / Jadwal --}}
+                <div class="bg-white p-5 rounded-lg border-l-4 border-amber-500 shadow-sm flex justify-between items-center">
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase">Kelas Hari Ini</p>
+                        <h3 class="text-2xl font-bold text-gray-800 mt-1">24 <span class="text-sm font-normal text-gray-400">/ 48 Sesi</span></h3>
+                        <p class="text-xs text-gray-500 mt-1">Ruangan Terpakai: 80%</p>
+                    </div>
+                    <div class="bg-amber-50 p-2 rounded text-amber-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            {{-- B. QUICK ACCESS MENU (Gaya Grid Icon + Text) --}}
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                    <h3 class="font-bold text-gray-800">Menu Cepat Administrasi</h3>
+                </div>
+                <div class="p-6 grid grid-cols-2 md:grid-cols-4 gap-6">
+                    {{-- Item 1 --}}
+                    <a href="{{ route('admin.krs.index') }}" class="group flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition border border-transparent hover:border-gray-200">
+                        <div class="w-10 h-10 bg-blue-100 text-[#004269] rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700 text-center">Validasi KRS</span>
+                    </a>
+                    {{-- Item 2 --}}
+                    <a href="{{ route('admin.khs.index') }}" class="group flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition border border-transparent hover:border-gray-200">
+                        <div class="w-10 h-10 bg-teal-100 text-[#009DA5] rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700 text-center">Cetak KHS</span>
+                    </a>
+                    {{-- Item 3 --}}
+                    <a href="{{ route('admin.kelola_jadwal') }}" class="group flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition border border-transparent hover:border-gray-200">
+                        <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700 text-center">Jadwal Kuliah</span>
+                    </a>
+                    {{-- Item 4 --}}
+                    <a href="{{ route('admin.transkrip.index') }}" class="group flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 transition border border-transparent hover:border-gray-200">
+                        <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700 text-center">Transkrip Nilai</span>
+                    </a>
+                </div>
+            </div>
+
+            {{-- C. PENGUMUMAN (List Style like Inbox) --}}
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                    <h3 class="font-bold text-gray-800">Pengumuman Terbaru</h3>
+                    <a href="{{ route('admin.pengumuman.index') }}" class="text-xs font-bold text-[#009DA5] hover:underline">Lihat Semua</a>
+                </div>
+                <div class="divide-y divide-gray-100">
+                    {{-- Item 1 --}}
+                    <div class="p-4 hover:bg-gray-50 transition flex items-start">
+                        <div class="flex-shrink-0 mt-1">
+                            <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-blue-100">
+                                <span class="text-xs font-medium leading-none text-blue-700">AK</span>
+                            </span>
+                        </div>
+                        <div class="ml-4 flex-1">
+                            <p class="text-sm font-medium text-gray-900">Jadwal Pengisian KRS Semester Ganjil 2025/2026</p>
+                            <p class="text-xs text-gray-500 mt-1 line-clamp-1">Diberitahukan kepada seluruh mahasiswa bahwa pengisian KRS dimulai tanggal...</p>
+                            <div class="mt-2 flex items-center text-xs text-gray-400">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                2 Jam yang lalu
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Item 2 (Static Example) --}}
+                    <div class="p-4 hover:bg-gray-50 transition flex items-start">
+                        <div class="flex-shrink-0 mt-1">
+                            <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-orange-100">
+                                <span class="text-xs font-medium leading-none text-orange-700">KU</span>
+                            </span>
+                        </div>
+                        <div class="ml-4 flex-1">
+                            <p class="text-sm font-medium text-gray-900">Batas Akhir Pembayaran Uang Kuliah</p>
+                            <p class="text-xs text-gray-500 mt-1 line-clamp-1">Pembayaran tahap pertama harus diselesaikan sebelum tanggal 20...</p>
+                            <div class="mt-2 flex items-center text-xs text-gray-400">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                1 Hari yang lalu
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- RIGHT COLUMN (1/4 Width): Identitas & Kalender --}}
+        <div class="lg:col-span-1 space-y-6">
+            
+            {{-- PROFILE CARD (SIAKAD Style) --}}
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-[#004269] to-[#00536e] p-6 text-center">
+                    <div class="w-20 h-20 bg-white rounded-full mx-auto p-1 mb-3">
+                        <div class="w-full h-full bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
+                            {{-- Placeholder Photo --}}
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        </div>
+                    </div>
+                    <h3 class="text-white font-bold text-lg">Bu Rina</h3>
+                    <p class="text-blue-200 text-xs uppercase tracking-wider">Staf Akademik</p>
+                </div>
+                <div class="p-4">
+                    <div class="text-sm text-gray-600 space-y-3">
+                        <div class="flex justify-between border-b border-gray-100 pb-2">
+                            <span>NIP</span>
+                            <span class="font-semibold text-gray-800">19850101 2010</span>
+                        </div>
+                        <div class="flex justify-between border-b border-gray-100 pb-2">
+                            <span>Unit</span>
+                            <span class="font-semibold text-gray-800">BAAK</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Status</span>
+                            <span class="text-green-600 font-bold text-xs bg-green-50 px-2 py-0.5 rounded-full">Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- KALENDER AKADEMIK MINI --}}
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                    <h3 class="font-bold text-gray-700 text-sm">Agenda Akademik</h3>
+                </div>
+                <div class="p-4 space-y-4">
+                    {{-- Event 1 --}}
+                    <div class="flex space-x-3">
+                        <div class="flex-shrink-0 text-center w-10">
+                            <span class="block text-xs font-bold text-[#009DA5] uppercase">Jan</span>
+                            <span class="block text-xl font-bold text-gray-800">15</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">Awal Perkuliahan</p>
+                            <p class="text-xs text-gray-500">Semester Ganjil 2025/2026</p>
+                        </div>
+                    </div>
+                    {{-- Event 2 --}}
+                    <div class="flex space-x-3">
+                        <div class="flex-shrink-0 text-center w-10">
+                            <span class="block text-xs font-bold text-gray-400 uppercase">Feb</span>
+                            <span class="block text-xl font-bold text-gray-800">10</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">Batas Perubahan KRS</p>
+                            <p class="text-xs text-gray-500">Periode Revisi</p>
+                        </div>
+                    </div>
+                    {{-- Event 3 --}}
+                    <div class="flex space-x-3">
+                        <div class="flex-shrink-0 text-center w-10">
+                            <span class="block text-xs font-bold text-gray-400 uppercase">Mar</span>
+                            <span class="block text-xl font-bold text-gray-800">05</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800">Ujian Tengah Semester</p>
+                            <p class="text-xs text-gray-500">Persiapan Soal</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-4 py-3 border-t border-gray-100 bg-gray-50 text-center">
+                    <a href="#" class="text-xs font-bold text-[#004269] hover:underline">Lihat Kalender Lengkap</a>
+                </div>
+            </div>
+
+            {{-- KAMPUS INFO --}}
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center p-3 bg-white rounded-full shadow-sm mb-3">
+                    {{-- Logo Kampus LP3I (URL contoh) --}}
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Logo_Politeknik_LP3I.png" alt="LP3I" class="h-8 w-auto">
+                </div>
+                <h4 class="text-sm font-bold text-gray-700">Politeknik LP3I</h4>
+                <p class="text-xs text-gray-500">Kampus Karawang</p>
+                <p class="text-[10px] text-gray-400 mt-2">© 2026 Sistem Informasi Akademik</p>
+            </div>
+
+        </div>
+
+    </div>
+</div>
 @endsection

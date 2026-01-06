@@ -113,6 +113,11 @@ class MatkulController extends Controller
             $matkul = MataKuliah::findOrFail($id);
             $data = $request->except('sap_file');
             
+            // Ensure deskripsi has a value (empty string if not provided)
+            if (!isset($data['deskripsi']) || $data['deskripsi'] === null) {
+                $data['deskripsi'] = '';
+            }
+            
             // Handle SAP file upload
             if ($request->hasFile('sap_file')) {
                 // Delete old file if exists

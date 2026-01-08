@@ -52,7 +52,10 @@ class DashboardController extends Controller
             'total_matkul' => MataKuliah::count(),
             'mahasiswa_aktif' => Mahasiswa::where('status', 'Aktif')->count(),
         ];
+
+        // Get latest 3 announcements
+        $pengumuman = \App\Models\Pengumuman::latest()->take(3)->get();
         
-        return view('dashboard', compact('greeting', 'randomQuote', 'stats')); 
+        return view('dashboard', compact('greeting', 'randomQuote', 'stats', 'pengumuman')); 
     }
 }

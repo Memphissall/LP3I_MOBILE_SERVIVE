@@ -1,0 +1,26 @@
+﻿
+   INFO  Running migrations.  
+
+  2026_01_02_000004_create_krs_table  4.24ms FAIL
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'krs' already exists (Connection: mysql, SQL: create table `krs` (`id_krs` bigint unsigned not null auto_increment primary key, `nipd` varchar(255) not null, `nama_mhs` varchar(255) not null, `id_kelas` bigint unsigned not null, `id_jadwal` bigint unsigned not null, `semester` int not null, `periode` enum('Ganjil', 'Genap') not null, `tahun_akademik` varchar(255) not null, `status` enum('Draft', 'Submitted', 'Approved', 'Rejected') not null default 'Draft', `catatan` text null, `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci')
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:824
+    820Γûò                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    821Γûò                 );
+    822Γûò             }
+    823Γûò 
+  Γ₧£ 824Γûò             throw new QueryException(
+    825Γûò                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    826Γûò             );
+    827Γûò         }
+    828Γûò     }
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connection.php:570
+      PDOException::("SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'krs' already exists")
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connection.php:570
+      PDOStatement::execute()
+

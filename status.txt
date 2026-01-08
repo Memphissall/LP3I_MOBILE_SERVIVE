@@ -1,0 +1,52 @@
+﻿
+  Migration name  Batch / Status  
+  0001_01_01_000001_create_cache_table  [1] Ran  
+  0001_01_01_000002_create_jobs_table  [1] Ran  
+  2025_10_22_035701_create_users_table  [1] Ran  
+  2025_11_11_123522_add_role_to_users_table  [1] Ran  
+  2025_12_01_000000_create_ruangan_table  [1] Ran  
+  2025_12_02_000000_create_mata_kuliah_table  [1] Ran  
+  2025_12_02_103944_create_dosen_table  [1] Ran  
+  2025_12_03_000000_create_kelas_table  [1] Ran  
+  2025_12_03_074509_create_sessions_table  [1] Ran  
+  2025_12_04_171227_create_tugas_table  [1] Ran  
+  2025_12_08_072405_create_jadwal_table  [1] Ran  
+  2025_12_08_080053_create_honor_table  [1] Ran  
+  2025_12_08_080126_create_materi_table  [1] Ran  
+  2025_12_08_085447_create_jurusan_table  [1] Ran  
+  2025_12_08_090000_create_calon_mahasiswa_table  [1] Ran  
+  2025_12_08_090021_create_pendaftaran_table  [1] Ran  
+  2025_12_08_090311_create_presenter_table  [1] Ran  
+  2025_12_08_090326_create_pembayaran_table  [1] Ran  
+  2025_12_08_121020_create_mahasiswa_table  [1] Ran  
+  2025_12_09_072937_create_absensi_table  [1] Ran  
+  2025_12_09_080140_create_khs_table  [1] Ran  
+  2025_12_09_080146_create_krs_table  [1] Ran  
+  2025_12_09_085925_create_transkrip_nilai_table  [1] Ran  
+  2025_12_10_144704_create_ijazah_table  [1] Ran  
+  2025_12_17_141613_add_details_to_mahasiswa_table  [1] Ran  
+  2025_12_17_150000_make_kelas_nullable_in_mahasiswa_table  [1] Ran  
+  2025_12_17_153000_change_no_tlp_to_string_in_mahasiswa_table  [1] Ran  
+  2025_12_18_162658_make_user_id_nullable_in_dosen_table  [1] Ran  
+  2025_12_20_055945_add_status_to_jadwal_table  [1] Ran  
+  2026_01_01_000000_update_mata_kuliah_table  [1] Ran  
+  2026_01_01_000001_create_bidang_keahlian_table  [1] Ran  
+  2026_01_01_000002_convert_bidang_keahlian_to_fk  [1] Ran  
+  2026_01_01_000003_convert_kelas_jurusan_to_fk  [1] Ran  
+  2026_01_01_000004_change_waktu_to_string_in_jadwal  [1] Ran  
+  2026_01_01_000005_add_semester_to_kelas  [1] Ran  
+  2026_01_01_000006_add_dosen_to_jadwal  [1] Ran  
+  2026_01_01_000007_make_dosen_fields_nullable  [1] Ran  
+  2026_01_02_000001_create_nilai_table  [1] Ran  
+  2026_01_02_000002_add_khs_fields_to_nilai  [2] Ran  
+  2026_01_02_000003_make_nilai_fields_nullable  [2] Ran  
+  2026_01_02_000004_create_krs_table  Pending  
+  2026_01_02_000005_add_krs_columns  Pending  
+  2026_01_02_000006_modify_krs_to_use_matkul  Pending  
+  2026_01_02_000007_make_krs_id_mahasiswa_nullable  Pending  
+  2026_01_02_000008_make_krs_tahun_ajaran_nullable  Pending  
+  2026_01_03_063955_add_foto_to_mahasiswa_table  Pending  
+  2026_01_03_094430_add_id_dosen_internal_to_dosen_table  Pending  
+  2026_01_03_095520_change_mahasiswa_jurusan_to_bidang_keahlian  Pending  
+  2026_01_04_101312_create_pengumumen_table  Pending  
+

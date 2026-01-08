@@ -65,14 +65,22 @@ class TranskripController extends Controller
             }
         }
 
-        // Get kelas list for filter
-        $kelasList = Kelas::with('bidangKeahlian')->get();
+        // Get kelas list for filter (deduplicated)
+        $kelasList = Kelas::with('bidangKeahlian')
+            ->get()
+            ->unique('nama_kelas')
+            ->sortBy('nama_kelas');
         
         // Get distinct tahun akademik from nilai table
         $tahunAkademikList = Nilai::select('tahun_akademik')
             ->distinct()
             ->orderBy('tahun_akademik', 'desc')
             ->pluck('tahun_akademik');
+            
+        // Fallback if empty
+        if ($tahunAkademikList->isEmpty()) {
+            $tahunAkademikList = collect(['2025/2026', '2024/2025', '2023/2024']);
+        }
 
         return view('akademik.transkrip', compact(
             'mahasiswaList',

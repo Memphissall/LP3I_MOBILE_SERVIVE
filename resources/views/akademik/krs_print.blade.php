@@ -1,326 +1,215 @@
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>KRS - {{ $mahasiswa->nama }}</title>
+    <title>KRS - {{ $mahasiswa->nipd }}</title>
     <style>
-        @page {
-            size: A4;
-            margin: 20mm;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        /* Margin nol agar bingkai navy mepet ke tepi kertas */
+        @page { size: A4; margin: 0; }
         
-        * {
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            font-size: 10pt; 
+            color: #333; 
+            line-height: 1.4; 
             margin: 0;
             padding: 0;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* Container dengan bingkai Navy Tebal Atas & Bawah */
+        .page-container { 
+            padding: 15mm 15mm; 
+            position: relative; 
+            min-height: 297mm; 
+            background: white;
             box-sizing: border-box;
+            border-top: 15px solid #000066 !important; 
+            border-bottom: 15px solid #000066 !important; 
         }
         
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 11pt;
-            line-height: 1.4;
-            color: #000;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 210mm;
-            margin: 0 auto;
-        }
-        
-        /* Header Section */
-        .header {
-            display: flex;
-            align-items: flex-start;
+        /* HEADER STYLE - Garis Ganda (Tebal & Tipis) */
+        .header-container { 
+            text-align: center; 
+            padding-bottom: 5px;
+            border-bottom: 1px solid #000; /* Garis tipis */
             margin-bottom: 20px;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
+            position: relative; /* Kunci patokan untuk logo */
+            min-height: 80px;
         }
-        
-        .logo {
-            width: 80px;
-            height: 80px;
-            margin-right: 15px;
+
+        /* REVISI: Styling Logo di Pojok Kiri */
+        .header-logo {
+            position: absolute;
+            left: 0;
+            width: 60px; /* Sesuaikan ukuran logo */
+            height: auto;
         }
-        
-        .college-info {
-            flex: 1;
+
+        /* Membuat garis tebal tambahan */
+        .header-container::after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            right: 0;
+            border-bottom: 3px solid #000; /* Garis tebal */
         }
-        
-        .college-info h2 {
-            font-size: 16pt;
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-        
-        .college-info p {
-            font-size: 9pt;
-            margin: 2px 0;
-        }
-        
-        .academic-year {
-            font-weight: bold;
-            font-size: 10pt;
-            margin-top: 5px;
-        }
-        
-        /* Title */
-        .title {
-            text-align: center;
-            font-size: 14pt;
-            font-weight: bold;
-            margin: 20px 0;
+
+        .campus-name { 
+            font-weight: bold; 
+            font-size: 18pt; 
+            color: #000066 !important; 
+            letter-spacing: 1px;
+            margin: 0;
             text-transform: uppercase;
         }
         
+        .campus-address {
+            font-size: 8.5pt;
+            color: #333;
+            margin: 2px 0;
+            padding-bottom: 10px; /* Memberi ruang untuk garis ganda */
+        }
+
+        .document-title { 
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 13pt; 
+            text-decoration: underline; 
+            margin: 15px 0; 
+            text-transform: uppercase;
+        }
+
         /* Student Info */
-        .student-info {
-            margin-bottom: 20px;
+        .info-table { width: 100%; margin-bottom: 15px; border-collapse: collapse; }
+        .info-table td { padding: 3px 0; vertical-align: top; }
+        .info-table .label { width: 160px; font-weight: 600; }
+
+        /* TABLE STYLE */
+        .krs-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; border: 1px solid #000; }
+        .krs-table th { 
+            box-shadow: inset 0 0 0 1000px #a6a6a6 !important; 
+            background-color: #a6a6a6 !important;
+            color: #000 !important;
+            border: 1px solid #000; 
+            padding: 10px 8px; 
+            text-align: center; 
+            font-size: 9pt; 
+            text-transform: uppercase;
         }
+        .krs-table td { border: 1px solid #000; padding: 8px; font-size: 9pt; }
+        .text-center { text-align: center; }
+        .total-row { font-weight: bold; }
+
+        /* Signature Area */
+        .signature-wrapper { margin-top: 30px; width: 100%; }
+        .sig-box { width: 40%; float: left; text-align: center; }
+        .sig-box-right { width: 40%; float: right; text-align: center; }
+        .sig-space { height: 60px; }
         
-        .student-info table {
-            width: 100%;
-            border-collapse: collapse;
+        .note { font-size: 8pt; margin-top: 10px; font-style: italic; color: #666; }
+
+        .btn-print {
+            position: fixed; top: 20px; right: 20px;
+            padding: 10px 20px; background: #000066; color: white;
+            border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
+            z-index: 9999; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        
-        .student-info td {
-            padding: 3px 0;
-            font-size: 10pt;
-        }
-        
-        .student-info td:first-child {
-            width: 150px;
-            font-weight: bold;
-        }
-        
-        .student-info td:nth-child(2) {
-            width: 10px;
-        }
-        
-        /* KRS Table */
-        .krs-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 10px;
-        }
-        
-        .krs-table thead {
-            background-color: #808080;
-            color: white;
-        }
-        
-        .krs-table th,
-        .krs-table td {
-            border: 1px solid #000;
-            padding: 8px;
-            text-align: left;
-        }
-        
-        .krs-table th {
-            font-weight: bold;
-            text-align: center;
-            font-size: 10pt;
-        }
-        
-        .krs-table td {
-            font-size: 10pt;
-        }
-        
-        .krs-table tbody tr:nth-child(even) {
-            background-color: #d3d3d3;
-        }
-        
-        .krs-table tbody tr:nth-child(odd) {
-            background-color: #ffffff;
-        }
-        
-        .col-no {
-            width: 40px;
-            text-align: center !important;
-        }
-        
-        .col-kode {
-            width: 100px;
-        }
-        
-        .col-matkul {
-            width: auto;
-        }
-        
-        .col-bk {
-            width: 60px;
-            text-align: center !important;
-        }
-        
-        .total-row {
-            font-weight: bold;
-            background-color: #808080 !important;
-            color: white;
-        }
-        
-        .total-row td {
-            text-align: right;
-            padding-right: 10px;
-        }
-        
-        /* Note */
-        .note {
-            font-size: 9pt;
-            font-style: italic;
-            margin: 15px 0;
-        }
-        
-        /* Signature Section */
-        .signature-section {
-            margin-top: 40px;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .signature-box {
-            width: 45%;
-        }
-        
-        .signature-box p {
-            margin: 3px 0;
-            font-size: 10pt;
-        }
-        
-        .signature-space {
-            height: 60px;
-            margin: 10px 0;
-        }
-        
-        .signature-name {
-            font-weight: bold;
-            border-bottom: 1px solid #000;
-            display: inline-block;
-            min-width: 200px;
-            text-align: center;
-        }
-        
+
         @media print {
-            body {
-                print-color-adjust: exact;
-                -webkit-print-color-adjust: exact;
-            }
-            
-            .no-print {
-                display: none;
-            }
+            .btn-print { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="10" width="80" height="80" fill="none" stroke="#000" stroke-width="3"/>
-                <text x="50" y="60" font-size="40" font-weight="bold" text-anchor="middle" fill="#000">LP3I</text>
-            </svg>
-            <div class="college-info">
-                <h2>LP3I COLLEGE</h2>
-                <p>Cabang Karawang : Jl. Tarumanegara, Komplek Karawang Hijau Blok B. 4-6, Kab. Karawang</p>
-                <p class="academic-year">TAHUN AKADEMIK {{ $tahun_akademik ?? '2024/2025' }}</p>
+    <button onclick="window.print()" class="btn-print">Print PDF</button>
+
+    <div class="page-container">
+        <div class="header-container">
+            <img src="{{ asset('images/lp3i_krw.png') }}" class="header-logo" alt="logo LP3I">
+            
+            <div class="campus-name">LP3I COLLEGE KARAWANG</div>
+            <div class="campus-address">
+                Gedung Karawang Hijau, Ruko Karawang Hijau, Jl. Tarumanagara No.4-6, Desa Purwadana,<br>
+                Kecamatan Telukjambe Timur, Kab. Karawang, Jawa Barat. <br>
+                <span style="font-weight: bold;">ACADEMIC YEAR 2023/2024</span>
             </div>
         </div>
-        
-        <!-- Title -->
-        <div class="title">
-            KARTU RENCANA STUDI (KRS)
-        </div>
-        
-        <!-- Student Info -->
-        <div class="student-info">
-            <table>
-                <tr>
-                    <td>NIPD</td>
-                    <td>:</td>
-                    <td>{{ $mahasiswa->nipd }}</td>
-                </tr>
-                <tr>
-                    <td>NAMA LENGKAP</td>
-                    <td>:</td>
-                    <td>{{ $mahasiswa->nama }}</td>
-                </tr>
-                <tr>
-                    <td>SEMESTER</td>
-                    <td>:</td>
-                    <td>{{ $semester ? 'Ganjil ( ' . $semester . ' )' : '-' }}</td>
-                </tr>
-                <tr>
-                    <td>BIDANG KEAHLIAN</td>
-                    <td>:</td>
-                    <td>{{ $mahasiswa->data_kelas->bidangKeahlian->nama ?? '-' }}</td>
-                </tr>
-            </table>
-        </div>
-        
-        <!-- KRS Table -->
+
+        <div class="document-title">STUDY PLAN CARD (KRS)</div>
+
+        <table class="info-table">
+            <tr>
+                <td class="label">NIM (NIPD)</td><td>: <strong>{{ $mahasiswa->nipd }}</strong></td>
+            </tr>
+            <tr>
+                <td class="label">FULL NAME</td><td>: <strong>{{ strtoupper($mahasiswa->nama) }}</strong></td>
+            </tr>
+            <tr>
+                <td class="label">SEMESTER</td><td>: {{ $semester ?? '-' }} @if($semester) ({{ $semester % 2 == 0 ? 'Even' : 'Odd' }}) @endif</td>
+            </tr>
+            <tr>
+                <td class="label">MAJOR / FIELD</td><td>: {{ $mahasiswa->data_kelas->bidangKeahlian->nama_bidang ?? 'Software Engineering' }}</td>
+            </tr>
+        </table>
+
         <table class="krs-table">
             <thead>
                 <tr>
-                    <th class="col-no">NO</th>
-                    <th class="col-kode">KODE</th>
-                    <th class="col-matkul">MATERI AJAR</th>
-                    <th class="col-bk">BK</th>
+                    <th width="5%">NO</th>
+                    <th width="20%">CODE</th>
+                    <th width="60%">COURSES SUBJECT</th>
+                    <th width="15%">SKS (BK)</th>
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $no = 1;
-                    $totalSks = 0;
-                @endphp
                 @forelse($krsList as $krs)
                     <tr>
-                        <td class="col-no">{{ $no++ }}</td>
-                        <td class="col-kode">{{ $krs->mataKuliah->kode_mk ?? '-' }}</td>
-                        <td class="col-matkul">{{ $krs->mataKuliah->nama_mk ?? '-' }}</td>
-                        <td class="col-bk">{{ $krs->mataKuliah->sks ?? 0 }}</td>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $krs->mataKuliah->kode_mk ?? ($krs->mataKuliah->id_matkul ?? '-') }}</td>
+                        <td>{{ $krs->mataKuliah->nama_mk ?? 'Subject not found' }}</td>
+                        <td class="text-center">{{ $krs->mataKuliah->sks ?? 0 }}</td>
                     </tr>
-                    @php
-                        $totalSks += $krs->mataKuliah->sks ?? 0;
-                    @endphp
                 @empty
                     <tr>
-                        <td colspan="4" style="text-align: center; padding: 20px;">Tidak ada data KRS</td>
+                        <td colspan="4" class="text-center" style="padding: 20px;">No data available for this semester.</td>
                     </tr>
                 @endforelse
-                
-                <!-- Total Row -->
                 <tr class="total-row">
-                    <td colspan="3">TOTAL JUMLAH BK</td>
-                    <td class="col-bk">{{ $totalSks }}</td>
+                    <td colspan="3" style="text-align: right; padding-right: 15px;">TOTAL SKS (TOTAL BK)</td>
+                    <td class="text-center" style="color: #000066;">{{ $totalSKS }}</td>
                 </tr>
             </tbody>
         </table>
-        
-        <!-- Note -->
-        <div class="note">
-            Note : Waktu dan Tempat lihat jadwal di Sistem Informasi Akademik (e-student)
+
+        <p class="note">Note: Time and Venue are listed in the Academic Information System (e-student).</p>
+
+        <div class="signature-wrapper">
+            <div class="sig-box">
+                <div>Academic Counselors (PA),</div>
+                <div class="sig-space"></div>
+                <div style="font-weight: bold; text-decoration: underline;">(...........................................)</div>
+                <div>NIDN. -</div>
+            </div>
+            <div class="sig-box-right">
+                <div>Karawang, {{ date('d F Y') }}</div>
+                <div>Student,</div>
+                <div class="sig-space"></div>
+                <div style="font-weight: bold; text-decoration: underline;">{{ strtoupper($mahasiswa->nama) }}</div>
+                <div>NIM. {{ $mahasiswa->nipd }}</div>
+            </div>
+            <div style="clear: both;"></div>
         </div>
-        
-        <!-- Signature Section -->
-        <div class="signature-section">
-            <div class="signature-box">
-                <p>Pembimbing Akademik (PA)</p>
-                <div class="signature-space"></div>
-                <p class="signature-name">...................................</p>
-            </div>
-            <div class="signature-box" style="text-align: right;">
-                <p>Karawang, {{ date('d-M-Y') }}</p>
-                <p>PD yang bersangkutan,</p>
-                <div class="signature-space"></div>
-                <p class="signature-name">{{ $mahasiswa->nama }}</p>
-            </div>
+
+        <div style="margin-top: 40px; border-top: 1px dashed #ccc; padding-top: 10px; text-align: center;">
+            <small style="color: #888;">#beranipunyaskill - This Page is a temporary Study Plan Card for internal use.</small>
         </div>
     </div>
-    
-    <script>
-        window.onload = function() {
-            window.print();
-        }
-    </script>
 </body>
 </html>

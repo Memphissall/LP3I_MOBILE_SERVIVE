@@ -124,38 +124,33 @@
                     <a href="{{ route('admin.pengumuman.index') }}" class="text-xs font-bold text-[#009DA5] hover:underline">Lihat Semua</a>
                 </div>
                 <div class="divide-y divide-gray-100">
-                    {{-- Item 1 --}}
+                    @forelse($pengumuman as $item)
+                    {{-- Dynamic Item --}}
                     <div class="p-4 hover:bg-gray-50 transition flex items-start">
                         <div class="flex-shrink-0 mt-1">
-                            <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-blue-100">
-                                <span class="text-xs font-medium leading-none text-blue-700">AK</span>
+                            @php
+                                $colors = ['bg-blue-100 text-blue-700', 'bg-orange-100 text-orange-700', 'bg-green-100 text-green-700', 'bg-purple-100 text-purple-700'];
+                                $randomColor = $colors[$loop->index % count($colors)];
+                                $initials = strtoupper(substr($item->judul, 0, 2));
+                            @endphp
+                            <span class="inline-flex items-center justify-center h-8 w-8 rounded-full {{ $randomColor }}">
+                                <span class="text-xs font-medium leading-none">{{ $initials }}</span>
                             </span>
                         </div>
                         <div class="ml-4 flex-1">
-                            <p class="text-sm font-medium text-gray-900">Jadwal Pengisian KRS Semester Ganjil 2025/2026</p>
-                            <p class="text-xs text-gray-500 mt-1 line-clamp-1">Diberitahukan kepada seluruh mahasiswa bahwa pengisian KRS dimulai tanggal...</p>
+                            <p class="text-sm font-medium text-gray-900">{{ $item->judul }}</p>
+                            <p class="text-xs text-gray-500 mt-1 line-clamp-1">{{ Str::limit(strip_tags($item->isi), 80) }}</p>
                             <div class="mt-2 flex items-center text-xs text-gray-400">
                                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                2 Jam yang lalu
+                                {{ $item->created_at->diffForHumans() }}
                             </div>
                         </div>
                     </div>
-                    {{-- Item 2 (Static Example) --}}
-                    <div class="p-4 hover:bg-gray-50 transition flex items-start">
-                        <div class="flex-shrink-0 mt-1">
-                            <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-orange-100">
-                                <span class="text-xs font-medium leading-none text-orange-700">KU</span>
-                            </span>
-                        </div>
-                        <div class="ml-4 flex-1">
-                            <p class="text-sm font-medium text-gray-900">Batas Akhir Pembayaran Uang Kuliah</p>
-                            <p class="text-xs text-gray-500 mt-1 line-clamp-1">Pembayaran tahap pertama harus diselesaikan sebelum tanggal 20...</p>
-                            <div class="mt-2 flex items-center text-xs text-gray-400">
-                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                1 Hari yang lalu
-                            </div>
-                        </div>
+                    @empty
+                    <div class="p-8 text-center text-gray-400 text-sm">
+                        Belum ada pengumuman terbaru
                     </div>
+                    @endforelse
                 </div>
             </div>
 
@@ -166,25 +161,44 @@
             
             {{-- PROFILE CARD (SIAKAD Style) --}}
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                @php
+                    $user = Auth::user();
+                    $roleLabel = match($user->role) {
+                        'admin' => 'Staf Akademik',
+                        'dosen' => 'Dosen Pengajar',
+                        'mahasiswa' => 'Mahasiswa',
+                        default => ucfirst($user->role)
+                    };
+                    $unitLabel = match($user->role) {
+                        'admin' => 'BAAK',
+                        'dosen' => 'Akademik',
+                        'mahasiswa' => 'Mahasiswa',
+                        default => '-'
+                    };
+                    $nipLabel = $user->username; // Assuming username is NIP/NIPD/NIDN
+                    
+                    // Initials for Avatar
+                    $names = explode(' ', $user->name);
+                    $initials = '';
+                    if(count($names) >= 1) $initials .= strtoupper(substr($names[0], 0, 1));
+                    if(count($names) >= 2) $initials .= strtoupper(substr($names[1], 0, 1));
+                @endphp
+                
                 <div class="bg-gradient-to-r from-[#004269] to-[#00536e] p-6 text-center">
                     <div class="w-20 h-20 bg-white rounded-full mx-auto p-1 mb-3">
-                        <div class="w-full h-full bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
-                            {{-- Placeholder Photo --}}
-                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        <div class="w-full h-full bg-blue-100 rounded-full flex items-center justify-center text-[#004269] font-bold text-2xl">
+                            {{-- Dynamic Initials Avatar --}}
+                            {{ $initials }}
                         </div>
                     </div>
-                    <h3 class="text-white font-bold text-lg">Bu Rina</h3>
-                    <p class="text-blue-200 text-xs uppercase tracking-wider">Staf Akademik</p>
+                    <h3 class="text-white font-bold text-lg">{{ $user->name }}</h3>
+                    <p class="text-blue-200 text-xs uppercase tracking-wider">{{ $roleLabel }}</p>
                 </div>
                 <div class="p-4">
                     <div class="text-sm text-gray-600 space-y-3">
                         <div class="flex justify-between border-b border-gray-100 pb-2">
-                            <span>NIP</span>
-                            <span class="font-semibold text-gray-800">19850101 2010</span>
-                        </div>
-                        <div class="flex justify-between border-b border-gray-100 pb-2">
-                            <span>Unit</span>
-                            <span class="font-semibold text-gray-800">BAAK</span>
+                            <span>Role</span>
+                            <span class="font-semibold text-gray-800">{{ $roleLabel }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span>Status</span>
@@ -243,7 +257,7 @@
             <div class="text-center">
                 <div class="inline-flex items-center justify-center p-3 bg-white rounded-full shadow-sm mb-3">
                     {{-- Logo Kampus LP3I (URL contoh) --}}
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Logo_Politeknik_LP3I.png" alt="LP3I" class="h-8 w-auto">
+                    <img src="{{ asset('images/lp3i_krw.png') }}" alt="LP3I" class="h-8 w-auto">
                 </div>
                 <h4 class="text-sm font-bold text-gray-700">Politeknik LP3I</h4>
                 <p class="text-xs text-gray-500">Kampus Karawang</p>

@@ -9,31 +9,59 @@ class KrsSeeder extends Seeder
 {
     public function run()
     {
-        // Sample student
-        $nipd = '2023010001';
-        $nama_mhs = 'John Doe';
-        $id_kelas = 1;
-        $tahun_akademik = '2023/2024';
+        // Clear existing data
+        DB::table('krs')->truncate();
 
-        // Get jadwal for semester 3 (from the uploaded image example)
-        // Assuming we have jadwal data seeded
-        $jadwalSem3 = DB::table('jadwal')
-            ->join('mata_kuliah', 'jadwal.id_matkul', '=', 'mata_kuliah.id_matkul')
-            ->where('mata_kuliah.semester', 3)
-            ->where('jadwal.id_kelas', $id_kelas)
-            ->select('jadwal.id_jadwal')
-            ->limit(8)
+        // Get all students with their class and major info
+        $students = \App\Models\Mahasiswa::with(['data_kelas'])->get();
+
+        foreach ($students as $mhs) {
+            // Skip if no class assigned
+            if (!$mhs->data_kelas) continue;
+
+            $currentSem = $mhs->data_kelas->semester ?? 1;
+            $idKelas = $mhs->id_kelas;
+            $idProdi = $mhs->data_kelas->id_bidang_keahlian;
+
+            // Scenario 1: Current Academic Year (2024/2025)
+            // Assign courses for the current semester
+            $this->assignKrs($mhs, $currentSem, '2024/2025', $idProdi);
+
+            // Scenario 2: Previous Academic Year (2023/2024)
+            // If student is in sem 3 or higher, they had history in sem 1
+            if ($currentSem >= 3) {
+                $prevSem = $currentSem - 2; // e.g. Sem 3 now -> Sem 1 last year
+                if ($prevSem > 0) {
+                    $this->assignKrs($mhs, $prevSem, '2023/2024', $idProdi);
+                }
+            }
+            
+            // If student is in sem 2, they had history in sem 1 (Same year or Prev year depends on intake)
+            // Let's assume Intake Ganjil. 
+            // Sem 2 (Genap 2024/2025) -> Sem 1 (Ganjil 2024/2025)
+            // We just stick to Simple Ganjil/Genap mapping if needed, but for 'Tahun Akademik' filter test:
+            // Just ensuring we have '2023/2024' data is enough.
+        }
+    }
+
+    private function assignKrs($mhs, $semester, $tahunAkademik, $idProdi)
+    {
+        // Get courses for this semester and prodi
+        $courses = \App\Models\MataKuliah::where('semester', $semester)
+            ->where('id_bidang_keahlian', $idProdi)
+            ->inRandomOrder()
+            ->take(6) // Take 6 random courses
             ->get();
 
-        foreach ($jadwalSem3 as $jadwal) {
+        foreach ($courses as $mk) {
             DB::table('krs')->insert([
-                'nipd' => $nipd,
-                'nama_mhs' => $nama_mhs,
-                'id_kelas' => $id_kelas,
-                'id_jadwal' => $jadwal->id_jadwal,
-                'semester' => 3,
-                'periode' => 'Ganjil',
-                'tahun_akademik' => $tahun_akademik,
+                'nipd' => $mhs->nipd,
+                'nama_mhs' => $mhs->nama,
+                'id_kelas' => $mhs->id_kelas,
+                'id_matkul' => $mk->id_matkul,
+                'semester' => $semester,
+                'periode' => ($semester % 2 == 1) ? 'Ganjil' : 'Genap',
+                'tahun_akademik' => $tahunAkademik,
                 'status' => 'Approved',
                 'created_at' => now(),
                 'updated_at' => now(),

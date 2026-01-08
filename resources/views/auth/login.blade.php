@@ -11,11 +11,17 @@
     <div class="flex max-w-5xl w-full mx-auto rounded-xl shadow-2xl overflow-hidden bg-white">
         
         {{-- Bagian Kiri (Informasi Sistem) --}}
-        <div class="w-1/2 bg-gradient-to-br from-[#004269] via-[#00536e] to-[#009DA5] p-10 flex flex-col justify-between text-white">
-            <div>
+        <div class="w-1/2 relative flex flex-col justify-between text-white p-10">
+            {{-- Background Image dengan Overlay --}}
+            <div class="absolute inset-0 z-0">
+                <img src="{{ asset('images/gedung_lp3i.jpg') }}" alt="Gedung LP3I" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-br from-[#004269]/90 to-[#009DA5]/80"></div> {{-- Overlay agar teks terbaca --}}
+            </div>
+
+            {{-- Content (Z-Index agar di atas overlay) --}}
+            <div class="relative z-10">
                 {{-- Logo dan Nama Kampus --}}
                 <div class="flex items-center mb-6">
-                    {{-- Ganti dengan path logo LP3I-mu --}}
                     <img src="{{ asset('images/logo_white.png') }}" alt="LP3I Logo" class="h-10 w-auto mr-3"> 
                 </div>
 
@@ -26,13 +32,13 @@
                 </div>
                 
                 {{-- Deskripsi Sistem --}}
-                <p class="text-white/90 text-sm leading-relaxed max-w-md">
+                <p class="text-white/90 text-sm leading-relaxed max-w-md mt-4">
                     Sistem terintegrasi untuk operasional akademik, dosen, dan mahasiswa. Memudahkan pengelolaan data, jadwal, materi, hingga nilai dalam satu solusi.
                 </p>
             </div>
             
             {{-- Footer Kiri --}}
-            <div class="text-white/70 text-sm mt-8">
+            <div class="relative z-10 text-white/70 text-sm mt-8">
                  <p class="text-white/80 text-sm">© {{ date('Y') }} Sistem Operasional Akademik. All rights reserved.</p>
             </div>
         </div>

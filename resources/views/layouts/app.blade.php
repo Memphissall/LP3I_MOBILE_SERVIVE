@@ -79,7 +79,7 @@
             <div class="flex items-center gap-3">
                 {{-- Logo LP3I Kecil (Ganti src dengan logo asli jika ada) --}}
                 <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-[#004269] font-bold text-xs shadow-lg">
-                    LP3I
+                    <img src="{{ asset('/images/lp3i_krw.png') }}" alt="LP3I College Karawang" class="w-5 h-5 object-contain-center">
                 </div>
                 <div>
                     <h1 class="text-lg font-extrabold tracking-wide">E-Academic</h1>
@@ -124,12 +124,12 @@
             <div class="relative" id="user-menu-container">
                 <button id="user-menu-btn" class="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 transition focus:outline-none">
                     <div class="text-right hidden md:block">
-                        <p class="text-sm font-bold text-gray-800 leading-tight">{{ session('user_name', 'Admin User') }}</p>
+                        <p class="text-sm font-bold text-gray-800 leading-tight">{{ Auth::user()->name ?? 'Guest' }}</p>
                         <p class="text-xs text-[#009DA5] font-medium">Administrator</p>
                     </div>
                     {{-- Avatar --}}
                     <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#004269] to-[#009DA5] flex items-center justify-center text-white font-bold shadow-md border-2 border-white ring-2 ring-gray-100">
-                        {{ strtoupper(substr(session('user_name', 'A'), 0, 1)) }}
+                        {{ strtoupper(substr(Auth::user()->name ?? 'G', 0, 1)) }}
                     </div>
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>
@@ -137,11 +137,11 @@
                 {{-- Dropdown Content --}}
                 <div id="user-dropdown" class="dropdown-menu absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 origin-top-right">
                     <div class="px-4 py-3 border-b border-gray-100 md:hidden">
-                        <p class="text-sm font-bold text-gray-800">{{ session('user_name', 'Admin User') }}</p>
+                        <p class="text-sm font-bold text-gray-800">{{ Auth::user()->name ?? 'Guest' }}</p>
                         <p class="text-xs text-gray-500">Administrator</p>
                     </div>
                     
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#004269] transition flex items-center">
+                    <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-[#004269] transition flex items-center">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                         Profil Saya
                     </a>
@@ -153,7 +153,7 @@
                     <div class="border-t border-gray-100 my-1"></div>
                     
                     {{-- Logout Form Link --}}
-                    <form action="{{ route('logout') }}" method="POST">
+                    <form action="{{ route('logout') }}" method="POST" id="logout-form">
                         @csrf
                         <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition flex items-center font-semibold">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>

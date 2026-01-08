@@ -5,19 +5,14 @@ namespace App\Http\Controllers;
 // PASTIKAN MENGGUNAKAN INI (JANGAN GUNAKAN 'use App\Http\Controllers\Controller;')
 use Illuminate\Routing\Controller; 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    // Mock user credentials
-    private $users = [
-        'admin' => ['password' => 'password', 'role' => 'admin', 'name' => 'Admin Utama'],
-        // Tambahkan user lain jika perlu
-    ];
-
     public function showLoginForm()
     {
         // Jika sudah login, redirect ke dashboard
-        if (session('auth_mock_role')) {
+        if (Auth::check()) {
             return redirect()->route('admin.dashboard'); 
         }
         return view('auth.login'); 
@@ -25,14 +20,23 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $username = $request->input('username');
-        $password = $request->input('password');
+        // Validasi input
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
 
-        if (isset($this->users[$username]) && $this->users[$username]['password'] === $password) {
-            // Berhasil login Mockup: Simpan di session
+        $credentials = $request->only('username', 'password');
+
+        // Coba login menggunakan Auth facade
+        if (Auth::attempt($credentials, $request->has('remember'))) {
+            // Regenerate session untuk keamanan
+            $request->session()->regenerate();
+
+            // Set session user data supaya kompatibel dengan view yang ada (optional)
             session([
-                'auth_mock_role' => $this->users[$username]['role'],
-                'auth_mock_name' => $this->users[$username]['name'],
+                'user_role' => Auth::user()->role,
+                'user_name' => Auth::user()->name,
             ]);
 
             // Redirect ke Dashboard Admin
@@ -40,14 +44,18 @@ class LoginController extends Controller
         }
 
         // Gagal login: Kirim error ke view
-        return redirect()->route('login')->withErrors([
+        return back()->withErrors([
             'login_fail' => 'Username atau password salah.',
         ])->withInput($request->only('username'));
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        session()->forget(['auth_mock_role', 'auth_mock_name']);
+        Auth::logout();
+        
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
         return redirect()->route('login')->with('success', 'Anda telah logout.');
     }
 }

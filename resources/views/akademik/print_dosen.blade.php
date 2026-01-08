@@ -7,118 +7,153 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
             color: #333;
             background-color: white;
+            line-height: 1.2;
+        }
+
+        @page { 
+            margin: 10mm; 
+            size: landscape; 
         }
 
         .print-container {
-            padding: 1cm 1.5cm; /* Diperkecil agar lebih efisien */
+            padding: 0;
+            width: 100%;
         }
 
-        /* KOP SURAT */
+        /* --- KOP SURAT --- */
         .kop-surat {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 3px solid #000080; 
-            padding-bottom: 10px; /* Rapat sedikit */
-            margin-bottom: 10px;
+            text-align: center;
+            padding-bottom: 5px; 
+            margin-bottom: 0; 
         }
-        .kop-text { text-align: center; }
-        .kop-text h1 { margin: 0; font-size: 26px; text-transform: uppercase; color: #000066; letter-spacing: 1px; }
-        .kop-text p { margin: 2px 0 0; font-size: 13px; font-style: italic; color: #555; }
 
+        /* --- TRICK GARIS GANDA PISAH (TEBAL ATAS, TIPIS BAWAH) --- */
+        .line-bold {
+            border-bottom: 4px solid #000;
+            width: 100%;
+            margin-bottom: 2px; /* Jarak celah putih antar garis */
+        }
+
+        .line-thin {
+            border-bottom: 1.5px solid #000;
+            width: 100%;
+            margin-bottom: 15px; /* Jarak ke judul laporan */
+        }
+
+        .kop-text h1 { 
+            margin: 0; 
+            font-size: 24px; 
+            text-transform: uppercase; 
+            color: #000066; 
+            line-height: 1.1;
+        }
+
+        .kop-text p { 
+            margin: 2px 0 0; 
+            font-size: 11px; 
+            font-style: italic; 
+            color: #555;
+        }
+
+         /* REVISI: Logo sekarang mengunci ke pojok kiri kop-surat */
+        .kop-text img { 
+            position: absolute; 
+            left: 40px; 
+            top: 35px; 
+            transform: translateY(-50%); 
+            width: 50px; 
+            height: auto; 
+            padding: 0; 
+            margin: 0;
+        }
+
+        /* --- JUDUL & INFO --- */
         .judul-laporan {
             text-align: center;
             text-transform: uppercase;
-            margin-top: 15px; /* Lebih naik */
-            margin-bottom: 8px;
-            font-size: 18px;
+            margin: 10px 0 5px 0; 
+            font-size: 16px;
             font-weight: bold;
         }
 
         .info-cetak {
-            text-align: right;
-            font-size: 11px;
+            text-align: center;
+            font-size: 9px;
             margin-bottom: 5px;
             color: #666;
         }
 
-        /* TABEL SETTINGS */
+        /* Updated CSS for Compactness and Pagination */
         table {
-            width: 100%;
+            width: 100%; /* Changed from 99% to 100% to match */
+            margin: 0 auto;
             border-collapse: collapse;
             table-layout: fixed;
+            border-bottom: 1px solid #444; /* Changed to 1px to match */
         }
         
         th, td {
             border: 1px solid #444;
-            padding: 6px 8px; /* DIET: Lebih tipis agar muat banyak */
-            font-size: 12px;
+            padding: 3px 4px; /* Reduced padding */
+            font-size: 10px; /* Reduced font */
             text-align: center;
             word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
-        th {
+        th { 
             background-color: #E6F0FF !important; 
-            color: #000066 !important;
-            text-transform: uppercase;
-            font-weight: bold;
-            -webkit-print-color-adjust: exact; 
-            print-color-adjust: exact;
+            color: #000066 !important; 
+            -webkit-print-color-adjust: exact;
         }
 
-        /* TANDA TANGAN */
+        /* --- LOGIKA 5 DATA IKUT TTD --- */
+        /* REMOVED split logic, just flow naturally */
+
         .signature-container {
-            margin-top: 20px; /* Jarak atas dikurangi */
+            margin-top: 25px;
             float: right; 
-            width: 350px; 
+            width: 250px; 
             text-align: center;
-            page-break-inside: avoid;
+            page-break-inside: avoid; /* Keep signature block together */
         }
 
         .signature-wrapper {
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            margin-top: 60px; /* DIET: Jarak tanda tangan diperpendek */
-            margin-bottom: 5px;
+            margin-top: 45px; 
+            margin-bottom: 2px;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 14px;
         }
 
         .line-inside {
             border-bottom: 1.5px solid #000;
-            width: 250px; 
+            width: 200px; 
             margin: 0 5px;
-            height: 14px;
+            height: 12px;
         }
 
-        .signature-role {
-            font-size: 14px;
-            font-weight: bold;
-            margin-top: 0;
-        }
+        .signature-role { font-size: 11px; font-weight: bold; }
 
         @media print {
-            @page {
-                margin: 0.5cm 1.5cm; 
-                size: landscape;
+            @page { 
+                margin: 10mm; /* Increased margin for safety on page 2 */
+                size: landscape; 
             }
-
-            thead {
-                display: table-header-group; 
-            }
-
-            th {
-                background-color: #E6F0FF !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
+            thead { display: table-row-group; } /* PREVENT header repetition (treat as normal row) */
+            tr { page-break-inside: avoid; }
         }
     </style>
 </head>
@@ -127,82 +162,109 @@
     <div class="print-container">
         <div class="kop-surat">
             <div class="kop-text">
+                <img src="{{ asset('images/lp3i_krw.png') }}" alt="logo LP3I"> 
                 <h1>LP3I COLLEGE KARAWANG</h1>
-                <p>Jl. Arteri Galuh Mas, Telukjambe Timur, Karawang, Jawa Barat</p>
-                <p>Telp: (0267) 840xxxx | Website: www.lp3i.ac.id | Email: info@karawang.lp3i.ac.id</p>
+                <p>Gedung Karawang Hijau, Ruko Karawang Hijau, Jl. Tarumanagara No.4-6, Desa Purwadana</p>
+                <p>Kecamatan Telukjambe Timur, Kabupaten Karawang, Jawa Barat 41361</p>
+                <p>Telp: (0267) 411286 | Website: www.lp3i.ac.id | Email: info@lp3i.id</p>
             </div>
         </div>
+        
+        <div class="line-bold"></div>
+        <div class="line-thin"></div>
 
-        <div class="info-cetak" id="waktu-cetak">
-            Dicetak pada: Memuat waktu...
-        </div>
+        <div class="info-cetak" id="waktu-cetak">Memuat waktu...</div>
 
         <h3 class="judul-laporan">LAPORAN DATA DOSEN</h3>
 
-        <table>
-            <thead>
-                <tr>
-                    <th width="40">No</th>
-                    <th width="120">NIDN / NIP</th>
-                    <th width="80">Nama Dosen</th>
-                    <th width="100">Pendidikan</th>
-                    <th width="150">No. Telepon</th>
-                    <th width="100">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($dosens as $index => $d)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td><b>{{ $d->nidn }}</b></td>
-                    <td style="text-align: left; padding-left: 15px;">{{ $d->nama_dosen }}</td>
-                    <td>{{ $d->pendidikan }}</td>
-                    <td>{{ $d->no_telp }}</td>
-                    <td style="text-transform: capitalize;">{{ $d->status }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6" style="padding: 20px;">Data dosen tidak ditemukan.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+        @php
+            $perPage = 12;
+            $chunks = $dosens->chunk($perPage);
+            $totalChunks = $chunks->count();
+        @endphp
 
-        <div class="signature-container">
-            <p id="tanggal-ttd">Karawang, ...</p>
-            <p>Staf Akademik,</p>
-            
-            <div class="signature-wrapper">
-                <span>(</span>
-                <div class="line-inside"></div>
-                <span>)</span>
-            </div>
-            
-            <p class="signature-role">LP3I College Karawang</p>
-        </div>
+        @foreach($chunks as $chunkIndex => $chunk)
+            @if($chunkIndex > 0)
+                <div style="page-break-before: always;"></div>
+            @endif
 
-        <div style="clear: both;"></div>
+            <table>
+                {{-- Column widths definition for consistent layout --}}
+                <colgroup>
+                    <col style="width: 3%;">
+                    <col style="width: 8%;">
+                    <col style="width: 6%;">
+                    <col style="width: 16%;">
+                    <col style="width: 10%;">
+                    <col style="width: 8%;">
+                    <col style="width: 13%;">
+                    <col style="width: 14%;">
+                    <col style="width: 8%;">
+                    <col style="width: 9%;">
+                    <col style="width: 5%;">
+                </colgroup>
+                
+                @if($chunkIndex === 0)
+                {{-- Header only on first page --}}
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>NIDN</th>
+                        <th>ID Internal</th>
+                        <th>Nama Dosen</th>
+                        <th>Tempat Lahir</th>
+                        <th>Tgl Lahir</th>
+                        <th>Alamat</th>
+                        <th>Email</th>
+                        <th>Pendidikan</th>
+                        <th>No. Telp</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                @endif
+                <tbody>
+                    @foreach($chunk->values() as $index => $d)
+                    <tr>
+                        <td>{{ ($chunkIndex * $perPage) + $index + 1 }}</td>
+                        <td style="font-size: 9px;"><b>{{ $d->nidn }}</b></td>
+                        <td style="font-size: 9px;">{{ $d->id_dosen_internal ?? '-' }}</td>
+                        <td style="text-align: left; padding-left: 5px;">{{ $d->nama_dosen }}</td>
+                        <td style="text-align: left;">{{ $d->tempat ?? '-' }}</td>
+                        <td>{{ $d->tanggal_lahir ? date('d/m/Y', strtotime($d->tanggal_lahir)) : '-' }}</td>
+                        <td style="text-align: left; font-size: 9px;">{{ $d->alamat ?? '-' }}</td>
+                        <td style="text-align: left; font-size: 9px;">{{ $d->email }}</td>
+                        <td style="text-align: left;">{{ $d->pendidikan }}</td>
+                        <td>{{ $d->no_telp }}</td>
+                        <td style="text-transform: capitalize;">{{ $d->status }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            @if($chunkIndex === $totalChunks - 1)
+                {{-- Signature only on last page --}}
+                <div class="signature-container">
+                    <p id="tanggal-ttd">Karawang, ...</p>
+                    <p>Staf Akademik,</p>
+                    <div class="signature-wrapper">
+                        <span>(</span><div class="line-inside"></div><span>)</span>
+                    </div>
+                    <p class="signature-role">LP3I College Karawang</p>
+                </div>
+                <div style="clear: both;"></div>
+            @endif
+        @endforeach
     </div>
 
     <script type="text/javascript">
         function updateTime() {
             const now = new Date();
             const optionsDate = { day: '2-digit', month: 'long', year: 'numeric' };
-            const optionsTime = { hour: '2-digit', minute: '2-digit'};
-            
-            const tanggalIndo = now.toLocaleDateString('id-ID', optionsDate);
-            const waktuIndo = now.toLocaleTimeString('id-ID', optionsTime);
-
-            document.getElementById('waktu-cetak').innerHTML = `Dicetak pada: ${tanggalIndo}, ${waktuIndo} WIB`;
-            document.getElementById('tanggal-ttd').innerHTML = `Karawang, ${tanggalIndo}`;
+            const optionsTime = { hour: '2-digit', minute: '2-digit' };
+            document.getElementById('waktu-cetak').innerHTML = `Dicetak pada: ${now.toLocaleDateString('id-ID', optionsDate)}, ${now.toLocaleTimeString('id-ID', optionsTime)} WIB`;
+            document.getElementById('tanggal-ttd').innerHTML = `Karawang, ${now.toLocaleDateString('id-ID', optionsDate)}`;
         }
-
-        window.onload = function() {
-            updateTime();
-            setTimeout(function() {
-                window.print();
-            }, 800); 
-        }
+        window.onload = function() { updateTime(); setTimeout(() => window.print(), 800); }
     </script>
 </body>
 </html>

@@ -15,11 +15,44 @@ class KhsController extends Controller
      */
     public function index(Request $request)
     {
+        // 1. Get Filter Options First
+        // Get kelas list for filter (deduplicated by name)
+        $kelasList = Kelas::with('bidangKeahlian')
+            ->get()
+            ->unique('nama_kelas')
+            ->sortBy('nama_kelas');
+        
+        // Get distinct tahun akademik from Nilai table
+        $tahunAkademikList = Nilai::select('tahun_akademik')
+            ->distinct()
+            ->orderBy('tahun_akademik', 'desc')
+            ->pluck('tahun_akademik');
+            
+        // Fallback if empty
+        if ($tahunAkademikList->isEmpty()) {
+            $tahunAkademikList = collect(['2025/2026', '2024/2025', '2023/2024']);
+        }
+
+        // Get distinct semester from Nilai table
+        $semesterList = Nilai::select('semester')
+            ->distinct()
+            ->orderBy('semester')
+            ->pluck('semester');
+            
+        if ($semesterList->isEmpty()) {
+            $semesterList = collect(range(1, 8));
+        }
+
+        // 2. Set Defaults based on available options
         $id_kelas = $request->input('id_kelas', null);
         $semester = $request->input('semester', null);
-        $tahun_akademik = $request->input('tahun_akademik', '2023/2024');
+        
+        // Default tahun_akademik to the latest one if not specified
+        $defaultTahun = $tahunAkademikList->first();
+        $tahun_akademik = $request->input('tahun_akademik', $defaultTahun);
 
-        // Get mahasiswa list
+
+        // 3. Get Data with Filters
         $query = Mahasiswa::query();
 
         if ($id_kelas) {
@@ -51,23 +84,14 @@ class KhsController extends Controller
             $mhs->ips = $mhs->total_sks > 0 ? round($totalBobot / $mhs->total_sks, 2) : 0;
         }
 
-        // Get kelas list for filter
-        $kelasList = Kelas::with('bidangKeahlian')->get();
-        
-        // Get distinct tahun akademik from mahasiswa periode (same as angkatan logic)
-        $tahunAkademikList = Mahasiswa::select('periode')
-            ->whereNotNull('periode')
-            ->distinct()
-            ->orderBy('periode', 'desc')
-            ->pluck('periode');
-
         return view('akademik.khs', compact(
             'mahasiswaList',
             'id_kelas',
             'semester',
             'tahun_akademik',
             'kelasList',
-            'tahunAkademikList'
+            'tahunAkademikList',
+            'semesterList'
         ));
     }
 

@@ -64,5 +64,18 @@ class AkademikController extends Controller
         }
     }
 
+    /**
+     * Get common filter options (agama, status, etc.)
+     */
+    public function getCommonFilters()
+    {
+        return response()->json([
+            'agama' => ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'],
+            'status_mahasiswa' => ['Aktif', 'Cuti', 'Lulus', 'DO', 'Mengundurkan Diri'],
+            'status_jadwal' => ['Offline', 'Online', 'Libur', 'Kelas Tunjangan', 'Belum Ada Konfirmasi'],
+            'jenis_kelamin' => ['Laki-laki', 'Perempuan']
+        ]);
+    }
+
     // Tambahkan method controller lain untuk fitur akademik di sini
 }

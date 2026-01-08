@@ -1,0 +1,26 @@
+﻿
+   INFO  Running migrations.  
+
+  2026_01_02_000006_modify_krs_to_use_matkul  100.56ms FAIL
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[42000]: Syntax error or access violation: 1091 Can't DROP FOREIGN KEY `krs_id_jadwal_foreign`; check that it exists (Connection: mysql, SQL: alter table `krs` drop foreign key `krs_id_jadwal_foreign`)
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:824
+    820Γûò                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    821Γûò                 );
+    822Γûò             }
+    823Γûò 
+  Γ₧£ 824Γûò             throw new QueryException(
+    825Γûò                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    826Γûò             );
+    827Γûò         }
+    828Γûò     }
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connection.php:570
+      PDOException::("SQLSTATE[42000]: Syntax error or access violation: 1091 Can't DROP FOREIGN KEY `krs_id_jadwal_foreign`; check that it exists")
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connection.php:570
+      PDOStatement::execute()
+

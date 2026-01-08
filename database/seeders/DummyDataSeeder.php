@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
 use App\Models\Mahasiswa;
 use App\Models\Kelas;
+use App\Models\BidangKeahlian;
 
 class DummyDataSeeder extends Seeder
 {
@@ -14,30 +15,55 @@ class DummyDataSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
 
+        // Fetch Bidang Keahlian IDs
+        // Map: Code => ID
+        $bkMap = BidangKeahlian::pluck('id_bidang_keahlian', 'kode')->toArray();
+
         // 1. Create Dummy Kelas
         $kelasIds = [];
         
-        // Jurusan mapping (code => full name)
-        $jurusanMapping = [
-            'OAA' => 'Office Automation Authorization',
-            'ASE' => 'Application Software Engineering',
-            'AIS' => 'Accounting Information System'
-        ];
-        
-        // Kelas untuk Angkatan 2024 (dengan strip)
+        // Kelas untuk Angkatan 2024 (semester 1-3)
         $kelas2024 = [
-            ['nama' => 'OAA-13A', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2024/2025'],
-            ['nama' => 'OAA-13B', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2024/2025'],
-            ['nama' => 'ASE-10', 'jurusan_code' => 'ASE', 'tahun_ajaran' => '2024/2025'],
-            ['nama' => 'AIS-12', 'jurusan_code' => 'AIS', 'tahun_ajaran' => '2024/2025'],
+            // OAA - Semester 1-3
+            ['nama' => 'OAA-13A', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2024/2025', 'semester' => 1],
+            ['nama' => 'OAA-13B', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2024/2025', 'semester' => 2],
+            ['nama' => 'OAA-13C', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2024/2025', 'semester' => 3],
+            
+            // ASE - Semester 1-3
+            ['nama' => 'ASE-10A', 'jurusan_code' => 'ASE', 'tahun_ajaran' => '2024/2025', 'semester' => 1],
+            ['nama' => 'ASE-10B', 'jurusan_code' => 'ASE', 'tahun_ajaran' => '2024/2025', 'semester' => 2],
+            ['nama' => 'ASE-10C', 'jurusan_code' => 'ASE', 'tahun_ajaran' => '2024/2025', 'semester' => 3],
+            
+            // AIS - Semester 1-3
+            ['nama' => 'AIS-12A', 'jurusan_code' => 'AIS', 'tahun_ajaran' => '2024/2025', 'semester' => 1],
+            ['nama' => 'AIS-12B', 'jurusan_code' => 'AIS', 'tahun_ajaran' => '2024/2025', 'semester' => 2],
+            ['nama' => 'AIS-12C', 'jurusan_code' => 'AIS', 'tahun_ajaran' => '2024/2025', 'semester' => 3],
         ];
         
-        // Kelas untuk Angkatan 2025 (dengan strip)
+        // Kelas untuk Angkatan 2025 (semester 4-6)
         $kelas2025 = [
-            ['nama' => 'OAA-14A', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2025/2026'],
-            ['nama' => 'OAA-14B', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2025/2026'],
-            ['nama' => 'ASE-11', 'jurusan_code' => 'ASE', 'tahun_ajaran' => '2025/2026'],
-            ['nama' => 'AIS-13', 'jurusan_code' => 'AIS', 'tahun_ajaran' => '2025/2026'],
+            // OAA - Semester 4-6
+            ['nama' => 'OAA-14A', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2025/2026', 'semester' => 4],
+            ['nama' => 'OAA-14B', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2025/2026', 'semester' => 5],
+            ['nama' => 'OAA-14C', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2025/2026', 'semester' => 6],
+            
+            // ASE - Semester 4-6
+            ['nama' => 'ASE-11A', 'jurusan_code' => 'ASE', 'tahun_ajaran' => '2025/2026', 'semester' => 4],
+            ['nama' => 'ASE-11B', 'jurusan_code' => 'ASE', 'tahun_ajaran' => '2025/2026', 'semester' => 5],
+            ['nama' => 'ASE-11C', 'jurusan_code' => 'ASE', 'tahun_ajaran' => '2025/2026', 'semester' => 6],
+            
+            // AIS - Semester 4-6
+            ['nama' => 'AIS-13A', 'jurusan_code' => 'AIS', 'tahun_ajaran' => '2025/2026', 'semester' => 4],
+            ['nama' => 'AIS-13B', 'jurusan_code' => 'AIS', 'tahun_ajaran' => '2025/2026', 'semester' => 5],
+            ['nama' => 'AIS-13C', 'jurusan_code' => 'AIS', 'tahun_ajaran' => '2025/2026', 'semester' => 6],
+            
+            // Additional Classes for Semester 7-8 coverage
+            ['nama' => 'OAA-15A', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2025/2026', 'semester' => 7],
+            ['nama' => 'OAA-15B', 'jurusan_code' => 'OAA', 'tahun_ajaran' => '2025/2026', 'semester' => 8],
+            ['nama' => 'ASE-12A', 'jurusan_code' => 'ASE', 'tahun_ajaran' => '2025/2026', 'semester' => 7],
+            ['nama' => 'ASE-12B', 'jurusan_code' => 'ASE', 'tahun_ajaran' => '2025/2026', 'semester' => 8],
+            ['nama' => 'AIS-14A', 'jurusan_code' => 'AIS', 'tahun_ajaran' => '2025/2026', 'semester' => 7],
+            ['nama' => 'AIS-14B', 'jurusan_code' => 'AIS', 'tahun_ajaran' => '2025/2026', 'semester' => 8],
         ];
         
         $kelasIds['2024'] = [];
@@ -47,8 +73,9 @@ class DummyDataSeeder extends Seeder
         foreach ($kelas2024 as $k) {
             $kelas = Kelas::create([
                 'nama_kelas' => $k['nama'],
-                'jurusan' => $jurusanMapping[$k['jurusan_code']], // Full name
+                'id_bidang_keahlian' => $bkMap[$k['jurusan_code']] ?? null, 
                 'tahun_ajaran' => $k['tahun_ajaran'],
+                'semester' => $k['semester'],
                 'nama_pa' => $faker->name,
             ]);
             $kelasIds['2024'][$k['jurusan_code']][] = $kelas->id_kelas;
@@ -58,8 +85,9 @@ class DummyDataSeeder extends Seeder
         foreach ($kelas2025 as $k) {
             $kelas = Kelas::create([
                 'nama_kelas' => $k['nama'],
-                'jurusan' => $jurusanMapping[$k['jurusan_code']], // Full name
+                'id_bidang_keahlian' => $bkMap[$k['jurusan_code']] ?? null,
                 'tahun_ajaran' => $k['tahun_ajaran'],
+                'semester' => $k['semester'],
                 'nama_pa' => $faker->name,
             ]);
             $kelasIds['2025'][$k['jurusan_code']][] = $kelas->id_kelas;
@@ -69,16 +97,19 @@ class DummyDataSeeder extends Seeder
         // A. Mahasiswa WITH Class
         for ($i = 0; $i < 15; $i++) {
             $jurusanCode = $faker->randomElement(['OAA', 'ASE', 'AIS']);
-            $jurusanFullName = $jurusanMapping[$jurusanCode];
             
             // Generate angkatan (hanya 2024 dan 2025 karena kelas cuma ada untuk tahun ini)
             $angkatan = $faker->randomElement(['2024', '2025']);
             $periodeStart = (int)$angkatan;
             $periodeEnd = $periodeStart + 1;
-            $periode = "$periodeStart/$periodeEnd";
+            $semesterNum = $faker->numberBetween(1, 8);
+            $periode = "$periodeStart/$periodeEnd/$semesterNum";
             
             // Select class based on angkatan and jurusan code
-            $selectedClass = $faker->randomElement($kelasIds[$angkatan][$jurusanCode]);
+            $selectedClass = null;
+            if (isset($kelasIds[$angkatan][$jurusanCode])) {
+                $selectedClass = $faker->randomElement($kelasIds[$angkatan][$jurusanCode]);
+            }
             
             Mahasiswa::create([
                 'nipd' => $faker->unique()->numerify('##########'),
@@ -88,7 +119,7 @@ class DummyDataSeeder extends Seeder
                 'tgl_lahir' => $faker->date('Y-m-d', '2005-01-01'),
                 'kelas' => 'null', // Optional legacy field
                 'id_kelas' => $selectedClass,
-                'jurusan' => $jurusanFullName, // Use full name
+                'id_bidang_keahlian' => $bkMap[$jurusanCode] ?? null,
                 'angkatan' => $angkatan,
                 'periode' => $periode,
                 'email' => $faker->unique()->safeEmail,
@@ -100,33 +131,40 @@ class DummyDataSeeder extends Seeder
             ]);
         }
 
-        // B. Mahasiswa WITHOUT Class (New Students)
-        for ($i = 0; $i < 5; $i++) {
-            $jurusanCode = $faker->randomElement(['OAA', 'ASE', 'AIS']);
-            $jurusanFullName = $jurusanMapping[$jurusanCode];
-            
-            // Generate angkatan and matching periode
-            $angkatan = '2025';
-            $periode = '2025/2026';
-            
-            Mahasiswa::create([
-                'nipd' => $faker->unique()->numerify('##########'),
-                'nama' => $faker->name,
-                'jenis_kelamin' => $faker->randomElement(['Laki-laki', 'Perempuan']),
-                'tempat_lahir' => $faker->city,
-                'tgl_lahir' => $faker->date('Y-m-d', '2005-01-01'),
-                'kelas' => null, // Explicitly null
-                'id_kelas' => null, // Explicitly null
-                'jurusan' => $jurusanFullName, // Use full name
-                'angkatan' => $angkatan,
-                'periode' => $periode,
-                'email' => $faker->unique()->safeEmail,
-                'alamat' => $faker->address,
-                'agama' => 'Islam',
-                'no_tlp' => $faker->numerify('08##########'),
-                'foto' => 'default.jpg',
-                'status' => 'Aktif',
-            ]);
+        // B. Mahasiswa WITHOUT Class (NEW: Ensure complete coverage for semesters 1-8 for BOTH 2024 & 2025)
+        $angkatans = ['2024', '2025'];
+        $semesters = range(1, 8); // [1, 2, 3, 4, 5, 6, 7, 8]
+        
+        foreach ($angkatans as $angkatan) {
+            foreach ($semesters as $sem) {
+                // Create at least 1 student per semester/angkatan
+                for ($k = 0; $k < 1; $k++) {
+                    $jurusanCode = $faker->randomElement(['OAA', 'ASE', 'AIS']);
+                    $periodeStart = (int)$angkatan;
+                    $periodeEnd = $periodeStart + 1;
+                    $periode = "$periodeStart/$periodeEnd/$sem";
+                    
+                    Mahasiswa::create([
+                        'nipd' => $faker->unique()->numerify('##########'),
+                        'nama' => $faker->name,
+                        'jenis_kelamin' => $faker->randomElement(['Laki-laki', 'Perempuan']),
+                        'tempat_lahir' => $faker->city,
+                        'tgl_lahir' => $faker->date('Y-m-d', '2005-01-01'),
+                        'kelas' => null, 
+                        'id_kelas' => null, 
+                        'id_bidang_keahlian' => $bkMap[$jurusanCode] ?? null,
+                        'angkatan' => $angkatan,
+                        'periode' => $periode,
+                        'email' => $faker->unique()->safeEmail,
+                        'alamat' => $faker->address,
+                        'agama' => 'Islam',
+                        'no_tlp' => $faker->numerify('08##########'),
+                        'foto' => 'default.jpg',
+                        'status' => 'Aktif',
+                    ]);
+                }
+            }
         }
+
     }
 }

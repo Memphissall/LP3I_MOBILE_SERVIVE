@@ -7,14 +7,16 @@ use App\Models\Kelas;
 use App\Models\Mahasiswa;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\BidangKeahlian;
 
 class KelasController extends Controller
 {
     public function getKelasList(Request $request)
     {
-        $query = Kelas::query();
+        $query = Kelas::with('bidangKeahlian'); // Eager load relation
         if ($request->filled('jurusan') && $request->jurusan !== 'Semua Jurusan') {
-            $query->where('jurusan', $request->jurusan);
+            // Support filter by id_bidang_keahlian or old behavior (if needed)
+            $query->where('id_bidang_keahlian', $request->jurusan); 
         }
         $kelas = $query->get();
         return response()->json($kelas);
@@ -43,10 +45,17 @@ class KelasController extends Controller
         $kelasId = $request->id_kelas;
 
         if ($request->mode_kelas === 'new') {
+            // Handle jurusan input (bisa berupa ID atau nama)
+            $idBidangKeahlian = $request->jurusan;
+            if (!is_numeric($request->jurusan)) {
+                $bidang = BidangKeahlian::where('nama', $request->jurusan)->orWhere('kode', $request->jurusan)->first();
+                $idBidangKeahlian = $bidang ? $bidang->id_bidang_keahlian : null;
+            }
+
             $newKelas = Kelas::create([
                 'kode_mk' => $request->kode_mk,
                 'nama_kelas' => $request->nama_kelas,
-                'jurusan' => $request->jurusan,
+                'id_bidang_keahlian' => $idBidangKeahlian,
                 'tahun_ajaran' => $request->tahun_ajaran,
                 'nama_pa' => $request->nama_pa,
             ]);
@@ -92,10 +101,19 @@ class KelasController extends Controller
         $id_kelas = $request->id_kelas;
 
         if ($request->mode_kelas === 'new') {
+            // Handle jurusan input
+            $jurusanInput = $request->jurusan_baru;
+            $idBidangKeahlian = $jurusanInput;
+            
+            if (!is_numeric($jurusanInput)) {
+                $bidang = BidangKeahlian::where('nama', $jurusanInput)->orWhere('kode', $jurusanInput)->first();
+                $idBidangKeahlian = $bidang ? $bidang->id_bidang_keahlian : null;
+            }
+
             // 2. Insert tanpa kolom kode_mk / kode_kelas
             $id_kelas = DB::table('kelas')->insertGetId([
                 'nama_kelas'   => $request->nama_kelas_baru,
-                'jurusan'      => $request->jurusan_baru,
+                'id_bidang_keahlian' => $idBidangKeahlian,
                 'tahun_ajaran' => $request->tahun_ajaran,
                 'nama_pa'      => $request->nama_pa,
                 'created_at'   => now(),

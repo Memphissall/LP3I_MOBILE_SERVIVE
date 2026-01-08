@@ -24,6 +24,7 @@ class Dosen extends Model
         'tanggal_lahir',
         'jenis_kelamin',
         'agama',
+        'alamat',
         'email',
         'no_telp',
         'honor_per_sks',

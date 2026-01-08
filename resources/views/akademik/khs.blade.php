@@ -61,9 +61,9 @@
                         <div class="relative">
                             <select name="semester" id="filter-semester" class="w-full p-3 pl-4 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-[#009DA5] focus:ring-4 focus:ring-[#009DA5]/10 transition-all duration-200 appearance-none cursor-pointer hover:border-gray-300">
                                 <option value="">Semua Semester</option>
-                                @for($i = 1; $i <= 8; $i++)
-                                    <option value="{{ $i }}" {{ $semester == $i ? 'selected' : '' }}>Semester {{ $i }}</option>
-                                @endfor
+                                @foreach($semesterList as $sem)
+                                    <option value="{{ $sem }}" {{ $semester == $sem ? 'selected' : '' }}>Semester {{ $sem }}</option>
+                                @endforeach
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-400 group-hover:text-[#004269] transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>

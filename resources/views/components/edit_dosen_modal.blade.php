@@ -44,14 +44,21 @@
 
                 {{-- Pendidikan --}}
                 <div>
-                    <label for="edit-pendidikan" class="block text-sm font-medium text-gray-700">Pendidikan Terakhir *</label>
-                    <select id="edit-pendidikan" name="pendidikan" required
+                    <label for="edit-pendidikan-select" class="block text-sm font-medium text-gray-700">Pendidikan Terakhir *</label>
+                    <select id="edit-pendidikan-select" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- Pilih --</option>
-                        <option value="S1">S1</option>
-                        <option value="S2">S2</option>
-                        <option value="S3">S3</option>
+                        <option value="">-- Pilih Pendidikan --</option>
+                        <!-- Options will be populated from database -->
+                        <option value="__custom__">Lainnya (Custom)</option>
                     </select>
+                    
+                    {{-- Hidden input for custom value --}}
+                    <input type="text" id="edit-pendidikan-custom" name="pendidikan" 
+                        placeholder="Masukkan pendidikan custom, contoh: S2 - Pendidikan Bahasa"
+                        class="mt-2 hidden block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    
+                    {{-- Hidden input for selected value --}}
+                    <input type="hidden" id="edit-pendidikan" name="pendidikan">
                 </div>
 
                 {{-- Bidang Keahlian --}}
@@ -99,6 +106,14 @@
                         <option value="Buddha">Buddha</option>
                         <option value="Konghucu">Konghucu</option>
                     </select>
+                </div>
+
+                {{-- Alamat --}}
+                <div>
+                    <label for="edit-alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
+                    <textarea id="edit-alamat" name="alamat" rows="2"
+                        placeholder="Alamat lengkap dosen"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
                 </div>
 
                 {{-- Email --}}

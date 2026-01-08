@@ -40,6 +40,21 @@ class MatkulController extends Controller
     }
 
     /**
+     * Get filter options for matkul (semester values)
+     */
+    public function getFilterOptions()
+    {
+        $semesters = MataKuliah::distinct()
+            ->orderBy('semester')
+            ->pluck('semester');
+        
+        return response()->json([
+            'semesters' => $semesters
+        ]);
+    }
+
+
+    /**
      * Store new course
      */
     public function store(Request $request)

@@ -9,8 +9,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(SuperAdminSeeder::class);
-        $this->call([KelasMatkulSeeder::class,
-]);
+        // $this->call([KelasMatkulSeeder::class,]); // File missing
 
     }
 }

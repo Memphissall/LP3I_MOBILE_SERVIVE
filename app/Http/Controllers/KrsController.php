@@ -47,14 +47,22 @@ class KrsController extends Controller
                 });
         }
 
-        // Get kelas list for filter
-        $kelasList = Kelas::with('bidangKeahlian')->get();
+        // Get kelas list for filter (deduplicated by name)
+        $kelasList = Kelas::with('bidangKeahlian')
+            ->get()
+            ->unique('nama_kelas')
+            ->sortBy('nama_kelas');
         
         // Get distinct tahun akademik from krs table
         $tahunAkademikList = Krs::select('tahun_akademik')
             ->distinct()
             ->orderBy('tahun_akademik', 'desc')
             ->pluck('tahun_akademik');
+            
+        // Fallback if empty (e.g. fresh database)
+        if ($tahunAkademikList->isEmpty()) {
+            $tahunAkademikList = collect(['2025/2026', '2024/2025', '2023/2024']);
+        }
 
         return view('akademik.krs', compact(
             'mahasiswaList',
@@ -197,6 +205,11 @@ class KrsController extends Controller
         }
 
         $krsList = $krsList->orderBy('semester')->get();
+
+        // If semester is not provided, try to infer it from the data
+        if (!$semester && $krsList->isNotEmpty()) {
+            $semester = $krsList->first()->semester;
+        }
 
         $totalSKS = $krsList->sum(function($krs) {
             return $krs->mataKuliah->sks ?? 0;

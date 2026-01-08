@@ -32,14 +32,7 @@
                         <select id="tambah-semester" name="semester_filter" required 
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" disabled>
                             <option value="">-- Pilih Semester --</option>
-                            <option value="1">Semester 1</option>
-                            <option value="2">Semester 2</option>
-                            <option value="3">Semester 3</option>
-                            <option value="4">Semester 4</option>
-                            <option value="5">Semester 5</option>
-                            <option value="6">Semester 6</option>
-                            <option value="7">Semester 7</option>
-                            <option value="8">Semester 8</option>
+                            {{-- Will be populated by JavaScript from database --}}
                         </select>
                     </div>
 
@@ -73,17 +66,12 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         {{-- Hari --}}
-                        <div>
+                        <div class="col-span-1">
                             <label for="tambah-hari" class="block text-sm font-medium text-gray-700">Hari *</label>
                             <select id="tambah-hari" name="hari" required 
                                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">-- Pilih Hari --</option>
-                                <option value="Senin">Senin</option>
-                                <option value="Selasa">Selasa</option>
-                                <option value="Rabu">Rabu</option>
-                                <option value="Kamis">Kamis</option>
-                                <option value="Jumat">Jumat</option>
-                                <option value="Sabtu">Sabtu</option>
+                                {{-- Will be populated by JavaScript from database --}}
                             </select>
                         </div>
 
@@ -106,17 +94,12 @@
                         </select>
                     </div>
 
-                    {{-- Status --}}
                     <div>
                         <label for="tambah-status" class="block text-sm font-medium text-gray-700">Status *</label>
                         <select id="tambah-status" name="status" required 
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                             <option value="">-- Pilih Status --</option>
-                            <option value="Offline">Offline</option>
-                            <option value="Online">Online</option>
-                            <option value="Libur">Libur</option>
-                            <option value="Kelas Tunjangan">Kelas Tunjangan</option>
-                            <option value="Belum Ada Konfirmasi" selected>Belum Ada Konfirmasi</option>
+                            {{-- Will be populated by JavaScript --}}
                         </select>
                     </div>
 

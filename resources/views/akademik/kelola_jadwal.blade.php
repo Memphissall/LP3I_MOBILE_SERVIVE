@@ -63,13 +63,8 @@
                 <div class="group">
                     <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Hari</label>
                     <select id="filter-hari" class="w-full p-2.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:bg-white focus:border-[#009DA5] focus:ring-2 focus:ring-[#009DA5]/20 transition-all">
-                        <option value="Semua Hari">Semua</option>
-                        <option value="Senin">Senin</option>
-                        <option value="Selasa">Selasa</option>
-                        <option value="Rabu">Rabu</option>
-                        <option value="Kamis">Kamis</option>
-                        <option value="Jumat">Jumat</option>
-                        <option value="Sabtu">Sabtu</option>
+                        <option value="">Semua Hari</option>
+                        {{-- Will be populated by JavaScript from database --}}
                     </select>
                 </div>
 
@@ -154,6 +149,9 @@
 @include('components.tambah_jadwal_modal')
 @include('components.edit_jadwal_modal')
 
+{{-- Toast Notification Container --}}
+<div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
 @endsection
 
 @push('scripts')
@@ -162,6 +160,46 @@ $(document).ready(function() {
     
     // Setup CSRF Token
     $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+
+    // Toast Notification Function
+    function showToast(message, type = 'success') {
+        const colors = {
+            success: 'bg-green-500',
+            error: 'bg-red-500',
+            info: 'bg-blue-500',
+            warning: 'bg-yellow-500'
+        };
+        
+        const icons = {
+            success: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>',
+            error: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>',
+            info: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+            warning: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>'
+        };
+        
+        const toast = $(`
+            <div class="flex items-center gap-3 ${colors[type]} text-white px-4 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full opacity-0 min-w-[300px]">
+                <div class="flex-shrink-0">${icons[type]}</div>
+                <p class="flex-1 text-sm font-medium">${message}</p>
+                <button class="flex-shrink-0 hover:bg-white/20 rounded p-1 transition-colors" onclick="$(this).parent().remove()">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+        `);
+        
+        $('#toast-container').append(toast);
+        
+        // Animate in
+        setTimeout(() => {
+            toast.removeClass('translate-x-full opacity-0');
+        }, 10);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            toast.addClass('translate-x-full opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
 
     let dropdownData = { bidang_keahlian: [], ruangan: [] };
     let mataKuliahCache = {};
@@ -184,12 +222,19 @@ $(document).ready(function() {
                 dropdownData = data;
                 populateBidangKeahlianDropdowns();
                 populateRuanganDropdowns();
+                populateHariDropdowns();
+                populateStatusDropdowns();
+                populateSemesterDropdowns();
             },
             error: function(xhr) { console.error('Error loading dropdown data', xhr); }
         });
     }
 
     function populateBidangKeahlianDropdowns() {
+        if (!dropdownData.bidang_keahlian || dropdownData.bidang_keahlian.length === 0) {
+            console.warn('Bidang Keahlian data is empty');
+            return;
+        }
         const selectors = ['#filter-bidang-keahlian', '#tambah-bidang-keahlian', '#edit-bidang-keahlian'];
         selectors.forEach(selector => {
             const $select = $(selector);
@@ -206,9 +251,44 @@ $(document).ready(function() {
         selectors.forEach(selector => {
             const $select = $(selector);
             $select.find('option:not(:first)').remove();
-            dropdownData.ruangan.forEach(r => {
-                $select.append(`<option value="${r.id_ruangan}">${r.nama_ruangan}</option>`);
-            });
+            if (dropdownData.ruangan) {
+                dropdownData.ruangan.forEach(r => {
+                    $select.append(`<option value="${r.id_ruangan}">${r.nama_ruangan}</option>`);
+                });
+            }
+        });
+    }
+
+    function populateHariDropdowns() {
+        const selectors = ['#filter-hari', '#tambah-hari', '#edit-hari'];
+        selectors.forEach(selector => {
+            const $select = $(selector);
+            $select.find('option:not(:first)').remove();
+            if (dropdownData.hari) {
+                dropdownData.hari.forEach(h => { $select.append(`<option value="${h}">${h}</option>`); });
+            }
+        });
+    }
+
+    function populateStatusDropdowns() {
+        const selectors = ['#tambah-status', '#edit-status'];
+        selectors.forEach(selector => {
+            const $select = $(selector);
+            $select.find('option:not(:first)').remove();
+            if (dropdownData.status) {
+                dropdownData.status.forEach(s => { $select.append(`<option value="${s}">${s}</option>`); });
+            }
+        });
+    }
+
+    function populateSemesterDropdowns() {
+        const selectors = ['#tambah-semester', '#edit-semester'];
+        selectors.forEach(selector => {
+            const $select = $(selector);
+            $select.find('option:not(:first)').remove();
+            if (dropdownData.semester && dropdownData.semester.length > 0) {
+                dropdownData.semester.forEach(s => { $select.append(`<option value="${s}">Semester ${s}</option>`); });
+            }
         });
     }
 
@@ -232,7 +312,18 @@ $(document).ready(function() {
         $select.find('option:not(:first)').remove();
         $select.prop('disabled', false);
         if (dosenData.length === 0) { $select.append('<option value="">-- Tidak Ada Dosen --</option>'); return; }
-        dosenData.forEach(d => { $select.append(`<option value="${d.id_dosen}">${d.nama_dosen}</option>`); });
+        
+        // Deduplicate by nama_dosen
+        const seenNames = new Set();
+        const uniqueDosen = [];
+        dosenData.forEach(d => {
+            if (!seenNames.has(d.nama_dosen)) {
+                seenNames.add(d.nama_dosen);
+                uniqueDosen.push(d);
+            }
+        });
+        
+        uniqueDosen.forEach(d => { $select.append(`<option value="${d.id_dosen}">${d.nama_dosen}</option>`); });
     }
 
     function loadKelas(id_bidang_keahlian, semester, modalPrefix) {
@@ -257,7 +348,20 @@ $(document).ready(function() {
             success: function(data) {
                 const $select = $('#filter-kelas');
                 $select.find('option:not(:first)').remove();
-                data.forEach(k => { $select.append(`<option value="${k.id_kelas}">${k.nama_kelas}</option>`); });
+                
+                // Deduplicate by nama_kelas
+                const seenNames = new Set();
+                const uniqueKelas = [];
+                data.forEach(k => {
+                    if (!seenNames.has(k.nama_kelas)) {
+                        seenNames.add(k.nama_kelas);
+                        uniqueKelas.push(k);
+                    }
+                });
+                
+                uniqueKelas.forEach(k => { 
+                    $select.append(`<option value="${k.id_kelas}">${k.nama_kelas}</option>`); 
+                });
             }
         });
     }
@@ -267,7 +371,18 @@ $(document).ready(function() {
         $select.find('option:not(:first)').remove();
         $select.prop('disabled', false);
         if (kelasData.length === 0) { $select.append('<option value="">-- Tidak Ada Kelas --</option>'); return; }
-        kelasData.forEach(k => { $select.append(`<option value="${k.id_kelas}">${k.nama_kelas}</option>`); });
+        
+        // Deduplicate by nama_kelas
+        const seenNames = new Set();
+        const uniqueKelas = [];
+        kelasData.forEach(k => {
+            if (!seenNames.has(k.nama_kelas)) {
+                seenNames.add(k.nama_kelas);
+                uniqueKelas.push(k);
+            }
+        });
+        
+        uniqueKelas.forEach(k => { $select.append(`<option value="${k.id_kelas}">${k.nama_kelas}</option>`); });
     }
 
     function loadMataKuliah(id_bidang_keahlian, semester, modalPrefix) {
@@ -412,7 +527,11 @@ $(document).ready(function() {
     }
 
     // 5. MODAL & ACTIONS
-    $('#btn-open-tambah-jadwal-modal').click(function() { $('#tambah-jadwal-modal').removeClass('hidden'); });
+    $('#btn-open-tambah-jadwal-modal').click(function() { 
+        // Semester, Hari, Status are already populated by loadDropdownData()
+        $('#tambah-jadwal-modal').removeClass('hidden'); 
+    });
+
     $('.close-tambah-jadwal-modal').click(function() { $('#tambah-jadwal-modal').addClass('hidden'); $('#tambah-jadwal-form')[0].reset(); });
     $('.close-edit-jadwal-modal').click(function() { $('#edit-jadwal-modal').addClass('hidden'); });
 
@@ -424,12 +543,12 @@ $(document).ready(function() {
             method: 'POST',
             data: $(this).serialize(),
             success: function(response) {
-                alert(response.message);
+                showToast(response.message, 'success');
                 $('#tambah-jadwal-modal').addClass('hidden');
                 $('#tambah-jadwal-form')[0].reset();
                 renderTable();
             },
-            error: function(xhr) { alert('Gagal: ' + (xhr.responseJSON?.message || 'Terjadi kesalahan')); },
+            error: function(xhr) { showToast('Gagal: ' + (xhr.responseJSON?.message || 'Terjadi kesalahan'), 'error'); },
             complete: function() { $('#btn-tambah-jadwal').text('Simpan Data').prop('disabled', false); }
         });
     });
@@ -447,15 +566,17 @@ $(document).ready(function() {
                 $('#edit-bidang-keahlian').val(id_bidang_keahlian);
                 $('#edit-semester').val(semester);
                 
+                // Load cascading data
                 loadKelas(id_bidang_keahlian, semester, 'edit');
                 loadMataKuliah(id_bidang_keahlian, semester, 'edit');
                 
+                // Wait for cascading data to load before setting values
                 setTimeout(() => {
                     $('#edit-id-matkul').val(data.id_matkul).trigger('change');
                     $('#edit-id-kelas').val(data.id_kelas);
-                    $('#edit-hari').val(data.hari);
-                    $('#edit-id-ruangan').val(data.id_ruangan);
-                    $('#edit-status').val(data.status || 'Belum Ada Konfirmasi');
+                    $('#edit-hari').val(data.hari); // Options already populated by loadDropdownData
+                    $('#edit-id-ruangan').val(data.id_ruangan); // Options already populated by loadDropdownData
+                    $('#edit-status').val(data.status || 'Belum Ada Konfirmasi'); // Options already populated by loadDropdownData
                     setTimeout(() => {
                         $('#edit-waktu').val(data.waktu);
                         $('#edit-id-dosen').val(data.id_dosen);
@@ -463,7 +584,7 @@ $(document).ready(function() {
                 }, 300);
                 $('#edit-jadwal-modal').removeClass('hidden');
             },
-            error: function() { alert('Gagal mengambil data'); }
+            error: function() { showToast('Gagal mengambil data', 'error'); }
         });
     });
 
@@ -475,11 +596,11 @@ $(document).ready(function() {
             method: 'PUT',
             data: $(this).serialize(),
             success: function(response) {
-                alert(response.message);
+                showToast(response.message, 'success');
                 $('#edit-jadwal-modal').addClass('hidden');
                 renderTable();
             },
-            error: function(xhr) { alert('Gagal: ' + (xhr.responseJSON?.message || 'Terjadi kesalahan')); },
+            error: function(xhr) { showToast('Gagal: ' + (xhr.responseJSON?.message || 'Terjadi kesalahan'), 'error'); },
             complete: function() { $('#btn-update-jadwal').text('Simpan Perubahan').prop('disabled', false); }
         });
     });
@@ -490,13 +611,14 @@ $(document).ready(function() {
             url: "{{ route('admin.jadwal.destroy', ':id') }}".replace(':id', $(this).data('id')),
             method: 'DELETE',
             data: { _token: "{{ csrf_token() }}" },
-            success: function(response) { alert(response.message); renderTable(); },
-            error: function() { alert('Gagal menghapus data'); }
+            success: function(response) { showToast(response.message, 'success'); renderTable(); },
+            error: function() { showToast('Gagal menghapus data', 'error'); }
         });
     });
 
     $('#btn-filter').click(function() { renderTable(); });
     loadDropdownData();
+    // loadHariOptions(); // REMOVED (Replaced by populateHariDropdowns inside loadDropdownData)
 });
 </script>
 @endpush

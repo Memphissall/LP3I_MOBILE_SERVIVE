@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <title>Transkrip Nilai - Batch Print</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
         @page {
             size: A4;
-            margin: 20mm;
+            margin: 5mm 10mm;
         }
         
         * {
@@ -16,10 +18,12 @@
         }
         
         body {
-            font-family: Arial, sans-serif;
-            font-size: 10pt;
-            line-height: 1.4;
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 9pt; /* Reduced font size */
+            line-height: 1.3;
             color: #000;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         
         .page-break {
@@ -28,58 +32,69 @@
         
         .container {
             width: 100%;
-            max-width: 210mm;
+            max-width: 100%;
             margin: 0 auto;
+            padding: 0 5px;
         }
         
-        /* Header Section */
-        .header {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
+        /* HEADER STYLE - Garis Ganda (Tebal & Tipis) */
+        .header { 
+            text-align: center; 
+            padding-bottom: 5px;
+            border-bottom: 1px solid #000; /* Garis tipis */
+            margin-bottom: 5px; /* Reduced */
+            position: relative; 
+            min-height: 80px; /* Reduced */
+        }
+
+        /* Styling Logo di Pojok Kiri */
+        .header-logo {
+            position: absolute;
+            left: 0;
+            width: 50px; /* Reduced */
+            height: auto;
+        }
+
+        /* Membuat garis tebal tambahan */
+        .header::after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            right: 0;
+            border-bottom: 3px solid #000; /* Garis tebal */
+        }
+
+        .campus-name { 
+            font-weight: bold; 
+            font-size: 14pt; /* Reduced */
+            color: #000066; 
+            letter-spacing: 1px;
+            margin: 0;
+            text-transform: uppercase;
         }
         
-        .logo {
-            width: 70px;
-            height: 70px;
-            margin-right: 15px;
-        }
-        
-        .college-info {
-            flex: 1;
-        }
-        
-        .college-info h2 {
-            font-size: 14pt;
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-        
-        .college-info p {
-            font-size: 8pt;
+        .campus-address {
+            font-size: 7pt; /* Reduced */
+            color: #333;
             margin: 2px 0;
-        }
-        
-        .academic-year {
-            font-weight: bold;
-            font-size: 9pt;
-            margin-top: 5px;
+            padding-bottom: 2px;
         }
         
         /* Title */
         .title {
             text-align: center;
-            font-size: 12pt;
+            font-size: 12pt; /* Reduced */
             font-weight: bold;
-            margin: 15px 0;
+            margin: 5px 0; /* Reduced */
+            text-decoration: underline;
             text-transform: uppercase;
         }
         
         /* Student Info */
         .student-info {
-            margin-bottom: 15px;
+            margin-bottom: 5px; /* Reduced */
         }
         
         .student-info table {
@@ -88,12 +103,12 @@
         }
         
         .student-info td {
-            padding: 2px 0;
-            font-size: 9pt;
+            padding: 1px 0; /* Reduced */
+            font-size: 8pt; /* Reduced */
         }
         
         .student-info td:first-child {
-            width: 130px;
+            width: 120px;
             font-weight: bold;
         }
         
@@ -105,7 +120,7 @@
         .transkrip-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 8px;
+            margin-bottom: 5px; /* Reduced */
         }
         
         .transkrip-table thead {
@@ -116,33 +131,33 @@
         .transkrip-table th,
         .transkrip-table td {
             border: 1px solid #000;
-            padding: 6px;
+            padding: 3px; /* Reduced padding */
             text-align: left;
         }
         
         .transkrip-table th {
             font-weight: bold;
             text-align: center;
-            font-size: 9pt;
+            font-size: 8pt; /* Reduced */
         }
         
         .transkrip-table td {
-            font-size: 9pt;
+            font-size: 8pt; /* Reduced */
         }
         
         .semester-header {
             background-color: #d3d3d3;
             font-weight: bold;
-            font-size: 9pt;
+            font-size: 8pt;
         }
         
         .col-no {
-            width: 30px;
+            width: 25px;
             text-align: center !important;
         }
         
         .col-kode {
-            width: 80px;
+            width: 70px;
         }
         
         .col-matkul {
@@ -150,17 +165,17 @@
         }
         
         .col-sks {
-            width: 40px;
+            width: 30px;
             text-align: center !important;
         }
         
         .col-nilai {
-            width: 50px;
+            width: 40px;
             text-align: center !important;
         }
         
         .col-mutu {
-            width: 40px;
+            width: 30px;
             text-align: center !important;
         }
         
@@ -177,14 +192,14 @@
         
         /* Note */
         .note {
-            font-size: 8pt;
+            font-size: 7pt;
             font-style: italic;
-            margin: 10px 0;
+            margin: 5px 0;
         }
         
         /* Signature Section */
         .signature-section {
-            margin-top: 30px;
+            margin-top: 15px; /* Reduced */
             display: flex;
             justify-content: space-between;
         }
@@ -194,13 +209,13 @@
         }
         
         .signature-box p {
-            margin: 3px 0;
-            font-size: 9pt;
+            margin: 2px 0;
+            font-size: 8pt;
         }
         
         .signature-space {
-            height: 50px;
-            margin: 10px 0;
+            height: 30px; /* Reduced */
+            margin: 5px 0;
         }
         
         .signature-name {
@@ -228,14 +243,12 @@
     <div class="container {{ !$loop->last ? 'page-break' : '' }}">
         <!-- Header -->
         <div class="header">
-            <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="10" width="80" height="80" fill="none" stroke="#000" stroke-width="3"/>
-                <text x="50" y="60" font-size="40" font-weight="bold" text-anchor="middle" fill="#000">LP3I</text>
-            </svg>
-            <div class="college-info">
-                <h2>LP3I COLLEGE</h2>
-                <p>Cabang Karawang : Jl. Tarumanegara, Komplek Karawang Hijau Blok B. 4-6, Kab. Karawang</p>
-                <p class="academic-year">TRANSKRIP NILAI AKADEMIK</p>
+            <img src="{{ asset('images/lp3i_krw.png') }}" class="header-logo" alt="logo LP3I">
+            
+            <div class="campus-name">LP3I COLLEGE KARAWANG</div>
+            <div class="campus-address">
+                Gedung Karawang Hijau, Ruko Karawang Hijau, Jl. Tarumanagara No.4-6, Desa Purwadana,<br>
+                Kecamatan Telukjambe Timur, Kab. Karawang, Jawa Barat.
             </div>
         </div>
         

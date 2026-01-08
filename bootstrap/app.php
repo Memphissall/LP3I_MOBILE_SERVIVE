@@ -15,8 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         
         // Mendaftarkan alias 'admin' ke class AdminSessionMock
         $middleware->alias([
-            // Alias 'admin' sekarang merujuk ke logic Session Mock kamu!
-            'admin' => \App\Http\Middleware\AdminSessionMock::class, 
+            // Alias 'admin' sekarang merujuk ke middleware otentikasi asli
+            'admin' => \App\Http\Middleware\AdminMiddleware::class, 
         ]);
     })
 

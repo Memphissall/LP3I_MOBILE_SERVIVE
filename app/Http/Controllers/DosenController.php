@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Dosen;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class DosenController extends Controller
 {
@@ -17,6 +18,25 @@ class DosenController extends Controller
     }
 
     /**
+     * Get filter options from database (for dynamic dropdowns)
+     */
+    public function getFilterOptions()
+    {
+        // Return all possible status enum values
+        $status = ['Aktif', 'Tidak Aktif', 'Kontrak', 'Tetap', 'Honorer'];
+        
+        $pendidikan = DB::table('dosen')
+            ->distinct()
+            ->orderBy('pendidikan')
+            ->pluck('pendidikan');
+        
+        return response()->json([
+            'status' => $status,
+            'pendidikan' => $pendidikan
+        ]);
+    }
+
+    /**
      * Get list of lecturers with filters (for AJAX)
      */
     public function apiList(Request $request)
@@ -25,7 +45,7 @@ class DosenController extends Controller
 
         // Filter by status
         if ($request->filled('status') && $request->status !== 'Semua Status') {
-            $query->where('status', strtolower($request->status));
+            $query->where('status', $request->status);
         }
 
         // Filter by education
@@ -33,7 +53,7 @@ class DosenController extends Controller
             $query->where('pendidikan', $request->pendidikan);
         }
 
-        $dosens = $query->get();
+        $dosens = $query->get()->unique('nama_dosen')->values();
         return response()->json($dosens);
     }
 
@@ -57,12 +77,13 @@ class DosenController extends Controller
             'nidn' => 'required|string|unique:dosen,nidn,' . $id . ',id_dosen',
             'id_dosen_internal' => 'nullable|string|unique:dosen,id_dosen_internal,' . $id . ',id_dosen',
             'nama_dosen' => 'required|string|max:255',
-            'pendidikan' => 'required|in:S1,S2,S3',
+            'pendidikan' => 'required|string|max:255',
             'bidang' => 'required|string|max:255',
             'tempat' => 'required|string',
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'agama' => 'required|string',
+            'alamat' => 'nullable|string',
             'email' => 'required|email|unique:dosen,email,' . $id . ',id_dosen',
             'no_telp' => 'required|string',
             'honor_per_sks' => 'required|integer|min:0',
@@ -122,7 +143,7 @@ class DosenController extends Controller
             $query->where('pendidikan', $pendidikan);
         }
 
-        $dosens = $query->get();
+        $dosens = $query->get()->unique('nama_dosen');
 
         return view('akademik.print_dosen', compact('dosens'));
     }

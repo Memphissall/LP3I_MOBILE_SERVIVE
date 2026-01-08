@@ -76,7 +76,8 @@ class JadwalController extends Controller
             $query->where('semester', $request->semester);
         }
 
-        $mataKuliah = $query->orderBy('semester')->orderBy('kode_mk')->get();
+        // Deduplicate by nama_mk
+        $mataKuliah = $query->orderBy('semester')->orderBy('kode_mk')->get()->unique('nama_mk')->values();
         return response()->json($mataKuliah);
     }
 
@@ -95,7 +96,8 @@ class JadwalController extends Controller
             $query->where('semester', $request->semester);
         }
 
-        $kelas = $query->orderBy('nama_kelas')->get();
+        // Deduplicate by nama_kelas
+        $kelas = $query->orderBy('nama_kelas')->get()->unique('nama_kelas')->values();
         return response()->json($kelas);
     }
 
@@ -110,7 +112,8 @@ class JadwalController extends Controller
             $query->where('id_matkul', $request->id_matkul);
         }
 
-        $dosen = $query->orderBy('nama_dosen')->get();
+        // Deduplicate by nama_dosen
+         $dosen = $query->orderBy('nama_dosen')->get()->unique('nama_dosen')->values();
         return response()->json($dosen);
     }
 
@@ -120,10 +123,31 @@ class JadwalController extends Controller
     public function getDropdownData()
     {
         return response()->json([
-            'bidang_keahlian' => BidangKeahlian::select('id_bidang_keahlian', 'kode', 'nama')->get(),
-            'ruangan' => Ruangan::select('id_ruangan', 'nama_ruangan')->get()
+            'bidang_keahlian' => BidangKeahlian::select('id_bidang_keahlian', 'kode', 'nama')->orderBy('nama')->get(),
+            'ruangan' => Ruangan::select('id_ruangan', 'nama_ruangan')->orderBy('nama_ruangan')->get(),
+            'hari' => ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
+            'status' => ['Offline', 'Online', 'Libur', 'Kelas Tunjangan', 'Belum Ada Konfirmasi'],
+            'semester' => MataKuliah::select('semester')->distinct()->orderBy('semester')->pluck('semester')
         ]);
     }
+
+    /**
+     * Get filter options from database (for dynamic dropdowns)
+     */
+    public function getFilterOptions()
+    {
+        $hari = Jadwal::distinct()->pluck('hari')->filter();
+        
+        // Fallback to standard days if database is empty
+        if ($hari->isEmpty()) {
+            $hari = collect(['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']);
+        }
+        
+        return response()->json([
+            'hari' => $hari->values()
+        ]);
+    }
+
 
     /**
      * Store new schedule

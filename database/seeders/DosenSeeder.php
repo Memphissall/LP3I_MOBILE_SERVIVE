@@ -9,11 +9,13 @@ class DosenSeeder extends Seeder
 {
     public function run()
     {
-        // Get mata kuliah IDs for assignment
-        $matkul = DB::table('mata_kuliah')->select('id_matkul', 'kode_mk', 'nama_mk')->get()->keyBy('kode_mk');
-        
+        // Helper to find matkul by name
+        $findMatkul = function($pattern) {
+            return DB::table('mata_kuliah')->where('nama_mk', 'LIKE', $pattern)->first()->id_matkul ?? null;
+        };
+
         $dosen = [
-            // DOSEN BAHASA INGGRIS (untuk semua English courses)
+            // DOSEN BAHASA INGGRIS
             [
                 'nidn' => '0103038803',
                 'nama_dosen' => 'Citra Dewi, S.S., M.Pd.',
@@ -23,10 +25,10 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Bahasa Inggris',
                 'jenis_kelamin' => 'Perempuan',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23OA0101']->id_matkul ?? null, // English 1
+                'id_matkul' => $findMatkul('%English%1%') ?? $findMatkul('%English%'),
             ],
             
-            // DOSEN PEMROGRAMAN WEB (untuk Web Programming courses)
+            // DOSEN PEMROGRAMAN WEB
             [
                 'nidn' => '0108088808',
                 'nama_dosen' => 'Hendra Kusuma, S.Kom., M.T.',
@@ -36,7 +38,7 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Pemrograman Web',
                 'jenis_kelamin' => 'Laki-laki',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23AD0201']->id_matkul ?? null, // Web Programming 1
+                'id_matkul' => $findMatkul('%Web%Programming%') ?? $findMatkul('%Pemrograman%Web%'),
             ],
             
             // DOSEN DATABASE
@@ -49,10 +51,10 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Database & Big Data',
                 'jenis_kelamin' => 'Perempuan',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23AD0202']->id_matkul ?? null, // Database 1
+                'id_matkul' => $findMatkul('%Database%') ?? $findMatkul('%Basis%Data%'),
             ],
             
-            // DOSEN PEMROGRAMAN (Java, Python, dll)
+            // DOSEN PEMROGRAMAN
             [
                 'nidn' => '0107078807',
                 'nama_dosen' => 'Dr. Gunawan Wibisono, S.T., M.Kom.',
@@ -62,7 +64,7 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Pemrograman & RPL',
                 'jenis_kelamin' => 'Laki-laki',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23AD0101']->id_matkul ?? null, // Algorithms & Programming
+                'id_matkul' => $findMatkul('%Algoritma%') ?? $findMatkul('%Programming%'),
             ],
             
             // DOSEN AKUNTANSI
@@ -75,7 +77,7 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Akuntansi',
                 'jenis_kelamin' => 'Laki-laki',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23CA0101']->id_matkul ?? null, // Pengantar Akuntansi
+                'id_matkul' => $findMatkul('%Pengantar%Akuntansi%'),
             ],
             
             // DOSEN PERPAJAKAN
@@ -88,7 +90,7 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Perpajakan',
                 'jenis_kelamin' => 'Perempuan',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23CA0201']->id_matkul ?? null, // Perpajakan
+                'id_matkul' => $findMatkul('%Perpajakan%'),
             ],
             
             // DOSEN MANAJEMEN
@@ -101,10 +103,10 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Manajemen',
                 'jenis_kelamin' => 'Laki-laki',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23OA0201']->id_matkul ?? null, // Business Management
+                'id_matkul' => $findMatkul('%Business%Management%') ?? $findMatkul('%Manajemen%'),
             ],
             
-            // DOSEN OFFICE (Ms. Office, dll)
+            // DOSEN OFFICE
             [
                 'nidn' => '0101018801',
                 'nama_dosen' => 'Dr. Anita Rahmawati, S.E., M.M.',
@@ -114,7 +116,7 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Aplikasi Perkantoran',
                 'jenis_kelamin' => 'Perempuan',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23OA0102']->id_matkul ?? null, // Office Applications
+                'id_matkul' => $findMatkul('%Office%') ?? $findMatkul('%Perkantoran%'),
             ],
             
             // DOSEN SISTEM INFORMASI
@@ -127,7 +129,7 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Sistem Informasi',
                 'jenis_kelamin' => 'Laki-laki',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23CA0102']->id_matkul ?? null, // Sistem Informasi Akuntansi
+                'id_matkul' => $findMatkul('%Sistem%Informasi%'),
             ],
             
             // DOSEN JARINGAN
@@ -140,7 +142,7 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Jaringan Komputer',
                 'jenis_kelamin' => 'Laki-laki',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23AD0301']->id_matkul ?? null, // Computer Networks
+                'id_matkul' => $findMatkul('%Networking%') ?? $findMatkul('%Jaringan%'),
             ],
             
             // DOSEN SOFT SKILLS
@@ -153,7 +155,7 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Kewirausahaan & Soft Skills',
                 'jenis_kelamin' => 'Perempuan',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23AD0103']->id_matkul ?? null, // Character Building
+                'id_matkul' => $findMatkul('%Character%') ?? $findMatkul('%Kewirausahaan%'),
             ],
             
             // DOSEN HUKUM BISNIS
@@ -166,19 +168,25 @@ class DosenSeeder extends Seeder
                 'bidang' => 'Hukum Bisnis',
                 'jenis_kelamin' => 'Perempuan',
                 'status' => 'Aktif',
-                'id_matkul' => $matkul['23OA0301']->id_matkul ?? null, // Business Law
+                'id_matkul' => $findMatkul('%Law%') ?? $findMatkul('%Hukum%'),
             ],
         ];
 
         foreach ($dosen as $d) {
-            DB::table('dosen')->insert(array_merge($d, [
-                'created_at' => now(),
-                'updated_at' => now()
-            ]));
+            DB::table('dosen')->updateOrInsert(
+                ['nidn' => $d['nidn']],
+                array_merge($d, [
+                    'updated_at' => now()
+                ])
+            );
         }
         
         // Update related courses dengan dosen yang sama
-        $this->assignRelatedCourses();
+        // DISABLED: assignRemainingCourses() already handles all mata kuliah assignment
+        // $this->assignRelatedCourses();
+        
+        // Assign ALL remaining mata kuliah to dosen
+        $this->assignRemainingCourses();
     }
     
     private function assignRelatedCourses()
@@ -197,19 +205,20 @@ class DosenSeeder extends Seeder
                 ->get();
                 
             foreach ($englishCourses as $course) {
-                DB::table('dosen')->insert([
-                    'nidn' => $dosenEnglish->nidn . '_' . $course->kode_mk,
-                    'nama_dosen' => $dosenEnglish->nama_dosen,
-                    'email' => str_replace('@', "+{$course->kode_mk}@", $dosenEnglish->email),
-                    'no_telp' => $dosenEnglish->no_telp,
-                    'pendidikan' => $dosenEnglish->pendidikan,
-                    'bidang' => $dosenEnglish->bidang,
-                    'jenis_kelamin' => $dosenEnglish->jenis_kelamin,
-                    'status' => $dosenEnglish->status,
-                    'id_matkul' => $course->id_matkul,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                DB::table('dosen')->updateOrInsert(
+                    ['nidn' => $dosenEnglish->nidn . '_' . $course->kode_mk],
+                    [
+                        'nama_dosen' => $dosenEnglish->nama_dosen,
+                        'email' => str_replace('@', "+{$course->kode_mk}@", $dosenEnglish->email),
+                        'no_telp' => $dosenEnglish->no_telp,
+                        'pendidikan' => $dosenEnglish->pendidikan,
+                        'bidang' => $dosenEnglish->bidang,
+                        'jenis_kelamin' => $dosenEnglish->jenis_kelamin,
+                        'status' => $dosenEnglish->status,
+                        'id_matkul' => $course->id_matkul,
+                        'updated_at' => now(),
+                    ]
+                );
             }
         }
         
@@ -226,19 +235,20 @@ class DosenSeeder extends Seeder
                 ->get();
                 
             foreach ($webCourses as $course) {
-                DB::table('dosen')->insert([
-                    'nidn' => $dosenWeb->nidn . '_' . $course->kode_mk,
-                    'nama_dosen' => $dosenWeb->nama_dosen,
-                    'email' => str_replace('@', "+{$course->kode_mk}@", $dosenWeb->email),
-                    'no_telp' => $dosenWeb->no_telp,
-                    'pendidikan' => $dosenWeb->pendidikan,
-                    'bidang' => $dosenWeb->bidang,
-                    'jenis_kelamin' => $dosenWeb->jenis_kelamin,
-                    'status' => $dosenWeb->status,
-                    'id_matkul' => $course->id_matkul,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                DB::table('dosen')->updateOrInsert(
+                    ['nidn' => $dosenWeb->nidn . '_' . $course->kode_mk],
+                    [
+                        'nama_dosen' => $dosenWeb->nama_dosen,
+                        'email' => str_replace('@', "+{$course->kode_mk}@", $dosenWeb->email),
+                        'no_telp' => $dosenWeb->no_telp,
+                        'pendidikan' => $dosenWeb->pendidikan,
+                        'bidang' => $dosenWeb->bidang,
+                        'jenis_kelamin' => $dosenWeb->jenis_kelamin,
+                        'status' => $dosenWeb->status,
+                        'id_matkul' => $course->id_matkul,
+                        'updated_at' => now(),
+                    ]
+                );
             }
         }
         
@@ -251,20 +261,87 @@ class DosenSeeder extends Seeder
                 ->get();
                 
             foreach ($dbCourses as $course) {
-                DB::table('dosen')->insert([
-                    'nidn' => $dosenDB->nidn . '_' . $course->kode_mk,
-                    'nama_dosen' => $dosenDB->nama_dosen,
-                    'email' => str_replace('@', "+{$course->kode_mk}@", $dosenDB->email),
-                    'no_telp' => $dosenDB->no_telp,
-                    'pendidikan' => $dosenDB->pendidikan,
-                    'bidang' => $dosenDB->bidang,
-                    'jenis_kelamin' => $dosenDB->jenis_kelamin,
-                    'status' => $dosenDB->status,
-                    'id_matkul' => $course->id_matkul,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                DB::table('dosen')->updateOrInsert(
+                    ['nidn' => $dosenDB->nidn . '_' . $course->kode_mk],
+                    [
+                        'nama_dosen' => $dosenDB->nama_dosen,
+                        'email' => str_replace('@', "+{$course->kode_mk}@", $dosenDB->email),
+                        'no_telp' => $dosenDB->no_telp,
+                        'pendidikan' => $dosenDB->pendidikan,
+                        'bidang' => $dosenDB->bidang,
+                        'jenis_kelamin' => $dosenDB->jenis_kelamin,
+                        'status' => $dosenDB->status,
+                        'id_matkul' => $course->id_matkul,
+                        'updated_at' => now(),
+                    ]
+                );
             }
         }
+        
+        // Assign ALL remaining mata kuliah to dosen
+        $this->assignRemainingCourses();
+    }
+    
+    private function assignRemainingCourses()
+    {
+        // Get all mata kuliah
+        $allMatkul = DB::table('mata_kuliah')->get();
+        
+        // Get ALL existing dosen with their assigned matkul (including clones)
+        $assignedMatkulIds = DB::table('dosen')->pluck('id_matkul')->toArray();
+        
+        // Find unassigned mata kuliah
+        $unassignedMatkul = $allMatkul->filter(function($mk) use ($assignedMatkulIds) {
+            return !in_array($mk->id_matkul, $assignedMatkulIds);
+        });
+        
+        if ($unassignedMatkul->isEmpty()) {
+            echo "All mata kuliah already have assigned dosen.\n";
+            return; // All mata kuliah already assigned
+        }
+        
+        echo "Found " . $unassignedMatkul->count() . " unassigned mata kuliah. Assigning dosen...\n";
+        
+        // Get base dosen templates (the original 12 dosen)
+        $baseDosen = DB::table('dosen')
+            ->where('nidn', 'NOT LIKE', '%\_%') // Only original dosen, not clones
+            ->get();
+        
+        if ($baseDosen->isEmpty()) {
+            return; // No dosen to assign
+        }
+        
+        // Assign unassigned mata kuliah to dosen (round-robin)
+        $dosenIndex = 0;
+        foreach ($unassignedMatkul as $matkul) {
+            $templateDosen = $baseDosen[$dosenIndex % $baseDosen->count()];
+            
+            // Create new dosen entry for this matkul
+            DB::table('dosen')->updateOrInsert(
+                ['nidn' => $templateDosen->nidn . '_' . $matkul->kode_mk],
+                [
+                    'nama_dosen' => $templateDosen->nama_dosen,
+                    'email' => str_replace('@', "+{$matkul->kode_mk}@", $templateDosen->email),
+                    'no_telp' => $templateDosen->no_telp,
+                    'pendidikan' => $templateDosen->pendidikan,
+                    'bidang' => $templateDosen->bidang,
+                    'jenis_kelamin' => $templateDosen->jenis_kelamin,
+                    'status' => $templateDosen->status,
+                    'id_matkul' => $matkul->id_matkul,
+                    'tempat' => $templateDosen->tempat ?? 'Jakarta',
+                    'tanggal_lahir' => $templateDosen->tanggal_lahir ?? '1990-01-01',
+                    'agama' => $templateDosen->agama ?? 'Islam',
+                    'honor_per_sks' => $templateDosen->honor_per_sks ?? 150000,
+                    'user_id' => $templateDosen->user_id ?? 1,
+                    'alamat' => $templateDosen->alamat ?? 'Karawang',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+            
+            $dosenIndex++;
+        }
+        
+        echo "Successfully assigned " . $unassignedMatkul->count() . " mata kuliah to dosen.\n";
     }
 }

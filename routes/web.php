@@ -30,10 +30,7 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 
 // ROUTE LOGOUT (POST method for form submission)
-Route::post('/logout', function () {
-    session()->flush();
-    return redirect()->route('login')->with('success', 'Logout berhasil!');
-})->name('logout');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
 // =========================================================================
@@ -81,6 +78,7 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     
     // Dosen CRUD Routes
     Route::get('/api/dosen-list', [App\Http\Controllers\DosenController::class, 'apiList'])->name('api.dosen.list');
+    Route::get('/api/dosen/filter-options', [App\Http\Controllers\DosenController::class, 'getFilterOptions'])->name('api.dosen.filter-options');
     Route::get('/dosen/{id}/edit', [App\Http\Controllers\DosenController::class, 'edit'])->name('dosen.edit');
     Route::put('/dosen/{id}', [App\Http\Controllers\DosenController::class, 'update'])->name('dosen.update');
     Route::delete('/dosen/{id}', [App\Http\Controllers\DosenController::class, 'destroy'])->name('dosen.destroy');
@@ -88,6 +86,7 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     
     // Matkul CRUD Routes
     Route::get('/api/bidang-keahlian-list', [App\Http\Controllers\MatkulController::class, 'getBidangKeahlianList'])->name('api.bidang_keahlian.list');
+    Route::get('/api/matkul/filter-options', [App\Http\Controllers\MatkulController::class, 'getFilterOptions'])->name('api.matkul.filter-options');
     Route::get('/api/matkul-list', [App\Http\Controllers\MatkulController::class, 'index'])->name('api.matkul.list');
     Route::post('/matkul', [App\Http\Controllers\MatkulController::class, 'store'])->name('matkul.store');
     Route::get('/matkul/{id}/edit', [App\Http\Controllers\MatkulController::class, 'edit'])->name('matkul.edit');
@@ -101,6 +100,8 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::get('/api/jadwal/kelas-filtered', [App\Http\Controllers\JadwalController::class, 'getKelasByBidangKeahlian'])->name('api.jadwal.kelas_filtered');
     Route::get('/api/jadwal/dosen-filtered', [App\Http\Controllers\JadwalController::class, 'getDosenByMataKuliah'])->name('api.jadwal.dosen_filtered');
     Route::get('/api/jadwal/dropdown', [App\Http\Controllers\JadwalController::class, 'getDropdownData'])->name('api.jadwal.dropdown');
+    Route::get('/api/jadwal/filter-options', [App\Http\Controllers\JadwalController::class, 'getFilterOptions'])->name('api.jadwal.filter-options');
+    Route::get('/api/common-filters', [App\Http\Controllers\AkademikController::class, 'getCommonFilters'])->name('api.common.filters');
     Route::get('/api/jadwal-list', [App\Http\Controllers\JadwalController::class, 'index'])->name('api.jadwal.list');
     Route::post('/jadwal', [App\Http\Controllers\JadwalController::class, 'store'])->name('jadwal.store');
     Route::get('/jadwal/{id}/edit', [App\Http\Controllers\JadwalController::class, 'edit'])->name('jadwal.edit');

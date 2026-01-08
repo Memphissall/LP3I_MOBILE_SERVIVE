@@ -8,7 +8,7 @@
     {{-- Header Page --}}
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Data Dosen</h1>
+            <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Data Pendidik</h1>
             <p class="text-sm text-gray-500 mt-1">Manajemen data tenaga pengajar (Dosen Tetap, Kontrak, & Honorer).</p>
         </div>
     </div>
@@ -65,9 +65,7 @@
                     <div class="relative">
                         <select id="filter-pendidikan" class="w-full p-3 pl-4 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-[#009DA5] focus:ring-4 focus:ring-[#009DA5]/10 transition-all duration-200 appearance-none cursor-pointer hover:border-gray-300">
                             <option value="Semua Pendidikan">Semua Pendidikan</option>
-                            <option value="S1">S1</option>
-                            <option value="S2">S2</option>
-                            <option value="S3">S3</option>
+                            <!-- Options will be populated dynamically from database -->
                         </select>
                         <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-400 group-hover:text-[#004269] transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -119,19 +117,23 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-12 border-b-2 border-gray-200">No</th>
-                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">NIDN</th>
-                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">ID Internal</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">Id Pendidik</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">Id</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">Nama Dosen</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">Tempat Lahir</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200 w-24">Tanggal Lahir</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200 w-24">Alamat</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200 w-24">Email</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200 w-24">Pendidikan</th>
-                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">Bidang Keahlian</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200 w-24">No Telp</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-28 border-b-2 border-gray-200">Status</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-24 border-b-2 border-gray-200">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="lecturer-table-body" class="bg-white divide-y divide-gray-100 text-sm">
                     <tr>
-                         {{-- Colspan 8 untuk 8 Kolom --}}
-                        <td colspan="8" class="px-6 py-10 text-center text-gray-500 italic">
+                         {{-- Colspan 12 untuk 12 Kolom --}}
+                        <td colspan="12" class="px-6 py-10 text-center text-gray-500 italic">
                              <div class="flex flex-col items-center justify-center">
                                 <span class="text-sm font-medium text-gray-400">Silakan klik tombol "Terapkan Filter" untuk memuat data.</span>
                             </div>
@@ -157,6 +159,45 @@
 $(document).ready(function() {
     
     // =========================================================================
+    // LOAD DYNAMIC FILTER OPTIONS ON PAGE LOAD
+    // =========================================================================
+    
+    function loadFilterOptions() {
+        $.ajax({
+            url: "{{ route('admin.api.dosen.filter-options') }}",
+            method: 'GET',
+            success: function(data) {
+                // Populate Status dropdown
+                const $statusSelect = $('#filter-status');
+                const currentStatus = $statusSelect.val();
+                $statusSelect.empty();
+                $statusSelect.append('<option value="Semua Status">Semua Status</option>');
+                data.status.forEach(function(status) {
+                    // Database now uses Title case, use value directly
+                    $statusSelect.append(`<option value="${status}">${status}</option>`);
+                });
+                if (currentStatus) $statusSelect.val(currentStatus);
+                
+                // Populate Pendidikan dropdown
+                const $pendidikanSelect = $('#filter-pendidikan');
+                const currentPendidikan = $pendidikanSelect.val();
+                $pendidikanSelect.empty();
+                $pendidikanSelect.append('<option value="Semua Pendidikan">Semua Pendidikan</option>');
+                data.pendidikan.forEach(function(pendidikan) {
+                    $pendidikanSelect.append(`<option value="${pendidikan}">${pendidikan}</option>`);
+                });
+                if (currentPendidikan) $pendidikanSelect.val(currentPendidikan);
+            },
+            error: function(xhr) {
+                console.error('Failed to load filter options:', xhr);
+            }
+        });
+    }
+    
+    // Load filter options on page load
+    loadFilterOptions();
+    
+    // =========================================================================
     // RENDER TABLE FUNCTION
     // =========================================================================
     
@@ -166,7 +207,7 @@ $(document).ready(function() {
 
         // Loading State
         const $tbody = $('#lecturer-table-body');
-        $tbody.html('<tr><td colspan="8" class="px-6 py-16 text-center"><div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-[#004269] transition ease-in-out duration-150 cursor-not-allowed"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Sedang memuat data...</div></td></tr>');
+        $tbody.html('<tr><td colspan="12" class="px-6 py-16 text-center"><div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-[#004269] transition ease-in-out duration-150 cursor-not-allowed"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Sedang memuat data...</div></td></tr>');
         $('#btn-filter').prop('disabled', true).addClass('opacity-75');
 
         $.ajax({
@@ -180,7 +221,7 @@ $(document).ready(function() {
                      // Empty State Illustration
                      const emptyHtml = `
                     <tr>
-                        <td colspan="8" class="px-6 py-12 text-center">
+                        <td colspan="12" class="px-6 py-12 text-center">
                             <div class="flex flex-col items-center justify-center">
                                 <div class="bg-gray-50 rounded-full p-6 mb-4">
                                     <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -211,14 +252,18 @@ $(document).ready(function() {
                                 </td>
                                 <td class="px-3 py-3">
                                     <div class="text-xs font-bold text-gray-800 group-hover:text-[#004269] transition-colors">${dosen.nama_dosen}</div>
-                                    <div class="text-[10px] text-gray-400">${dosen.email || ''}</div>
+                                    <div class="text-[10px] text-gray-400">${dosen.bidang || ''}</div>
                                 </td>
+                                <td class="px-3 py-3 text-xs text-gray-600">${dosen.tempat || '-'}</td>
+                                <td class="px-3 py-3 text-xs text-gray-600 text-center">${dosen.tanggal_lahir || '-'}</td>
+                                <td class="px-3 py-3 text-xs text-gray-600 truncate max-w-xs" title="${dosen.alamat || '-'}">${dosen.alamat || '-'}</td>
+                                <td class="px-3 py-3 text-xs text-gray-600 truncate" title="${dosen.email || '-'}">${dosen.email || '-'}</td>
                                 <td class="px-3 py-3 text-center">
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700 uppercase tracking-wide border border-gray-200">
                                         ${dosen.pendidikan}
                                     </span>
                                 </td>
-                                <td class="px-3 py-3 text-xs text-gray-600 font-medium truncate max-w-xs" title="${dosen.bidang}">${dosen.bidang}</td>
+                                <td class="px-3 py-3 text-xs text-gray-600">${dosen.no_telp || '-'}</td>
                                 <td class="px-3 py-3 text-center">${statusBadge}</td>
                                 <td class="px-3 py-3 text-center whitespace-nowrap text-xs font-medium">
                                     <div class="flex justify-center space-x-1">
@@ -241,7 +286,7 @@ $(document).ready(function() {
             error: function(xhr) {
                 Swal.fire({ icon: 'error', title: 'Gagal!', text: 'Gagal memuat data dosen', confirmButtonColor: '#004269' });
                 console.error(xhr);
-                $tbody.html('<tr><td colspan="8" class="px-6 py-10 text-center text-red-500 italic">Terjadi kesalahan saat memuat data.</td></tr>');
+                $tbody.html('<tr><td colspan="12" class="px-6 py-10 text-center text-red-500 italic">Terjadi kesalahan saat memuat data.</td></tr>');
             },
             complete: function() {
                 $('#btn-filter').prop('disabled', false).removeClass('opacity-75');
@@ -290,22 +335,86 @@ $(document).ready(function() {
             url: editUrl,
             method: 'GET',
             success: function(data) {
-                $('#edit-dosen-id').val(data.id_dosen);
-                $('#edit-nidn').val(data.nidn);
-                $('#edit-id-internal').val(data.id_dosen_internal);
-                $('#edit-nama').val(data.nama_dosen);
-                $('#edit-pendidikan').val(data.pendidikan);
-                $('#edit-bidang').val(data.bidang);
-                $('#edit-tempat').val(data.tempat);
-                $('#edit-tanggal-lahir').val(data.tanggal_lahir);
-                $('#edit-jenis-kelamin').val(data.jenis_kelamin);
-                $('#edit-agama').val(data.agama);
-                $('#edit-email').val(data.email);
-                $('#edit-no-telp').val(data.no_telp);
-                $('#edit-honor').val(data.honor_per_sks);
-                $('#edit-status').val(data.status);
+                // First, populate pendidikan options from filter data
+                $.ajax({
+                    url: "{{ route('admin.api.dosen.filter-options') }}",
+                    method: 'GET',
+                    success: function(filterData) {
+                        console.log('Filter data received:', filterData);
+                        
+                        // Populate select dropdown with database values
+                        const $pendidikanSelect = $('#edit-pendidikan-select');
+                        $pendidikanSelect.find('option:not(:first):not(:last)').remove(); // Keep first (placeholder) and last (custom) option
+                        
+                        filterData.pendidikan.forEach(function(pendidikan) {
+                            // Insert before the "Lainnya (Custom)" option
+                            $pendidikanSelect.find('option:last').before(`<option value="${pendidikan}">${pendidikan}</option>`);
+                        });
+                        console.log('Select dropdown populated with', filterData.pendidikan.length, 'options');
+                        
+                        // Populate form fields
+                        $('#edit-dosen-id').val(data.id_dosen);
+                        $('#edit-nidn').val(data.nidn);
+                        $('#edit-id-internal').val(data.id_dosen_internal);
+                        $('#edit-nama').val(data.nama_dosen);
+                        $('#edit-bidang').val(data.bidang);
+                        $('#edit-tempat').val(data.tempat);
+                        $('#edit-tanggal-lahir').val(data.tanggal_lahir);
+                        $('#edit-jenis-kelamin').val(data.jenis_kelamin);
+                        $('#edit-agama').val(data.agama);
+                        $('#edit-alamat').val(data.alamat);
+                        $('#edit-email').val(data.email);
+                        $('#edit-no-telp').val(data.no_telp);
+                        $('#edit-honor').val(data.honor_per_sks);
+                        $('#edit-status').val(data.status ? data.status.toLowerCase() : '');
 
-                $('#edit-dosen-modal').removeClass('hidden');
+                        // Set pendidikan value
+                        const pendidikanValue = data.pendidikan;
+                        
+                        // Check if value exists in select options
+                        const optionExists = $('#edit-pendidikan-select option[value="' + pendidikanValue + '"]').length > 0;
+                        
+                        if (optionExists) {
+                            // Use existing option from database
+                            $('#edit-pendidikan-select').val(pendidikanValue);
+                            $('#edit-pendidikan-custom').addClass('hidden').prop('required', false);
+                            $('#edit-pendidikan').val(pendidikanValue);
+                        } else {
+                            // Use custom option
+                            $('#edit-pendidikan-select').val('__custom__');
+                            $('#edit-pendidikan-custom').removeClass('hidden').prop('required', true).val(pendidikanValue);
+                            $('#edit-pendidikan').val(pendidikanValue);
+                        }
+                        
+                        $('#edit-dosen-modal').removeClass('hidden');
+                    },
+                    error: function(xhr) {
+                        console.error('Failed to load pendidikan options:', xhr);
+                        // Still show modal even if datalist fails
+                        $('#edit-dosen-id').val(data.id_dosen);
+                        $('#edit-nidn').val(data.nidn);
+                        $('#edit-id-internal').val(data.id_dosen_internal);
+                        $('#edit-nama').val(data.nama_dosen);
+                        
+                        // Set pendidikan value (error handler)
+                        const pendidikanValue = data.pendidikan;
+                        
+                        // Check if value exists in select options
+                        const optionExists = $('#edit-pendidikan-select option[value="' + pendidikanValue + '"]').length > 0;
+                        
+                        if (optionExists) {
+                            $('#edit-pendidikan-select').val(pendidikanValue);
+                            $('#edit-pendidikan-custom').addClass('hidden').prop('required', false);
+                            $('#edit-pendidikan').val(pendidikanValue);
+                        } else {
+                            $('#edit-pendidikan-select').val('__custom__');
+                            $('#edit-pendidikan-custom').removeClass('hidden').prop('required', true).val(pendidikanValue);
+                            $('#edit-pendidikan').val(pendidikanValue);
+                        }
+                        
+                        $('#edit-dosen-modal').removeClass('hidden');
+                    }
+                });
             },
             error: function(xhr) {
                 Swal.fire({ icon: 'error', title: 'Gagal!', text: 'Gagal mengambil data dosen', confirmButtonColor: '#004269' });
@@ -416,7 +525,29 @@ $(document).ready(function() {
     $('#btn-filter').click(function() {
         renderTable();
     });
-
+    
+    // Handle Pendidikan Select Change
+    $('#edit-pendidikan-select').on('change', function() {
+        const value = $(this).val();
+        if (value === '__custom__') {
+            $('#edit-pendidikan-custom').removeClass('hidden').prop('required', true).focus();
+            $('#edit-pendidikan-select').prop('required', false);
+        } else {
+            $('#edit-pendidikan-custom').addClass('hidden').prop('required', false).val('');
+            $('#edit-pendidikan-select').prop('required', true);
+            $('#edit-pendidikan').val(value);
+        }
+    });
+    
+    // Handle Custom Input Change
+    $('#edit-pendidikan-custom').on('input', function() {
+        $('#edit-pendidikan').val($(this).val());
+    });
+    
+    // EDIT BUTTON HANDLER
+    // This seems to be a misplaced comment/handler, assuming it's meant for the print button based on context
+    // If it's a new edit button handler, it should be placed with other edit-related handlers.
+    // For now, I'm placing it as per the instruction's provided snippet.
     $('#btn-print').click(function() {
         const status = $('#filter-status').val();
         const pendidikan = $('#filter-pendidikan').val();

@@ -61,14 +61,7 @@
                     <div class="relative">
                         <select id="filter-semester" class="w-full p-3 pl-4 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-[#009DA5] focus:ring-4 focus:ring-[#009DA5]/10 transition-all duration-200 appearance-none cursor-pointer hover:border-gray-300">
                             <option value="Semua Semester">Semua Semester</option>
-                            <option value="1">Semester 1</option>
-                            <option value="2">Semester 2</option>
-                            <option value="3">Semester 3</option>
-                            <option value="4">Semester 4</option>
-                            <option value="5">Semester 5</option>
-                            <option value="6">Semester 6</option>
-                            <option value="7">Semester 7</option>
-                            <option value="8">Semester 8</option>
+                            <!-- Options will be populated dynamically -->
                         </select>
                         <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-400 group-hover:text-[#004269] transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -119,9 +112,8 @@
                     <tr>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-12 border-b-2 border-gray-200">No</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[120px] border-b-2 border-gray-200">Kode MK</th>
-                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[250px] border-b-2 border-gray-200">Nama Mata Kuliah</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[250px] border-b-2 border-gray-200">Materi Ajar</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[80px] border-b-2 border-gray-200">SKS</th>
-                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Bobot</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Semester</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[180px] border-b-2 border-gray-200">Bidang Keahlian</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">SAP</th>
@@ -196,6 +188,59 @@ $(document).ready(function() {
 
     loadBidangKeahlian();
     
+    // LOAD SEMESTER OPTIONS DYNAMICALLY
+    function loadSemesterOptions() {
+        console.log('Loading Semester options...');
+        $.ajax({
+            url: "{{ route('admin.api.matkul.filter-options') }}",
+            method: 'GET',
+            success: function(data) {
+                console.log('Semester data received:', data);
+                const $semesterSelect = $('#filter-semester');
+                const currentSemester = $semesterSelect.val();
+                $semesterSelect.empty();
+                $semesterSelect.append('<option value="Semua Semester">Semua Semester</option>');
+                data.semesters.forEach(function(semester) {
+                    $semesterSelect.append(`<option value="${semester}">Semester ${semester}</option>`);
+                });
+                console.log('Semester dropdown populated with', data.semesters.length, 'options');
+                if (currentSemester) $semesterSelect.val(currentSemester);
+            },
+            error: function(xhr) {
+                console.error('Failed to load semester options:', xhr);
+                console.error('Status:', xhr.status, 'Response:', xhr.responseText);
+            }
+        });
+    }
+    
+    // Load Bidang Keahlian options for filter
+    function loadBidangKeahlianOptions() {
+        console.log('Loading Bidang Keahlian options...');
+        $.ajax({
+            url: "{{ route('admin.api.bidang_keahlian.list') }}",
+            method: 'GET',
+            success: function(data) {
+                console.log('Bidang Keahlian data received:', data);
+                const $bidangSelect = $('#filter-bidang-keahlian');
+                const currentBidang = $bidangSelect.val();
+                $bidangSelect.empty();
+                $bidangSelect.append('<option value="all">Semua Bidang Keahlian</option>');
+                data.forEach(function(bidang) {
+                    $bidangSelect.append(`<option value="${bidang.id_bidang_keahlian}">${bidang.nama} (${bidang.kode})</option>`);
+                });
+                console.log('Bidang Keahlian dropdown populated with', data.length, 'options');
+                if (currentBidang && currentBidang !== 'all') $bidangSelect.val(currentBidang);
+            },
+            error: function(xhr) {
+                console.error('Failed to load bidang keahlian options:', xhr);
+                console.error('Status:', xhr.status, 'Response:', xhr.responseText);
+            }
+        });
+    }
+    
+    loadBidangKeahlianOptions();
+    loadSemesterOptions();
+    
     // RENDER TABLE
     function renderTable() {
         const id_bidang_keahlian = $('#filter-bidang-keahlian').val();
@@ -262,9 +307,6 @@ $(document).ready(function() {
                                         ${mk.sks}
                                     </span>
                                 </td>
-                                <td class="px-3 py-3 text-center text-xs font-bold text-gray-600">
-                                    ${mk.bobot_kompetensi}%
-                                </td>
                                 <td class="px-3 py-3 text-center">
                                      <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-600 uppercase tracking-wide border border-amber-100">
                                         SMT ${mk.semester}
@@ -304,12 +346,31 @@ $(document).ready(function() {
     // TAMBAH MATKUL
     $('#btn-open-tambah-matkul-modal').click(function() {
         $('#tambah-matkul-modal').removeClass('hidden');
+        // Load semester options for modal
+        loadSemesterOptionsForSelect('#tambah-semester');
     });
 
     $('.close-tambah-matkul-modal').click(function() {
         $('#tambah-matkul-modal').addClass('hidden');
         $('#tambah-matkul-form')[0].reset();
     });
+    
+    // Function to load semester options for a specific select element
+    function loadSemesterOptionsForSelect(selectId) {
+        $.ajax({
+            url: "{{ route('admin.api.matkul.filter-options') }}",
+            method: 'GET',
+            success: function(data) {
+                const $select = $(selectId);
+                const currentValue = $select.val();
+                $select.find('option:not(:first)').remove();
+                data.semesters.forEach(function(semester) {
+                    $select.append(`<option value="${semester}">Semester ${semester}</option>`);
+                });
+                if (currentValue) $select.val(currentValue);
+            }
+        });
+    }
 
     $('#tambah-matkul-form').submit(function(e) {
         e.preventDefault();
@@ -343,6 +404,9 @@ $(document).ready(function() {
         const matkulId = $(this).data('id');
         const editUrl = "{{ route('admin.matkul.edit', ':id') }}".replace(':id', matkulId);
 
+        // Load semester options first
+        loadSemesterOptionsForSelect('#edit-semester');
+
         $.ajax({
             url: editUrl,
             method: 'GET',
@@ -352,7 +416,12 @@ $(document).ready(function() {
                 $('#edit-nama-mk').val(data.nama_mk);
                 $('#edit-sks').val(data.sks);
                 $('#edit-bobot-kompetensi').val(data.bobot_kompetensi);
-                $('#edit-semester').val(data.semester);
+                
+                // Set semester after options are loaded
+                setTimeout(() => {
+                    $('#edit-semester').val(data.semester);
+                }, 200);
+                
                 $('#edit-bidang-keahlian').val(data.id_bidang_keahlian);
                 $('#edit-deskripsi').val(data.deskripsi);
 

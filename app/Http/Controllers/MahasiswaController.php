@@ -27,10 +27,13 @@ class MahasiswaController extends Controller
         // Get bidang keahlian from bidang_keahlian table
         $jurusan = DB::table('bidang_keahlian')->select('id_bidang_keahlian', 'nama', 'kode')->get();
         $angkatan = DB::table('mahasiswa')->whereNotNull('angkatan')->distinct()->pluck('angkatan');
-        $periode = DB::table('mahasiswa')->whereNotNull('periode')->distinct()->pluck('periode');
+        $periode = DB::table('mahasiswa')->whereNotNull('periode')->distinct()->pluck('periode')->sort()->values();
         
-        // Get kelas
-        $kelas = DB::table('kelas')->select('id_kelas', 'nama_kelas')->get();
+        // Get kelas with id_bidang_keahlian for filtering (DISTINCT to prevent duplicates)
+        $kelas = DB::table('kelas')
+            ->select('id_kelas', 'nama_kelas', 'id_bidang_keahlian')
+            ->distinct()
+            ->get();
         
         return response()->json([
             'status'   => 'success',
@@ -72,16 +75,26 @@ class MahasiswaController extends Controller
             $query->where('periode', $request->periode);
         }
 
-        // 4. Filter Kelas
-        if ($request->filled('kelas') && !in_array($request->kelas, ['', 'Semua Kelas'])) {
-            if (is_numeric($request->kelas)) {
-                $query->where('id_kelas', $request->kelas);
-            } else {
-                $query->whereHas('data_kelas', function($q) use ($request) {
-                    $q->where('nama_kelas', $request->kelas);
+        // 4. Filter Kelas - Handle duplicate class names by filtering by name
+    if ($request->filled('kelas') && !in_array($request->kelas, ['', 'Semua Kelas'])) {
+        if (is_numeric($request->kelas)) {
+            // Get the class name from the selected id_kelas
+            $kelasName = \App\Models\Kelas::where('id_kelas', $request->kelas)->value('nama_kelas');
+            if ($kelasName) {
+                // Filter by class name to catch all students in classes with the same name
+                $query->whereHas('data_kelas', function($q) use ($kelasName) {
+                    $q->where('nama_kelas', $kelasName);
                 });
+            } else {
+                // Fallback to ID if name not found
+                $query->where('id_kelas', $request->kelas);
             }
+        } else {
+            $query->whereHas('data_kelas', function($q) use ($request) {
+                $q->where('nama_kelas', $request->kelas);
+            });
         }
+    }
 
         // 5. Filter Khusus untuk Modal
         if ($request->status_kelas === 'kosong') {
@@ -91,7 +104,7 @@ class MahasiswaController extends Controller
         // --- OPTIMASI UTAMA BUBUB ---
         // Batasi kolom yang ditarik dari tabel mahasiswa.
         // Ganti nama kolom sesuai database kamu (nipd/nim/nama/jurusan/angkatan/id_kelas)
-        $mahasiswa = $query->select('id_mahasiswa', 'nipd', 'nama', 'id_bidang_keahlian', 'angkatan', 'periode', 'status', 'id_kelas')
+        $mahasiswa = $query->select('id_mahasiswa', 'nipd', 'nama', 'id_bidang_keahlian', 'angkatan', 'periode', 'status', 'id_kelas', 'tempat_lahir', 'tgl_lahir', 'alamat', 'no_tlp', 'email')
                            ->limit(500)
                            ->get();
         
@@ -125,25 +138,52 @@ class MahasiswaController extends Controller
             // Get distinct values sesuai filter yang sudah dipilih
             $jurusan = DB::table('bidang_keahlian')->select('id_bidang_keahlian', 'nama', 'kode')->get();
             $angkatan = (clone $query)->whereNotNull('angkatan')->distinct()->orderBy('angkatan', 'desc')->pluck('angkatan');
-            $periode = (clone $query)->whereNotNull('periode')->distinct()->orderBy('periode', 'desc')->pluck('periode');
+            $periode = (clone $query)->whereNotNull('periode')->distinct()->pluck('periode')->sort()->values();
             
-            // For kelas, join dengan tabel kelas dan apply filters
-            $kelasQuery = DB::table('mahasiswa')
-                ->join('kelas', 'mahasiswa.id_kelas', '=', 'kelas.id_kelas')
-                ->select('kelas.id_kelas', 'kelas.nama_kelas')
-                ->whereNotNull('mahasiswa.id_kelas');
+        // For kelas, group by nama_kelas to prevent duplicates
+        // Start with base query for kelas
+        $kelasBaseQuery = DB::table('kelas');
+        
+        // Filter by bidang keahlian if specified
+        if ($request->filled('jurusan') && $request->jurusan !== '') {
+            $kelasBaseQuery->where('id_bidang_keahlian', $request->jurusan);
+        }
+        
+        // If angkatan is specified, filter to only classes that have students from that angkatan
+        if ($request->filled('angkatan') && $request->angkatan !== '') {
+            // Get all kelas IDs that have students from this angkatan
+            $kelasIdsWithStudents = DB::table('mahasiswa')
+                ->where('angkatan', $request->angkatan)
+                ->whereNotNull('id_kelas')
+                ->distinct()
+                ->pluck('id_kelas');
             
-            if ($request->filled('jurusan') && $request->jurusan !== '') {
-                $kelasQuery->where('mahasiswa.id_bidang_keahlian', $request->jurusan);
+            if ($kelasIdsWithStudents->isEmpty()) {
+                // No classes have students from this angkatan
+                $kelas = collect([]);
+            } else {
+                // Get class names from those IDs
+                $classNamesWithStudents = DB::table('kelas')
+                    ->whereIn('id_kelas', $kelasIdsWithStudents)
+                    ->distinct()
+                    ->pluck('nama_kelas');
+                
+                // Now filter base query to only include these class names
+                $kelas = $kelasBaseQuery
+                    ->select(DB::raw('MIN(id_kelas) as id_kelas'), 'nama_kelas')
+                    ->whereIn('nama_kelas', $classNamesWithStudents)
+                    ->groupBy('nama_kelas')
+                    ->orderBy('nama_kelas')
+                    ->get();
             }
-            if ($request->filled('angkatan') && $request->angkatan !== '') {
-                $kelasQuery->where('mahasiswa.angkatan', $request->angkatan);
-            }
-            if ($request->filled('periode') && $request->periode !== '') {
-                $kelasQuery->where('mahasiswa.periode', $request->periode);
-            }
-            
-            $kelas = $kelasQuery->distinct()->get();
+        } else {
+            // No angkatan filter - show all classes from the bidang keahlian
+            $kelas = $kelasBaseQuery
+                ->select(DB::raw('MIN(id_kelas) as id_kelas'), 'nama_kelas')
+                ->groupBy('nama_kelas')
+                ->orderBy('nama_kelas')
+                ->get();
+        }
             
             return response()->json([
                 'status' => 'success',
@@ -196,7 +236,7 @@ class MahasiswaController extends Controller
     $mahasiswa->id_kelas = $request->id_kelas;
     
     // Personal data
-    $mahasiswa->jenis_kelamin = $request->jenis_kelamin;
+    $mahasiswa->jenis_kelamin = $request->jenis_kelamin == 'L' ? 'Laki-laki' : ($request->jenis_kelamin == 'P' ? 'Perempuan' : $request->jenis_kelamin);
     $mahasiswa->tempat_lahir = $request->tempat_lahir;
     $mahasiswa->tgl_lahir = $request->tgl_lahir;
     $mahasiswa->agama = $request->agama;
@@ -257,6 +297,25 @@ class MahasiswaController extends Controller
             }
             if ($request->filled('periode') && $request->periode !== 'Semua Periode') {
                 $query->where('periode', $request->periode);
+            }
+            if ($request->filled('kelas') && $request->kelas !== 'Semua Kelas' && $request->kelas !== '') {
+                if (is_numeric($request->kelas)) {
+                    // Get the class name from the selected id_kelas
+                    $kelasName = \App\Models\Kelas::where('id_kelas', $request->kelas)->value('nama_kelas');
+                    if ($kelasName) {
+                        // Filter by class name to catch all students in classes with the same name
+                        $query->whereHas('data_kelas', function($q) use ($kelasName) {
+                            $q->where('nama_kelas', $kelasName);
+                        });
+                    } else {
+                        // Fallback to ID if name not found
+                        $query->where('id_kelas', $request->kelas);
+                    }
+                } else {
+                    $query->whereHas('data_kelas', function($q) use ($request) {
+                        $q->where('nama_kelas', $request->kelas);
+                    });
+                }
             }
 
             $mahasiswa = $query->with('data_kelas')->get();

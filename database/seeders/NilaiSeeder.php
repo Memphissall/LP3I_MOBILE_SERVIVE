@@ -29,12 +29,21 @@ class NilaiSeeder extends Seeder
         $nidn = $dosen ? $dosen->nidn : '0000000000';
 
         foreach ($mahasiswaList as $mhs) {
-            // Use mahasiswa's own periode as tahun_akademik (for consistency)
-            $tahun_akademik = $mhs->periode ?? '2024/2025';
+            // Skip if mahasiswa has no class
+            if (empty($mhs->id_kelas)) {
+                $this->command->info("Skipping {$mhs->nama} (No Class)");
+                continue;
+            }
+
+            // Determine tahun_akademik based on angkatan
+            $angkatan = $mhs->angkatan ?? '2023';
+            $nextYear = (int)$angkatan + 1;
+            $tahun_akademik = "{$angkatan}/{$nextYear}";
             
             // Determine how many semesters to seed based on class
-            $kelasNama = $mhs->data_kelas->nama_kelas ?? '';
-            $maxSemester = (strtoupper($kelasNama) === 'AIS-12') ? 4 : 1;
+            // Seed up to the current semester of the student
+            $currentClassSemester = $mhs->data_kelas ? $mhs->data_kelas->semester : 8;
+            $maxSemester = $currentClassSemester;
             
             // Loop through semesters
             for ($sem = 1; $sem <= $maxSemester; $sem++) {
@@ -69,6 +78,8 @@ class NilaiSeeder extends Seeder
                     $bobotIP = Nilai::getBobotIP($mutu);
 
                     DB::table('nilai')->insert([
+                        'id_mahasiswa' => $mhs->id_mahasiswa,
+                        'id_dosen' => $dosen ? $dosen->id_dosen : null,
                         'nidn' => $nidn,
                         'nipd' => $mhs->nipd,
                         'nama_mhs' => $mhs->nama,

@@ -61,7 +61,7 @@
                         {{-- Kolom Periode --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Periode</label>
-                            <input type="text" id="edit-periode" name="periode" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="2024/2025">
+                            <input type="text" id="edit-periode" name="periode" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="2024/2025/1">
                         </div>
 
                         {{-- Kolom Kelas --}}

@@ -22,8 +22,16 @@
             color: #000;
         }
         
-        .page-break {
-            page-break-after: always;
+        @media print {
+            .page-break {
+                page-break-after: always;
+                break-after: page;
+            }
+            
+            .container {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
         }
         
         .container {
@@ -42,8 +50,8 @@
         }
         
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 40px;
+            height: 60px;
             margin-right: 15px;
         }
         
@@ -116,18 +124,18 @@
         .krs-table th,
         .krs-table td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 4px;
             text-align: left;
         }
         
         .krs-table th {
             font-weight: bold;
             text-align: center;
-            font-size: 10pt;
+            font-size: 9pt;
         }
         
         .krs-table td {
-            font-size: 10pt;
+            font-size: 9pt;
         }
         
         .krs-table tbody tr:nth-child(even) {
@@ -139,12 +147,12 @@
         }
         
         .col-no {
-            width: 40px;
+            width: 30px;
             text-align: center !important;
         }
         
         .col-kode {
-            width: 100px;
+            width: 80px;
         }
         
         .col-matkul {
@@ -152,7 +160,7 @@
         }
         
         .col-bk {
-            width: 60px;
+            width: 50px;
             text-align: center !important;
         }
         
@@ -169,37 +177,40 @@
         
         /* Note */
         .note {
-            font-size: 9pt;
+            font-size: 8pt;
             font-style: italic;
-            margin: 15px 0;
+            margin: 10px 0;
         }
         
         /* Signature Section */
         .signature-section {
-            margin-top: 40px;
+            margin-top: 20px;
             display: flex;
             justify-content: space-between;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
         
         .signature-box {
             width: 45%;
+            text-align: center;
         }
         
         .signature-box p {
-            margin: 3px 0;
-            font-size: 10pt;
+            margin: 2px 0;
+            font-size: 9pt;
         }
         
         .signature-space {
-            height: 60px;
-            margin: 10px 0;
+            height: 50px;
+            margin: 5px 0;
         }
         
         .signature-name {
             font-weight: bold;
             border-bottom: 1px solid #000;
             display: inline-block;
-            min-width: 200px;
+            min-width: 180px;
             text-align: center;
         }
         
@@ -220,13 +231,12 @@
     <div class="container {{ !$loop->last ? 'page-break' : '' }}">
         <!-- Header -->
         <div class="header">
-            <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="10" width="80" height="80" fill="none" stroke="#000" stroke-width="3"/>
-                <text x="50" y="60" font-size="40" font-weight="bold" text-anchor="middle" fill="#000">LP3I</text>
-            </svg>
+            <img src="{{ asset('images/lp3i_krw.png') }}" alt="LP3I Logo" class="logo">
             <div class="college-info">
                 <h2>LP3I COLLEGE</h2>
-                <p>Cabang Karawang : Jl. Tarumanegara, Komplek Karawang Hijau Blok B. 4-6, Kab. Karawang</p>
+                <p>Gedung Karawang Hijau, Ruko Karawang Hijau, Jl. Tarumanagara No.4-6, Desa Purwadana</p>
+                <p>Kecamatan Telukjambe Timur, Kabupaten Karawang, Jawa Barat 41361</p>
+                <p>Telp: (0267) 411286 | Website: www.lp3i.ac.id | Email: info@lp3i.id</p>
                 <p class="academic-year">TAHUN AKADEMIK {{ $tahun_akademik ?? '2024/2025' }}</p>
             </div>
         </div>
@@ -252,7 +262,24 @@
                 <tr>
                     <td>SEMESTER</td>
                     <td>:</td>
-                    <td>{{ $semester ? 'Ganjil ( ' . $semester . ' )' : '-' }}</td>
+                    <td>
+                        @if($semester)
+                            {{ ($semester % 2 == 1 ? 'Ganjil' : 'Genap') . ' ( ' . $semester . ' )' }}
+                        @else
+                            @php
+                                // Get unique semesters from KRS data
+                                $semesters = $data['krsList']->pluck('semester')->unique()->sort();
+                                if ($semesters->count() == 1) {
+                                    $sem = $semesters->first();
+                                    echo ($sem % 2 == 1 ? 'Ganjil' : 'Genap') . ' ( ' . $sem . ' )';
+                                } elseif ($semesters->count() > 1) {
+                                    echo 'Semester ' . $semesters->first() . ' - ' . $semesters->last();
+                                } else {
+                                    echo '-';
+                                }
+                            @endphp
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                     <td>BIDANG KEAHLIAN</td>

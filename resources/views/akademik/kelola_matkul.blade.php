@@ -8,7 +8,7 @@
     {{-- Header Page --}}
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Mata Kuliah</h1>
+            <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Materi Ajar</h1>
             <p class="text-sm text-gray-500 mt-1">Manajemen kurikulum, bobot SKS, dan SAP pembelajaran.</p>
         </div>
     </div>
@@ -90,7 +90,7 @@
                     <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-white tracking-wide">Daftar Mata Kuliah <span class="bg-white/20 px-2 py-0.5 rounded text-sm font-mono ml-2" id="matkul-count">0</span></h3>
+                    <h3 class="text-xl font-bold text-white tracking-wide">Daftar Materi Ajar <span class="bg-white/20 px-2 py-0.5 rounded text-sm font-mono ml-2" id="matkul-count">0</span></h3>
                 </div>
 
                 {{-- BUTTON GROUP --}}
@@ -113,7 +113,7 @@
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-12 border-b-2 border-gray-200">No</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[120px] border-b-2 border-gray-200">Kode MK</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[250px] border-b-2 border-gray-200">Materi Ajar</th>
-                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[80px] border-b-2 border-gray-200">SKS</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[80px] border-b-2 border-gray-200">BK</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Semester</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[180px] border-b-2 border-gray-200">Bidang Keahlian</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">SAP</th>
@@ -333,7 +333,12 @@ $(document).ready(function() {
                 $('#matkul-count').text(data.length);
             },
             error: function(xhr) {
-                alert('Gagal memuat data');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Memuat Data',
+                    text: 'Terjadi kesalahan saat mengambil data mata kuliah.',
+                    confirmButtonColor: '#004269'
+                });
                 console.error(xhr);
                 $tbody.html('<tr><td colspan="9" class="px-6 py-10 text-center text-red-500 italic">Terjadi kesalahan saat memuat data.</td></tr>');
             },
@@ -385,7 +390,14 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(response) {
-                alert(response.message);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: response.message,
+                    confirmButtonColor: '#004269',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
                 $('#tambah-matkul-modal').addClass('hidden');
                 $('#tambah-matkul-form')[0].reset();
                 renderTable();
@@ -393,7 +405,12 @@ $(document).ready(function() {
             },
             error: function(xhr) {
                 const res = xhr.responseJSON;
-                alert('Gagal: ' + (res.message || 'Terjadi kesalahan'));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menyimpan',
+                    text: res.message || 'Terjadi kesalahan pada server',
+                    confirmButtonColor: '#004269'
+                });
                 $('#btn-tambah-matkul').text('Simpan Data').prop('disabled', false);
             }
         });
@@ -436,7 +453,12 @@ $(document).ready(function() {
                 $('#edit-matkul-modal').removeClass('hidden');
             },
             error: function(xhr) {
-                alert('Gagal mengambil data');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Gagal mengambil data mata kuliah',
+                    confirmButtonColor: '#004269'
+                });
                 console.error(xhr);
             }
         });
@@ -465,14 +487,26 @@ $(document).ready(function() {
                 'X-HTTP-Method-Override': 'PUT'
             },
             success: function(response) {
-                alert(response.message);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Update!',
+                    text: response.message,
+                    confirmButtonColor: '#004269',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
                 $('#edit-matkul-modal').addClass('hidden');
                 renderTable();
                 $('#btn-update-matkul').text('Simpan Perubahan').prop('disabled', false);
             },
             error: function(xhr) {
                 const res = xhr.responseJSON;
-                alert('Gagal: ' + (res.message || 'Terjadi kesalahan'));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Update',
+                    text: res.message || 'Terjadi kesalahan pada server',
+                    confirmButtonColor: '#004269'
+                });
                 $('#btn-update-matkul').text('Simpan Perubahan').prop('disabled', false);
             }
         });
@@ -484,23 +518,45 @@ $(document).ready(function() {
         const matkulRow = $(this).closest('tr');
         const matkulName = matkulRow.find('td:eq(2) div').text(); // Adjust index based on column position (0=No, 1=Kode, 2=Nama)
 
-        if (!confirm(`Hapus mata kuliah "${matkulName}"?\n\nData tidak dapat dikembalikan!`)) {
-            return;
-        }
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: `Hapus mata kuliah "${matkulName}"? Data tidak dapat dikembalikan!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Lakukan request penghapusan
+                const deleteUrl = "{{ route('admin.matkul.destroy', ':id') }}".replace(':id', matkulId);
 
-        const deleteUrl = "{{ route('admin.matkul.destroy', ':id') }}".replace(':id', matkulId);
-
-        $.ajax({
-            url: deleteUrl,
-            method: 'DELETE',
-            data: { _token: "{{ csrf_token() }}" },
-            success: function(response) {
-                alert(response.message);
-                renderTable();
-            },
-            error: function(xhr) {
-                const res = xhr.responseJSON;
-                alert('Gagal: ' + (res.message || 'Terjadi kesalahan'));
+                $.ajax({
+                    url: deleteUrl,
+                    method: 'DELETE',
+                    data: { _token: "{{ csrf_token() }}" },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Terhapus!',
+                            text: response.message,
+                            confirmButtonColor: '#004269',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        renderTable();
+                    },
+                    error: function(xhr) {
+                        const res = xhr.responseJSON;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal Menghapus',
+                            text: res.message || 'Terjadi kesalahan',
+                            confirmButtonColor: '#004269'
+                        });
+                    }
+                });
             }
         });
     });

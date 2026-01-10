@@ -42,4 +42,10 @@ class Mahasiswa extends Model
     {
         return $this->belongsTo(Kelas::class, 'id_kelas', 'id_kelas');
     }
+    
+    // Relationship to Nilai
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class, 'nipd', 'nipd');
+    }
 }

@@ -288,6 +288,9 @@ class MahasiswaController extends Controller
     {
         try {
             $query = Mahasiswa::query();
+            
+            // Filter hanya mahasiswa dengan status 'Aktif'
+            $query->where('status', 'Aktif');
 
             if ($request->filled('jurusan') && $request->jurusan !== 'Semua Jurusan') {
                 $query->where('id_bidang_keahlian', $request->jurusan);

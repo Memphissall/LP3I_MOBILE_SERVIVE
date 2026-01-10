@@ -30,6 +30,7 @@
             </div>
 
             <form method="GET" action="{{ route('admin.krs.index') }}">
+                <input type="hidden" name="show_data" value="1">
                 {{-- Grid Input --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     
@@ -97,7 +98,7 @@
                         <button type="submit" class="w-full relative overflow-hidden group bg-[#004269] hover:bg-[#003350] text-white py-3 rounded-xl font-bold transition-all duration-300 shadow-[0_4px_14px_0_rgba(0,66,105,0.39)] hover:shadow-[0_6px_20px_rgba(0,66,105,0.23)] hover:-translate-y-1 active:translate-y-0 flex items-center justify-center">
                             <span class="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
                             <svg class="w-5 h-5 mr-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                            Filter Data
+                            Tampilkan Data
                         </button>
                     </div>
                 </div>
@@ -118,18 +119,24 @@
                 </div>
 
                 {{-- BATCH ACTION BUTTONS --}}
-                @if($id_kelas && count($mahasiswaList) > 0)
                 <div class="flex space-x-3">
+                    @if($id_kelas && count($mahasiswaList) > 0)
                     <button id="btn-batch-add" class="bg-white text-[#004269] px-4 py-2 rounded-lg font-bold hover:bg-gray-50 transition-all duration-200 shadow-lg shadow-black/10 flex items-center transform hover:scale-105 active:scale-95 text-sm">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                         Tambah Paket KRS
                     </button>
-                    <a href="{{ route('admin.krs.print.batch', ['id_kelas' => $id_kelas, 'semester' => $semester, 'tahun_akademik' => $tahun_akademik]) }}" target="_blank" class="bg-white/10 text-white border border-white/30 backdrop-blur-md px-4 py-2 rounded-lg font-bold hover:bg-white hover:text-[#004269] transition-all duration-200 flex items-center text-sm">
+                    <a href="{{ route('admin.krs.print.batch', ['id_kelas' => $id_kelas, 'semester' => $semester, 'tahun_akademik' => $tahun_akademik]) }}" target="_blank" onclick="return checkPrintFilters(event)" class="bg-white/10 text-white border border-white/30 backdrop-blur-md px-4 py-2 rounded-lg font-bold hover:bg-white hover:text-[#004269] transition-all duration-200 flex items-center text-sm">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                        Print Batch
+                        Print Kelas Ini
+                    </a>
+                    @endif
+                    
+                    {{-- Print All Button - Always Visible --}}
+                    <a href="{{ route('admin.krs.print.all', ['semester' => $semester, 'tahun_akademik' => $tahun_akademik]) }}" target="_blank" onclick="return checkPrintFilters(event)" class="bg-gradient-to-r from-[#009DA5] to-[#00b4bf] text-white px-4 py-2 rounded-lg font-bold hover:shadow-xl transition-all duration-200 flex items-center text-sm transform hover:scale-105 active:scale-95">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                        Print Semua Kelas
                     </a>
                 </div>
-                @endif
             </div>
         </div>
         
@@ -178,6 +185,7 @@
                             <td class="px-3 py-3 text-center whitespace-nowrap text-xs font-medium">
                                 <a href="{{ route('admin.krs.print.student', ['nipd' => $mhs->nipd, 'semester' => $semester, 'tahun_akademik' => $tahun_akademik]) }}" 
                                    target="_blank"
+                                   onclick="return checkPrintFilters(event)"
                                    class="inline-flex items-center justify-center p-1.5 text-white bg-[#004269] hover:bg-[#003350] rounded-lg transition-all duration-200 shadow-sm hover:shadow-md" title="Print KRS">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                                 </a>
@@ -191,7 +199,7 @@
                                         <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                     </div>
                                     <h3 class="text-lg font-medium text-gray-900">Data Tidak Ditemukan</h3>
-                                    <p class="text-gray-500 mt-1">Silakan pilih kelas, semester, dan tahun akademik untuk menampilkan data.</p>
+                                    <p class="text-gray-500 mt-1">Silakan gunakan filter di atas dan klik "Tampilkan Data" untuk menampilkan data mahasiswa.</p>
                                 </div>
                             </td>
                         </tr>
@@ -207,5 +215,24 @@
     </div>
 </div>
 
+<script>
+    window.checkPrintFilters = function(e) {
+        const semester = document.getElementById('filter-semester').value;
+        const tahun = document.getElementById('filter-tahun-akademik').value;
+        
+        if (!semester || semester === "" || !tahun || tahun === "") {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Data Belum Dipilih',
+                text: 'Mohon pilih Semester dan Tahun Akademik terlebih dahulu untuk mencetak!',
+                confirmButtonColor: '#004269',
+                confirmButtonText: 'Mengerti'
+            });
+            return false;
+        }
+        return true;
+    }
+</script>
 @include('akademik.krs_modal')
 @endsection

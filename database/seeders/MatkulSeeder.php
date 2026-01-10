@@ -9,10 +9,22 @@ class MatkulSeeder extends Seeder
 {
     public function run()
     {
-        // Get bidang keahlian IDs
-        $oaa = DB::table('bidang_keahlian')->where('kode', 'OAA')->first()->id_bidang_keahlian;
-        $ais = DB::table('bidang_keahlian')->where('kode', 'AIS')->first()->id_bidang_keahlian;
-        $ase = DB::table('bidang_keahlian')->where('kode', 'ASE')->first()->id_bidang_keahlian;
+        // Get bidang keahlian IDs with robust fallback
+        $bkMap = DB::table('bidang_keahlian')->pluck('id_bidang_keahlian', 'kode');
+
+        // Map legacy codes to possible new codes (LP3I standard)
+        $oaa = $bkMap['OAA'] ?? $bkMap['AB'] ?? $bkMap['KA'] ?? $bkMap['MP'] ?? null;
+        $ais = $bkMap['AIS'] ?? $bkMap['SI'] ?? $bkMap['MI'] ?? null;
+        $ase = $bkMap['ASE'] ?? $bkMap['TI'] ?? $bkMap['IF'] ?? null;
+
+        if (!$oaa || !$ais || !$ase) {
+            $this->command->warn("Warning: Some Bidang Keahlian codes (OAA, AIS, ASE) not found. Seeder might skip some data.");
+            // Try to fetch ANY id if specific ones are missing, to avoid crash
+            $firstId = DB::table('bidang_keahlian')->value('id_bidang_keahlian');
+            $oaa = $oaa ?? $firstId;
+            $ais = $ais ?? $firstId;
+            $ase = $ase ?? $firstId;
+        }
 
         $matkul = [
             // OAA - Semester 1
@@ -144,12 +156,15 @@ class MatkulSeeder extends Seeder
         ];
 
         foreach ($matkul as $mk) {
-            DB::table('mata_kuliah')->insert(array_merge($mk, [
-                'deskripsi' => null,
-                'sap' => null,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]));
+            DB::table('mata_kuliah')->updateOrInsert(
+                ['kode_mk' => $mk['kode_mk']], // Key to check for existence
+                array_merge($mk, [
+                    'deskripsi' => null,
+                    'sap' => null,
+                    'updated_at' => now(),
+                    // created_at will be handled by DB default or preserved on update
+                ])
+            );
         }
     }
 }

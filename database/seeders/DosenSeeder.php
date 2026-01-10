@@ -14,6 +14,14 @@ class DosenSeeder extends Seeder
             return DB::table('mata_kuliah')->where('nama_mk', 'LIKE', $pattern)->first()->id_matkul ?? null;
         };
 
+        // CLEANUP: Delete all generated 'clone' lecturers (identifiers containing '_') 
+        // to ensure a fresh start for smart assignment logic.
+        // This fixes the issue where old 'random' assignments persist because they are skipped by 'already assigned' checks.
+        $deleted = DB::table('dosen')->where('nidn', 'LIKE', '%\_%')->delete();
+        if ($deleted > 0) {
+            $this->command->info("Deleted $deleted old generated lecturer assignments.");
+        }
+
         $dosen = [
             // DOSEN BAHASA INGGRIS
             [
@@ -285,7 +293,7 @@ class DosenSeeder extends Seeder
     private function assignRemainingCourses()
     {
         // Get all mata kuliah
-        $allMatkul = DB::table('mata_kuliah')->get();
+        $allMatkul = DB::table('mata_kuliah')->orderBy('id_matkul')->get(); // Order to ensure deterministic seed
         
         // Get ALL existing dosen with their assigned matkul (including clones)
         $assignedMatkulIds = DB::table('dosen')->pluck('id_matkul')->toArray();
@@ -300,7 +308,7 @@ class DosenSeeder extends Seeder
             return; // All mata kuliah already assigned
         }
         
-        echo "Found " . $unassignedMatkul->count() . " unassigned mata kuliah. Assigning dosen...\n";
+        echo "Found " . $unassignedMatkul->count() . " unassigned mata kuliah. Assigning dosen with smart matching...\n";
         
         // Get base dosen templates (the original 12 dosen)
         $baseDosen = DB::table('dosen')
@@ -310,12 +318,43 @@ class DosenSeeder extends Seeder
         if ($baseDosen->isEmpty()) {
             return; // No dosen to assign
         }
+
+        // Keywords mapping for smarter matching
+        $matchRules = [
+            'Bahasa Inggris' => ['English', 'Communication', 'Language', 'TOEFL'],
+            'Pemrograman Web' => ['Web', 'Internet', 'E-Business', 'Frontend', 'Backend', 'HTML', 'CSS', 'Javascript', 'PHP', 'Framework'],
+            'Database & Big Data' => ['Data', 'Basis', 'Information', 'Warehouse', 'Mining', 'SQL'],
+            'Pemrograman & RPL' => ['Algoritma', 'Algorithm', 'Program', 'Logic', 'Computer', 'Digital', 'System Design', 'OOP', 'Java', 'C++', 'Python', 'Mobile', 'Android', 'IOS'],
+            'Akuntansi' => ['Account', 'Akuntan', 'Cost', 'Biaya', 'Keuangan', 'Finance', 'Budget', 'Audit'],
+            'Perpajakan' => ['Tax', 'Pajak', 'Fiskal'],
+            'Manajemen' => ['Manage', 'Manajemen', 'Bisnis', 'Business', 'Marketing', 'Lead', 'Entrepreneur', 'Wirausaha'],
+            'Aplikasi Perkantoran' => ['Office', 'Perkantoran', 'Excel', 'Word', 'PowerPoint', 'Typing', 'Arsip', 'Filing', 'Correspondence', 'Surat'],
+            'Sistem Informasi' => ['Sistem Informasi', 'Information System', 'Analisis', 'Analysis', 'ERP', 'SAP'],
+            'Jaringan Komputer' => ['Network', 'Jaringan', 'Security', 'Hardware', 'Operating System', 'Linux', 'Cloud', 'Server', 'Mikrotik', 'Cisco'],
+            'Kewirausahaan & Soft Skills' => ['Character', 'Kewirausahaan', 'Soft', 'Personality', 'K3', 'Ethics', 'Etika', 'Pancasila', 'Kewarganegaraan', 'Religion', 'Agama'],
+            'Hukum Bisnis' => ['Law', 'Hukum', 'Legal'],
+        ];
         
-        // Assign unassigned mata kuliah to dosen (round-robin)
+        // Assign unassigned mata kuliah to dosen
         $dosenIndex = 0;
         foreach ($unassignedMatkul as $matkul) {
-            $templateDosen = $baseDosen[$dosenIndex % $baseDosen->count()];
             
+            // 1. Try to find BEST MATCH dosen based on keywords
+            $matchedDosen = null;
+            foreach ($matchRules as $bidang => $keywords) {
+                foreach ($keywords as $keyword) {
+                    if (stripos($matkul->nama_mk, $keyword) !== false) {
+                        // Found a keyword match! Find the dosen with this bidang
+                        $matchedDosen = $baseDosen->firstWhere('bidang', $bidang);
+                        if ($matchedDosen) break 2;
+                    }
+                }
+            }
+            
+            // 2. Fallback to round-robin if no match found
+            $templateDosen = $matchedDosen ?? $baseDosen[$dosenIndex % $baseDosen->count()];
+            if (!$matchedDosen) $dosenIndex++; // Only increment round-robin index if we used it
+
             // Create new dosen entry for this matkul
             DB::table('dosen')->updateOrInsert(
                 ['nidn' => $templateDosen->nidn . '_' . $matkul->kode_mk],
@@ -338,8 +377,6 @@ class DosenSeeder extends Seeder
                     'updated_at' => now(),
                 ]
             );
-            
-            $dosenIndex++;
         }
         
         echo "Successfully assigned " . $unassignedMatkul->count() . " mata kuliah to dosen.\n";

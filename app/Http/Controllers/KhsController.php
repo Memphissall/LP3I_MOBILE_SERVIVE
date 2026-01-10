@@ -47,41 +47,51 @@ class KhsController extends Controller
         $id_kelas = $request->input('id_kelas', null);
         $semester = $request->input('semester', null);
         
-        // Default tahun_akademik to the latest one if not specified
-        $defaultTahun = $tahunAkademikList->first();
-        $tahun_akademik = $request->input('tahun_akademik', $defaultTahun);
+        // Default tahun_akademik to null if not specified (allows "All Years" option)
+        $tahun_akademik = $request->input('tahun_akademik', null);
 
+        // Check if user clicked the button (not just page load)
+        $hasFilters = $request->has('show_data') || $request->has('id_kelas') || $request->has('semester') || $request->has('tahun_akademik');
 
-        // 3. Get Data with Filters
-        $query = Mahasiswa::query();
+        // 3. Get Data with Filters - Only if filters are applied
+        if ($hasFilters) {
+            $query = Mahasiswa::query();
 
-        if ($id_kelas) {
-            $query->where('id_kelas', $id_kelas);
-        }
-
-        $mahasiswaList = $query->with('data_kelas.bidangKeahlian')->get();
-
-        // For each mahasiswa, calculate KHS stats
-        foreach ($mahasiswaList as $mhs) {
-            $nilaiQuery = Nilai::where('nipd', $mhs->nipd)
-                ->where('tahun_akademik', $tahun_akademik);
-            
-            if ($semester) {
-                $nilaiQuery->where('semester', $semester);
+            if ($id_kelas) {
+                $query->where('id_kelas', $id_kelas);
             }
-            
-            $nilaiList = $nilaiQuery->with('mataKuliah')->get();
-            
-            $mhs->nilai_count = $nilaiList->count();
-            
-            // Calculate Total SKS
-            $mhs->total_sks = $nilaiList->sum(function($nilai) {
-                return $nilai->mataKuliah->sks ?? 0;
-            });
-            
-            // Calculate IPS (Indeks Prestasi Semester)
-            $totalBobot = $nilaiList->sum('bobot_ip');
-            $mhs->ips = $mhs->total_sks > 0 ? round($totalBobot / $mhs->total_sks, 2) : 0;
+
+            $mahasiswaList = $query->with('data_kelas.bidangKeahlian')->get();
+
+            // For each mahasiswa, calculate KHS stats
+            foreach ($mahasiswaList as $mhs) {
+                $nilaiQuery = Nilai::where('nipd', $mhs->nipd);
+                
+                // Only filter by tahun akademik if specified
+                if ($tahun_akademik) {
+                    $nilaiQuery->where('tahun_akademik', $tahun_akademik);
+                }
+                
+                if ($semester) {
+                    $nilaiQuery->where('semester', $semester);
+                }
+                
+                $nilaiList = $nilaiQuery->with('mataKuliah')->get();
+                
+                $mhs->nilai_count = $nilaiList->count();
+                
+                // Calculate Total SKS
+                $mhs->total_sks = $nilaiList->sum(function($nilai) {
+                    return $nilai->mataKuliah->sks ?? 0;
+                });
+                
+                // Calculate IPS (Indeks Prestasi Semester)
+                $totalBobot = $nilaiList->sum('bobot_ip');
+                $mhs->ips = $mhs->total_sks > 0 ? round($totalBobot / $mhs->total_sks, 2) : 0;
+            }
+        } else {
+            // Initial page load - no data
+            $mahasiswaList = collect();
         }
 
         return view('akademik.khs', compact(
@@ -97,21 +107,29 @@ class KhsController extends Controller
 
     /**
      * Print individual student KHS
+     * Print KHS for single student
      */
-    public function printStudent(Request $request, $nipd)
+    public function printStudent($id)
     {
-        $semester = $request->input('semester');
-        $tahun_akademik = $request->input('tahun_akademik', '2023/2024');
+        $semester = request('semester');
+        $tahun_akademik = request('tahun_akademik');
 
-        $mahasiswa = Mahasiswa::where('nipd', $nipd)->with('data_kelas.bidangKeahlian')->first();
-        
-        if (!$mahasiswa) {
-            abort(404, 'Mahasiswa tidak ditemukan');
+        // Validation: Ensure filters are selected
+        if (!$semester || !$tahun_akademik) {
+            return redirect()->back()->with('error', 'Harap pilih Tahun Akademik dan Semester terlebih dahulu untuk mencetak.');
         }
 
+        $mahasiswa = Mahasiswa::with('data_kelas.bidangKeahlian')->where('nipd', $id)->firstOrFail();
+        
+        // For individual print, if no semester provided, Show ALL semesters (don't limit to current class semester)
+        
         $nilaiQuery = Nilai::with(['mataKuliah', 'kelas'])
-            ->where('nipd', $nipd)
-            ->where('tahun_akademik', $tahun_akademik);
+            ->where('nipd', $mahasiswa->nipd);
+            
+        // Only filter by tahun akademik if specified
+        if ($tahun_akademik) {
+            $nilaiQuery->where('tahun_akademik', $tahun_akademik);
+        }
 
         if ($semester) {
             $nilaiQuery->where('semester', $semester);
@@ -119,35 +137,41 @@ class KhsController extends Controller
 
         $nilaiList = $nilaiQuery->orderBy('semester')->get();
 
-        // Group by semester
+        // Initialize semesterData always
         $semesterData = [];
-        foreach ($nilaiList as $nilai) {
-            $sem = $nilai->semester;
-            if (!isset($semesterData[$sem])) {
-                $semesterData[$sem] = [
-                    'nilai' => [],
-                    'total_sks' => 0,
-                    'total_bobot' => 0,
-                    'ips' => 0
-                ];
+
+        if ($nilaiList->count() > 0) {
+            // Group by semester
+            foreach ($nilaiList as $nilai) {
+                $sem = $nilai->semester;
+                if (!isset($semesterData[$sem])) {
+                    $semesterData[$sem] = [
+                        'nilai' => [],
+                        'total_sks' => 0,
+                        'total_bobot' => 0,
+                        'ips' => 0
+                    ];
+                }
+                
+                $semesterData[$sem]['nilai'][] = $nilai;
+                $semesterData[$sem]['total_sks'] += $nilai->mataKuliah->sks ?? 0;
+                $semesterData[$sem]['total_bobot'] += $nilai->bobot_ip ?? 0;
             }
-            
-            $semesterData[$sem]['nilai'][] = $nilai;
-            $semesterData[$sem]['total_sks'] += $nilai->mataKuliah->sks ?? 0;
-            $semesterData[$sem]['total_bobot'] += $nilai->bobot_ip ?? 0;
+
+            // Calculate IPS
+            foreach ($semesterData as $sem => &$data) {
+                $data['ips'] = $data['total_sks'] > 0 ? round($data['total_bobot'] / $data['total_sks'], 2) : 0;
+            }
         }
 
-        // Calculate IPS for each semester
-        foreach ($semesterData as $sem => &$data) {
-            $data['ips'] = $data['total_sks'] > 0 ? round($data['total_bobot'] / $data['total_sks'], 2) : 0;
-        }
+        // Always populate batchData so view can render header/identity
+        $batchData = [[
+            'mahasiswa' => $mahasiswa,
+            'semesterData' => $semesterData
+        ]];
 
-        return view('akademik.khs_print', compact(
-            'mahasiswa',
-            'semesterData',
-            'semester',
-            'tahun_akademik'
-        ));
+        // Reuse the batch print view for consistency
+        return view('akademik.khs_print_batch', compact('batchData', 'semester', 'tahun_akademik'));
     }
 
     /**
@@ -157,7 +181,12 @@ class KhsController extends Controller
     {
         $id_kelas = $request->input('id_kelas');
         $semester = $request->input('semester');
-        $tahun_akademik = $request->input('tahun_akademik', '2023/2024');
+        $tahun_akademik = $request->input('tahun_akademik');
+
+        // Validation: Ensure filters are selected
+        if (!$semester || !$tahun_akademik) {
+            return redirect()->back()->with('error', 'Harap pilih Tahun Akademik dan Semester terlebih dahulu untuk mencetak.');
+        }
 
         if (!$id_kelas) {
             return redirect()->back()->with('error', 'Pilih kelas terlebih dahulu');
@@ -170,9 +199,89 @@ class KhsController extends Controller
         $batchData = [];
 
         foreach ($mahasiswaList as $mahasiswa) {
+            // Smart semester detection: use filter if provided, otherwise use student's class semester
+            $semesterToFilter = $semester ?? ($mahasiswa->data_kelas->semester ?? null);
+            
             $nilaiQuery = Nilai::with(['mataKuliah', 'kelas'])
-                ->where('nipd', $mahasiswa->nipd)
-                ->where('tahun_akademik', $tahun_akademik);
+                ->where('nipd', $mahasiswa->nipd);
+                
+            // Only filter by tahun akademik if specified
+            if ($tahun_akademik) {
+                $nilaiQuery->where('tahun_akademik', $tahun_akademik);
+            }
+
+            if ($semesterToFilter) {
+                $nilaiQuery->where('semester', $semesterToFilter);
+            }
+
+            $nilaiList = $nilaiQuery->orderBy('semester')->get();
+
+            if ($nilaiList->count() > 0) {
+                // Group by semester
+                $semesterData = [];
+                foreach ($nilaiList as $nilai) {
+                    $sem = $nilai->semester;
+                    if (!isset($semesterData[$sem])) {
+                        $semesterData[$sem] = [
+                            'nilai' => [],
+                            'total_sks' => 0,
+                            'total_bobot' => 0,
+                            'ips' => 0
+                        ];
+                    }
+                    
+                    $semesterData[$sem]['nilai'][] = $nilai;
+                    $semesterData[$sem]['total_sks'] += $nilai->mataKuliah->sks ?? 0;
+                    $semesterData[$sem]['total_bobot'] += $nilai->bobot_ip ?? 0;
+                }
+
+                // Calculate IPS
+                foreach ($semesterData as $sem => &$data) {
+                    $data['ips'] = $data['total_sks'] > 0 ? round($data['total_bobot'] / $data['total_sks'], 2) : 0;
+                }
+
+                $batchData[] = [
+                    'mahasiswa' => $mahasiswa,
+                    'semesterData' => $semesterData
+                ];
+            }
+        }
+
+        return view('akademik.khs_print_batch', compact(
+            'batchData',
+            'semester',
+            'tahun_akademik'
+        ));
+    }
+
+    /**
+     * Print KHS for all students across all classes
+     */
+    public function printAll(Request $request)
+    {
+        $semester = $request->input('semester');
+        $tahun_akademik = $request->input('tahun_akademik');
+
+        // Validation: Ensure filters are selected
+        if (!$semester || !$tahun_akademik) {
+            return redirect()->back()->with('error', 'Harap pilih Tahun Akademik dan Semester terlebih dahulu untuk mencetak.');
+        }
+
+        // Get all mahasiswa with their class data
+        $mahasiswaList = Mahasiswa::with('data_kelas.bidangKeahlian')
+            ->whereNotNull('id_kelas')
+            ->get();
+
+        $batchData = [];
+
+        foreach ($mahasiswaList as $mahasiswa) {
+            $nilaiQuery = Nilai::with(['mataKuliah', 'kelas'])
+                ->where('nipd', $mahasiswa->nipd);
+                
+            // Only filter by tahun akademik if specified
+            if ($tahun_akademik) {
+                $nilaiQuery->where('tahun_akademik', $tahun_akademik);
+            }
 
             if ($semester) {
                 $nilaiQuery->where('semester', $semester);

@@ -70,12 +70,12 @@
 
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <input id="remember_me" name="remember_me" type="checkbox" 
+                        <input id="remember" name="remember" type="checkbox" 
                                class="h-4 w-4 text-[#009DA5] focus:ring-[#009DA5] border-gray-300 rounded">
-                        <label for="remember_me" class="ml-2 block text-sm text-gray-900">Remember me</label>
+                        <label for="remember" class="ml-2 block text-sm text-gray-900">Remember me</label>
                     </div>
                     {{-- Link Lupa Password (opsional, jika ada route-nya) --}}
-                    <a href="#" class="text-sm font-medium text-[#004269] hover:text-[#009DA5]">Forgot password?</a>
+                    <a href="#" onclick="alert('Fitur Reset Password membutuhkan konfigurasi Email Server (SMTP).')" class="text-sm font-medium text-[#004269] hover:text-[#009DA5]">Forgot password?</a>
                 </div>
 
                 <div>

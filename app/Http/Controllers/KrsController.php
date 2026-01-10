@@ -19,32 +19,49 @@ class KrsController extends Controller
     {
         $id_kelas = $request->input('id_kelas', null);
         $semester = $request->input('semester', null);
-        $tahun_akademik = $request->input('tahun_akademik', '2023/2024');
+        
+        // Default tahun_akademik to null if not specified (allows "All Years" option)
+        $tahun_akademik = $request->input('tahun_akademik', null);
 
-        // Get mahasiswa list with KRS count
-        $query = Mahasiswa::query();
+        // Check if user clicked the button (not just page load)
+        $hasFilters = $request->has('show_data') || $request->has('id_kelas') || $request->has('semester') || $request->has('tahun_akademik');
 
-        if ($id_kelas) {
-            $query->where('id_kelas', $id_kelas);
-        }
+        // Only load data if filters are applied
+        if ($hasFilters) {
+            // Get mahasiswa list with KRS count
+            $query = Mahasiswa::query();
 
-        $mahasiswaList = $query->with('data_kelas.bidangKeahlian')->get();
-
-        // For each mahasiswa, get their KRS count for the selected semester
-        foreach ($mahasiswaList as $mhs) {
-            $krsQuery = Krs::where('nipd', $mhs->nipd)
-                ->where('tahun_akademik', $tahun_akademik);
-            
-            if ($semester) {
-                $krsQuery->where('semester', $semester);
+            if ($id_kelas) {
+                $query->where('id_kelas', $id_kelas);
             }
-            
-            $mhs->krs_count = $krsQuery->count();
-            $mhs->total_sks = $krsQuery->with('mataKuliah')
-                ->get()
-                ->sum(function($krs) {
+
+            $mahasiswaList = $query->with('data_kelas.bidangKeahlian')->get();
+
+            // For each mahasiswa, get their KRS count for the selected semester
+            foreach ($mahasiswaList as $mhs) {
+                $krsQuery = Krs::where('nipd', $mhs->nipd);
+                
+                // Only filter by tahun akademik if specified
+                if ($tahun_akademik) {
+                    $krsQuery->where('tahun_akademik', $tahun_akademik);
+                }
+                
+                if ($semester) {
+                    $krsQuery->where('semester', $semester);
+                }
+                
+                // Get KRS list with mataKuliah - execute query only ONCE
+                $krsList = $krsQuery->with('mataKuliah')->get();
+                
+                // Calculate count and total SKS from the same result set
+                $mhs->krs_count = $krsList->count();
+                $mhs->total_sks = $krsList->sum(function($krs) {
                     return $krs->mataKuliah->sks ?? 0;
                 });
+            }
+        } else {
+            // Initial page load - no data
+            $mahasiswaList = collect();
         }
 
         // Get kelas list for filter (deduplicated by name)
@@ -188,39 +205,48 @@ class KrsController extends Controller
     public function printStudent(Request $request, $nipd)
     {
         $semester = $request->input('semester');
-        $tahun_akademik = $request->input('tahun_akademik', '2023/2024');
+        $tahun_akademik = $request->input('tahun_akademik');
 
-        $mahasiswa = Mahasiswa::where('nipd', $nipd)->with('data_kelas.bidangKeahlian')->first();
+        // Validation: Ensure filters are selected
+        if (!$semester || !$tahun_akademik) {
+            return redirect()->back()->with('error', 'Harap pilih Tahun Akademik dan Semester terlebih dahulu untuk mencetak.');
+        }
+
+        $mahasiswa = Mahasiswa::where('nipd', $nipd)->with('data_kelas.bidangKeahlian')->firstOrFail();
         
-        if (!$mahasiswa) {
-            abort(404, 'Mahasiswa tidak ditemukan');
+        $krsQuery = Krs::with(['mataKuliah', 'kelas'])
+            ->where('nipd', $mahasiswa->nipd);
+            
+        // Only filter by tahun akademik if specified
+        if ($tahun_akademik) {
+            $krsQuery->where('tahun_akademik', $tahun_akademik);
         }
 
-        $krsList = Krs::with(['mataKuliah', 'kelas'])
-            ->where('nipd', $nipd)
-            ->where('tahun_akademik', $tahun_akademik);
-
+        // Allow explicit semester filter
         if ($semester) {
-            $krsList->where('semester', $semester);
+            $krsQuery->where('semester', $semester);
         }
 
-        $krsList = $krsList->orderBy('semester')->get();
+        $krsList = $krsQuery->orderBy('semester')->get();
 
-        // If semester is not provided, try to infer it from the data
-        if (!$semester && $krsList->isNotEmpty()) {
-            $semester = $krsList->first()->semester;
-        }
+        $krsList = $krsQuery->orderBy('semester')->get();
 
+        // Calculate SKS (0 if list is empty)
         $totalSKS = $krsList->sum(function($krs) {
             return $krs->mataKuliah->sks ?? 0;
         });
 
-        return view('akademik.krs_print', compact(
-            'mahasiswa',
-            'krsList',
+        // Always populate batchData so view can render header/identity
+        $batchData = [[
+            'mahasiswa' => $mahasiswa,
+            'krsList' => $krsList,
+            'totalSKS' => $totalSKS
+        ]];
+
+        return view('akademik.krs_print_batch', compact(
+            'batchData',
             'semester',
-            'tahun_akademik',
-            'totalSKS'
+            'tahun_akademik'
         ));
     }
 
@@ -231,7 +257,12 @@ class KrsController extends Controller
     {
         $id_kelas = $request->input('id_kelas');
         $semester = $request->input('semester');
-        $tahun_akademik = $request->input('tahun_akademik', '2023/2024');
+        $tahun_akademik = $request->input('tahun_akademik');
+
+        // Validation: Ensure filters are selected
+        if (!$semester || !$tahun_akademik) {
+            return redirect()->back()->with('error', 'Harap pilih Tahun Akademik dan Semester terlebih dahulu untuk mencetak.');
+        }
 
         if (!$id_kelas) {
             return redirect()->back()->with('error', 'Pilih kelas terlebih dahulu');
@@ -244,9 +275,71 @@ class KrsController extends Controller
         $batchData = [];
 
         foreach ($mahasiswaList as $mahasiswa) {
+            // Smart semester detection: use filter if provided, otherwise use student's class semester
+            $semesterToFilter = $semester ?? ($mahasiswa->data_kelas->semester ?? null);
+            
             $krsList = Krs::with(['mataKuliah', 'kelas'])
-                ->where('nipd', $mahasiswa->nipd)
-                ->where('tahun_akademik', $tahun_akademik);
+                ->where('nipd', $mahasiswa->nipd);
+                
+            // Only filter by tahun akademik if specified
+            if ($tahun_akademik) {
+                $krsList->where('tahun_akademik', $tahun_akademik);
+            }
+
+            if ($semesterToFilter) {
+                $krsList->where('semester', $semesterToFilter);
+            }
+
+            $krsList = $krsList->orderBy('semester')->get();
+
+            if ($krsList->count() > 0) {
+                $totalSKS = $krsList->sum(function($krs) {
+                    return $krs->mataKuliah->sks ?? 0;
+                });
+
+                $batchData[] = [
+                    'mahasiswa' => $mahasiswa,
+                    'krsList' => $krsList,
+                    'totalSKS' => $totalSKS
+                ];
+            }
+        }
+
+        return view('akademik.krs_print_batch', compact(
+            'batchData',
+            'semester',
+            'tahun_akademik'
+        ));
+    }
+
+    /**
+     * Print KRS for all students across all classes
+     */
+    public function printAll(Request $request)
+    {
+        $semester = $request->input('semester');
+        $tahun_akademik = $request->input('tahun_akademik');
+
+        // Validation: Ensure filters are selected
+        if (!$semester || !$tahun_akademik) {
+            return redirect()->back()->with('error', 'Harap pilih Tahun Akademik dan Semester terlebih dahulu untuk mencetak.');
+        }
+
+        // Get all mahasiswa with their class data
+        $mahasiswaList = Mahasiswa::with('data_kelas.bidangKeahlian')
+            ->whereNotNull('id_kelas')
+            ->get();
+
+        $batchData = [];
+
+        foreach ($mahasiswaList as $mahasiswa) {
+            $krsList = Krs::with(['mataKuliah', 'kelas'])
+                ->where('nipd', $mahasiswa->nipd);
+                
+            // Only filter by tahun akademik if specified
+            if ($tahun_akademik) {
+                $krsList->where('tahun_akademik', $tahun_akademik);
+            }
 
             if ($semester) {
                 $krsList->where('semester', $semester);

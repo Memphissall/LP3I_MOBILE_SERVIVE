@@ -14,34 +14,40 @@ class KrsSeeder extends Seeder
 
         // Get all students with their class and major info
         $students = \App\Models\Mahasiswa::with(['data_kelas'])->get();
+        
+        $totalInserted = 0;
+        $skippedCount = 0;
 
         foreach ($students as $mhs) {
             // Skip if no class assigned
-            if (!$mhs->data_kelas) continue;
+            if (!$mhs->data_kelas) {
+                $skippedCount++;
+                continue;
+            }
 
             $currentSem = $mhs->data_kelas->semester ?? 1;
             $idKelas = $mhs->id_kelas;
             $idProdi = $mhs->data_kelas->id_bidang_keahlian;
 
-            // Scenario 1: Current Academic Year (2024/2025)
+            // Scenario 1: Current Academic Year (2025/2026)
             // Assign courses for the current semester
-            $this->assignKrs($mhs, $currentSem, '2024/2025', $idProdi);
+            $count = $this->assignKrs($mhs, $currentSem, '2025/2026', $idProdi);
+            $totalInserted += $count;
 
-            // Scenario 2: Previous Academic Year (2023/2024)
+            // Scenario 2: Previous Academic Year (2024/2025)
             // If student is in sem 3 or higher, they had history in sem 1
             if ($currentSem >= 3) {
                 $prevSem = $currentSem - 2; // e.g. Sem 3 now -> Sem 1 last year
                 if ($prevSem > 0) {
-                    $this->assignKrs($mhs, $prevSem, '2023/2024', $idProdi);
+                    $count = $this->assignKrs($mhs, $prevSem, '2024/2025', $idProdi);
+                    $totalInserted += $count;
                 }
             }
-            
-            // If student is in sem 2, they had history in sem 1 (Same year or Prev year depends on intake)
-            // Let's assume Intake Ganjil. 
-            // Sem 2 (Genap 2024/2025) -> Sem 1 (Ganjil 2024/2025)
-            // We just stick to Simple Ganjil/Genap mapping if needed, but for 'Tahun Akademik' filter test:
-            // Just ensuring we have '2023/2024' data is enough.
         }
+        
+        $this->command->info("KRS Seeder completed!");
+        $this->command->info("Total KRS entries created: $totalInserted");
+        $this->command->info("Students skipped (no class): $skippedCount");
     }
 
     private function assignKrs($mhs, $semester, $tahunAkademik, $idProdi)
@@ -53,6 +59,12 @@ class KrsSeeder extends Seeder
             ->take(6) // Take 6 random courses
             ->get();
 
+        if ($courses->isEmpty()) {
+            // No courses available for this combination
+            return 0;
+        }
+
+        $count = 0;
         foreach ($courses as $mk) {
             DB::table('krs')->insert([
                 'nipd' => $mhs->nipd,
@@ -66,6 +78,9 @@ class KrsSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+            $count++;
         }
+        
+        return $count;
     }
 }

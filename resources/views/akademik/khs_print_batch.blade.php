@@ -9,7 +9,7 @@
         /* Header with logo */
         .header-container { display: table; width: 100%; margin-bottom: 20px; }
         .logo-section { display: table-cell; width: 80px; vertical-align: top; }
-        .logo { width: 70px; height: 70px; border: 2px solid #000; }
+        .logo { width: 40px; height: 60px; }
         .title-section { display: table-cell; vertical-align: middle; text-align: center; padding-left: 10px; }
         .title-section h1 { margin: 0; font-size: 16pt; font-weight: bold; }
         .title-section .address { font-size: 7pt; margin: 3px 0; line-height: 1.3; }
@@ -37,7 +37,21 @@
         .signature-section p { margin: 5px 0; }
         
         .page-footer { position: fixed; bottom: 0; left: 0; right: 0; text-align: center; font-size: 7pt; padding: 10px; background: #003366; color: white; }
-        .page-break { page-break-after: always; }
+        
+        @media print {
+            .page-break { 
+                page-break-after: always;
+                break-after: page;
+            }
+            .signature-section {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            .semester-block {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
     </style>
 </head>
 <body>
@@ -50,16 +64,14 @@
         <!-- Header -->
         <div class="header-container">
             <div class="logo-section">
-                <div class="logo" style="background: #003366; color: white; display: flex; align-items: center; justify-content: center; font-size: 20pt; font-weight: bold;">
-                    LP3I
-                </div>
+                <img src="{{ asset('images/lp3i_krw.png') }}" alt="LP3I Logo" class="logo" >
             </div>
             <div class="title-section">
                 <h1>LP3I COLLEGE</h1>
                 <div class="address">
-                    Gedung Karyajaya MH Thamrin No.8, Desa Panunggangan,<br>
-                    Kecamatan PH Lagaligo, Pinangsia, Kabupaten Karawang, Jawa Barat, 41361<br>
-                    Telepon: 021 2620 9090 - Email: lp3icollege@lp3i.ac.id
+                    Gedung Karawang Hijau, Ruko Karawang Hijau, Jl. Tarumanagara No.4-6, Desa Purwadana, <br>
+                    Kecamatan Telukjambe Timur, Kabupaten Karawang, Jawa Barat 41361<br>
+                    Telp: (0267) 411286 | Website: www.lp3i.ac.id | Email: info@lp3i.id
                 </div>
             </div>
         </div>
@@ -81,7 +93,7 @@
                 </tr>
                 <tr>
                     <td class="label">Tempat / Tanggal Lahir</td>
-                    <td>: {{ $mahasiswa->tempat_lahir ?? '-' }} / {{ $mahasiswa->tanggal_lahir ? \Carbon\Carbon::parse($mahasiswa->tanggal_lahir)->format('d F Y') : '-' }}</td>
+                    <td>: {{ $mahasiswa->tempat_lahir ?? '-' }} / {{ $mahasiswa->tgl_lahir ? \Carbon\Carbon::parse($mahasiswa->tgl_lahir)->format('d F Y') : '-' }}</td>
                 </tr>
                 <tr>
                     <td class="label">Bidang Keahlian</td>
@@ -91,8 +103,8 @@
         </div>
 
         <!-- Grades by Semester -->
-        @foreach($semesterData as $sem => $semData)
-            <div style="margin-top: 20px;">
+        @forelse($semesterData as $sem => $semData)
+            <div class="semester-block" style="margin-top: {{ $loop->first ? '20px' : '40px' }};">
                 <strong>Semester {{ $sem }}</strong>
             </div>
 
@@ -122,7 +134,7 @@
             </table>
 
             <!-- Summary Table -->
-            <table class="grades summary">
+            <table class="grades summary" style="margin-bottom: 20px;">
                 <tr>
                     <th style="width: 40%; text-align: left; padding-left: 10px;">JUMLAH</th>
                     <th style="width: 15%;">{{ $semData['total_sks'] }}</th>
@@ -138,7 +150,45 @@
                     <td colspan="2" style="text-align: left;">Indeks Prestasi Kumulatif (IPK): <strong>{{ number_format($semData['ips'], 2) }}</strong></td>
                 </tr>
             </table>
-        @endforeach
+        @empty
+            {{-- Empty State --}}
+            <div class="semester-block" style="margin-top: 20px;">
+                <strong>Semester -</strong>
+            </div>
+            
+            <table class="grades">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;">NO</th>
+                        <th>MATERI AJAR</th>
+                        <th style="width: 50px;">SKS</th>
+                        <th style="width: 80px;">Nilai<br>Angka</th>
+                        <th style="width: 80px;">Nilai<br>Huruf</th>
+                        <th style="width: 80px;">Kumulatif</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" style="text-align: center; height: 100px; vertical-align: middle; font-style: italic; color: #666;">
+                            Belum ada data nilai akademik yang tersedia.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Empty Summary Table -->
+            <table class="grades summary" style="margin-bottom: 20px;">
+                <tr>
+                    <th style="width: 40%; text-align: left; padding-left: 10px;">JUMLAH</th>
+                    <th style="width: 15%;">-</th>
+                    <th style="width: 45%; text-align: left;">Predikat: -</th>
+                </tr>
+                <tr>
+                    <td style="text-align: left; padding-left: 10px;">Nilai Prestasi Semester (IPS): <strong>0.00</strong></td>
+                    <td colspan="2" style="text-align: left;">Indeks Prestasi Kumulatif (IPK): <strong>0.00</strong></td>
+                </tr>
+            </table>
+        @endforelse
 
         <!-- Footer -->
         <div class="footer">

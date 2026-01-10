@@ -5,7 +5,7 @@
         
         {{-- Modal Header --}}
         <div class="flex justify-between items-center pb-3 border-b">
-            <h3 class="text-xl font-bold text-gray-900">Edit Mata Kuliah</h3>
+            <h3 class="text-xl font-bold text-gray-900">Edit Materi Ajar</h3>
             <button class="close-edit-matkul-modal text-gray-400 hover:text-gray-900 text-2xl font-bold">
                 &times;
             </button>

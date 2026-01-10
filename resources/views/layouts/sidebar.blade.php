@@ -70,7 +70,7 @@
                class="flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 group
                {{ request()->routeIs('admin.dosen.*') ? 'text-white bg-white/10 font-semibold' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                <span class="w-1.5 h-1.5 rounded-full mr-3 {{ request()->routeIs('admin.dosen.*') ? 'bg-[#009DA5]' : 'bg-gray-500 group-hover:bg-[#009DA5]' }}"></span>
-               Dosen
+               Pendidik
             </a>
 
             {{-- 2.3 Mata Kuliah --}}
@@ -78,7 +78,7 @@
                class="flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 group
                {{ request()->routeIs('admin.kelola_matkul') ? 'text-white bg-white/10 font-semibold' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                <span class="w-1.5 h-1.5 rounded-full mr-3 {{ request()->routeIs('admin.kelola_matkul') ? 'bg-[#009DA5]' : 'bg-gray-500 group-hover:bg-[#009DA5]' }}"></span>
-               Mata Kuliah
+               Materi Ajar
             </a>
         </div>
     </div>

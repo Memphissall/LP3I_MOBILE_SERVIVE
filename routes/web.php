@@ -114,11 +114,13 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::get('/khs', [App\Http\Controllers\KhsController::class, 'index'])->name('khs.index');
     Route::get('/khs/print/{nipd}', [App\Http\Controllers\KhsController::class, 'printStudent'])->name('khs.print.student');
     Route::get('/khs/print-batch', [App\Http\Controllers\KhsController::class, 'printBatch'])->name('khs.print.batch');
+    Route::get('/khs/print-all', [App\Http\Controllers\KhsController::class, 'printAll'])->name('khs.print.all');
     
     // KRS Routes
     Route::get('/krs', [App\Http\Controllers\KrsController::class, 'index'])->name('krs.index');
     Route::get('/krs/print/{nipd}', [App\Http\Controllers\KrsController::class, 'printStudent'])->name('krs.print.student');
     Route::get('/krs/print-batch', [App\Http\Controllers\KrsController::class, 'printBatch'])->name('krs.print.batch');
+    Route::get('/krs/print-all', [App\Http\Controllers\KrsController::class, 'printAll'])->name('krs.print.all');
     Route::post('/krs/batch', [App\Http\Controllers\KrsController::class, 'storeBatch'])->name('krs.store.batch');
     
     // KRS API Routes

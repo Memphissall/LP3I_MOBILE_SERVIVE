@@ -95,7 +95,7 @@
                     <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-white tracking-wide">Daftar Dosen <span class="bg-white/20 px-2 py-0.5 rounded text-sm font-mono ml-2" id="lecturer-count">0</span></h3>
+                    <h3 class="text-xl font-bold text-white tracking-wide">Daftar Data Pendidik <span class="bg-white/20 px-2 py-0.5 rounded text-sm font-mono ml-2" id="lecturer-count">0</span></h3>
                 </div>
 
                 <div class="flex space-x-3">
@@ -119,7 +119,7 @@
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-12 border-b-2 border-gray-200">No</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">Id Pendidik</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">Id</th>
-                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">Nama Dosen</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">Nama Pendidik</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200">Tempat Lahir</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200 w-24">Tanggal Lahir</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200 w-24">Alamat</th>
@@ -144,7 +144,7 @@
         </div>
         {{-- Footer Tabel --}}
         <div class="bg-gray-50 px-6 py-3 border-t border-gray-100 flex justify-between items-center">
-            <span class="text-xs text-gray-500 font-medium">Menampilkan data dosen terdaftar.</span>
+            <span class="text-xs text-gray-500 font-medium">Menampilkan data Pendidik terdaftar.</span>
         </div>
     </div>
 </div>

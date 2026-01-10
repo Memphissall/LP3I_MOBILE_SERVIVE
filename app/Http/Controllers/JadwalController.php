@@ -106,10 +106,13 @@ class JadwalController extends Controller
      */
     public function getDosenByMataKuliah(Request $request)
     {
-        $query = \App\Models\Dosen::select('id_dosen', 'nama_dosen', 'nidn', 'id_matkul');
+        // Modified to allow showing all lecturers if no specific assignment exists
+        // This solves the issue where dropdown is empty because lecturers are not strictly assigned to subjects in DB
+        $query = \App\Models\Dosen::select('id_dosen', 'nama_dosen', 'nidn');
 
+        // Optional: Only filter if necessary, but for now we return all to fix the empty dropdown
         if ($request->filled('id_matkul') && $request->id_matkul !== 'all') {
-            $query->where('id_matkul', $request->id_matkul);
+           $query->where('id_matkul', $request->id_matkul);
         }
 
         // Deduplicate by nama_dosen

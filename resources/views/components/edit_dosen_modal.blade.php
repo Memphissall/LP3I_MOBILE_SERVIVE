@@ -5,7 +5,7 @@
         
         {{-- Modal Header --}}
         <div class="flex justify-between items-center pb-3 border-b">
-            <h3 class="text-xl font-bold text-gray-900">Edit Data Dosen</h3>
+            <h3 class="text-xl font-bold text-gray-900">Edit Data Pendidik</h3>
             <button class="close-edit-dosen-modal text-gray-400 hover:text-gray-900 text-2xl font-bold">
                 &times;
             </button>

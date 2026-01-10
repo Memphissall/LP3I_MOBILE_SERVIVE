@@ -135,9 +135,13 @@ class DosenController extends Controller
 
         $query = Dosen::query();
 
-        if ($status && $status !== 'Semua Status') {
-            $query->where('status', strtolower($status));
-        }
+        // Enforce only Active lecturers for print
+        $query->where('status', 'Aktif');
+
+        // Remove dynamic status filter since we only want Aktif
+        // if ($status && $status !== 'Semua Status') {
+        //     $query->where('status', strtolower($status));
+        // }
 
         if ($pendidikan && $pendidikan !== 'Semua Pendidikan') {
             $query->where('pendidikan', $pendidikan);

@@ -12,9 +12,9 @@
 
             {{-- SEMESTER --}}
             <div class="flex items-center gap-6">
-                <label class="w-32 font-medium">Semester</label>
+                <label class="w-32 font-medium">Periode Akademik</label>
                 <select id="semester" class="w-80 border rounded-lg px-4 py-2">
-                    <option value="">-- Pilih Semester --</option>
+                    <option value="">-- Pilih Periode Akademik --</option>
                     @for($s=1; $s<=8; $s++)
                         @php
                             $periode = $s % 2 == 1 ? 'Ganjil' : 'Genap';
@@ -45,10 +45,10 @@
 
             {{-- MATA KULIAH --}}
             <div class="flex items-center gap-6">
-                <label class="w-32 font-medium">Mata Kuliah</label>
+                <label class="w-32 font-medium">Materi Ajar</label>
                 <select id="matkul" disabled
                         class="w-80 border rounded-lg px-4 py-2">
-                    <option value="">-- Pilih Mata Kuliah --</option>
+                    <option value="">-- Pilih Materi Ajar --</option>
                 </select>
             </div>
 

@@ -23,9 +23,6 @@ return new class extends Migration
             $table->string('agama');
             $table->string('email')->unique();
             $table->string('no_telp');
-
-            $table->integer('honor_per_sks');
-
             // Status lengkap
             $table->enum('status', [
                 'aktif',
@@ -38,6 +35,8 @@ return new class extends Migration
             // Upload foto
             $table->string('foto')->nullable();
 
+            $table->integer('honor_per_sks');
+            $table->integer('total_gaji_diterima')->default(0);
             $table->timestamps();
 
             $table->foreign('user_id')

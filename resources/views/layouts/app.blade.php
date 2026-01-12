@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Sistem E-Dosen') }}</title>
+    <title>{{ config('app.name', 'Sistem E-Lecturer') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
         :root{
-            --navy:#0f3a5f;
-            --teal:#00a7a7;
+            --indigo:#1f3a5f;        /* Indigo Dye */
+            --viridian:#1b8a7a;     /* Viridian Green */
             --white:#ffffff;
-            --bg:#f5f7fb;
+            --bg:#f3f6fb;
         }
 
         *{margin:0;padding:0;box-sizing:border-box}
+
         body{
             font-family:Poppins,sans-serif;
             background:var(--bg);
@@ -31,7 +31,7 @@
         .sidebar{
             width:260px;
             min-height:100vh;
-            background:var(--navy);
+            background:linear-gradient(180deg, var(--indigo), #162c45);
             position:fixed;
             color:#fff;
             display:flex;
@@ -39,12 +39,29 @@
             justify-content:space-between;
         }
 
-        .sidebar h2{
-            padding:24px;
-            text-align:center;
-            border-bottom:1px solid rgba(255,255,255,.2);
+        /* BRAND */
+        .sidebar-brand{
+            padding:20px;
+            display:flex;
+            align-items:center;
+            gap:12px;
+            border-bottom:1px solid rgba(255,255,255,.15);
         }
 
+        .sidebar-brand img{
+            width:38px;
+            height:38px;
+            object-fit:contain;
+        }
+
+        .sidebar-brand span{
+            font-size:16px;
+            font-weight:700;
+            line-height:1.2;
+            color:#fff;
+        }
+
+        /* MENU */
         .sidebar nav{
             padding:16px;
             display:flex;
@@ -57,25 +74,37 @@
             display:flex;
             align-items:center;
             gap:12px;
-            color:#e5e7eb;
-            border-radius:8px;
+            color:#dbe7f0;
+            border-radius:10px;
             transition:.2s;
+            font-size:15px;
         }
 
         .sidebar nav a:hover,
         .sidebar nav a.active{
-            background:var(--teal);
+            background:var(--viridian);
             color:#fff;
         }
 
+        /* LOGOUT */
         .logout-btn{
+            width:calc(100% - 32px);
             margin:16px;
-            padding:12px;
-            background:#ff0000;
+            padding:14px;
+            background:#162c45;
             border:none;
-            border-radius:10px;
+            border-radius:12px;
             color:#fff;
             cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            font-size:15px;
+        }
+
+        .logout-btn:hover{
+            background:var(--viridian);
         }
 
         /* ===== MAIN ===== */
@@ -86,19 +115,26 @@
             flex-direction:column;
         }
 
+        /* ===== NAVBAR ATAS (SEJAJAR SIDEBAR) ===== */
         .navbar{
-            background:var(--white);
-            padding:16px 24px;
+            background:linear-gradient(90deg, var(--indigo), var(--viridian));
+            padding:18px 24px;
             display:flex;
-            justify-content:space-between;
+            justify-content:flex-end;
             align-items:center;
-            border-bottom:1px solid #e5e7eb;
+            color:#fff;
+            border-bottom:3px solid rgba(0,0,0,.08);
+            box-shadow:0 4px 10px rgba(0,0,0,.08);
         }
 
         .profile-link{
-            color:var(--teal);
+            color:#a7fff2;
             font-weight:600;
             margin-left:10px;
+        }
+
+        .profile-link:hover{
+            color:#ffffff;
         }
 
         main{
@@ -112,55 +148,7 @@
             padding:14px;
             border-top:1px solid #e5e7eb;
             font-size:14px;
-        }
-
-        /* ===== CARD DASHBOARD ===== */
-        .welcome{
-            background:#fff;
-            padding:20px;
-            border-radius:12px;
-            border-left:6px solid var(--teal);
-            margin-bottom:24px;
-        }
-
-        .grid{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-            gap:20px;
-        }
-
-        .card{
-            background:#fff;
-            padding:20px;
-            border-radius:14px;
-            border-left:5px solid var(--teal);
-        }
-
-        .card a{
-            color:var(--teal);
-            font-weight:600;
-        }
-
-        .icon-grid{
-            margin-top:30px;
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-            gap:20px;
-        }
-
-        .icon-card{
-            background:#fff;
-            padding:26px;
-            text-align:center;
-            border-radius:16px;
-            box-shadow:0 4px 10px rgba(0,0,0,.04);
-            color:#000;
-        }
-
-        .icon-card i{
-            font-size:28px;
-            color:var(--teal);
-            margin-bottom:10px;
+            color:#64748b;
         }
     </style>
 </head>
@@ -169,7 +157,11 @@
 
 <aside class="sidebar">
     <div>
-        <h2>📘 Sistem E-Lecturer</h2>
+        <!-- LOGO + TITLE -->
+        <div class="sidebar-brand">
+            <img src="{{ asset('images/lp3i.png') }}" alt="LP3I College">
+            <span>Sistem<br>E-Lecturer</span>
+        </div>
 
         <nav>
             @if(Auth::user()->role === 'admin')
@@ -203,7 +195,7 @@
                     <i class="fa-solid fa-list-check"></i> Tugas
                 </a>
 
-                <a href="#">
+                <a href="{{ route('dosen.gaji') }}" class="{{ request()->routeIs('dosen.gaji') ? 'active' : '' }}">
                     <i class="fa-solid fa-money-bill-wave"></i> Lihat Gaji
                 </a>
 
@@ -214,6 +206,7 @@
         </nav>
     </div>
 
+    <!-- LOGOUT -->
     <form method="POST" action="{{ route('logout') }}">
         @csrf
         <button class="logout-btn">
@@ -223,24 +216,18 @@
 </aside>
 
 <div class="main-content">
-
     <header class="navbar">
-        <div></div>
-        <div>
-            👋 {{ Auth::user()->name }}
-            <a href="{{ route('profile.edit') }}" class="profile-link">Profil</a>
-        </div>
+        👋 {{ Auth::user()->name }}
+        <a href="{{ route('profile.edit') }}" class="profile-link">Profil</a>
     </header>
 
     <main>
-        {{-- ISI DASHBOARD --}}
         @yield('content')
     </main>
 
     <footer>
-        © {{ date('Y') }} ASE10 V0.1 | LP3I Karawang
+        © {{ date('Y') }} ASE10 V0.1 | REV0.3 | LP3I Karawang
     </footer>
-
 </div>
 
 <script>
@@ -250,5 +237,6 @@
     });
 </script>
 
+@stack('scripts')
 </body>
 </html>

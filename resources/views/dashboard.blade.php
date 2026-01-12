@@ -41,6 +41,11 @@
     opacity: .9;
 }
 
+#datetime {
+    font-size: 13px;
+    opacity: .85;
+}
+
 /* WHITE CARD */
 .card {
     background: #fff;
@@ -144,14 +149,13 @@
 
     <!-- LEFT -->
     <div>
-
         <div class="welcome">
-            <h2>Good Day, {{ Auth::user()->name }}!</h2>
+            <h2>HII, {{ Auth::user()->name }}!</h2>
             <p>Dashboard Dosen</p>
+            <p id="datetime"></p>
         </div>
 
         <div class="grid-3">
-
             <div class="card">
                 <i class="fa-solid fa-calendar-days"></i>
                 <h3>Jadwal Mengajar</h3>
@@ -172,17 +176,15 @@
                 <p>Upload dan update materi.</p>
                 <a href="{{ route('materi.pilih') }}">Kelola Materi →</a>
             </div>
-
         </div>
 
         <div class="icon-grid">
-
             <a href="{{ route('dosen.absen') }}" class="icon-card">
                 <i class="fa-solid fa-user-check"></i>
                 <p>Absensi</p>
             </a>
 
-            <a href="#" class="icon-card">
+            <a href="{{ route('dosen.gaji') }}" class="icon-card">
                 <i class="fa-solid fa-money-bill-wave"></i>
                 <p>Gaji</p>
             </a>
@@ -196,40 +198,47 @@
                 <i class="fa-solid fa-star"></i>
                 <p>Nilai</p>
             </a>
-
         </div>
-
     </div>
 
     <!-- RIGHT -->
     <div class="rightbar">
-
         <div class="calendar">
             <h4 id="calendar-title"></h4>
-
             <div class="calendar-grid" id="calendar-days"></div>
             <div class="calendar-grid" id="calendar-dates"></div>
         </div>
-
     </div>
 
 </div>
 </div>
 
-<!-- REAL TIME CALENDAR SCRIPT -->
+<!-- REAL TIME DATE + CALENDAR SCRIPT -->
 <script>
+// ===== DATE REAL TIME =====
+function updateDateTime() {
+    const now = new Date();
+
+    const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+
+    const fullDate = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+    document.getElementById('datetime').innerText = fullDate;
+}
+
+updateDateTime();
+setInterval(updateDateTime, 60000);
+
+// ===== CALENDAR =====
 const now = new Date();
 const year = now.getFullYear();
 const month = now.getMonth();
 const today = now.getDate();
 
-const monthNames = [
-    "January","February","March","April","May","June",
-    "July","August","September","October","November","December"
-];
+const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
-document.getElementById("calendar-title").innerText =
-    monthNames[month] + " " + year;
+document.getElementById("calendar-title").innerText = monthNames[month] + " " + year;
 
 const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const daysContainer = document.getElementById("calendar-days");

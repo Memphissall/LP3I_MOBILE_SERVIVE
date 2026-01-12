@@ -61,7 +61,7 @@ class AbsensiLkmController extends Controller
         $pertemuanSkrg = $pertemuanTerakhir + 1;
         $sks = $matkul->sks;
         $durasiJam = $sks;
-        $durasiMenit = $sks * 50;
+        $durasiMenit = $sks * 60;
 
         return view('admin.dosen.absensi.index', compact(
             'mahasiswa',
@@ -79,62 +79,102 @@ class AbsensiLkmController extends Controller
 
     // Simpan absensi per kelas
     public function storeAbsen(Request $request, $id_kelas, $kode_mk)
-    {
-        if (!$request->absensi) {
-            return back()->with('error', 'Pilih absensi mahasiswa.');
-        }
-
-        $dosen = Dosen::where('user_id', Auth::id())->first();
-        if (!$dosen) {
-            return back()->with('error', 'Data dosen tidak ditemukan.');
-        }
-
-        $nidn = $dosen->nidn;
-        $tanggalSkrg = now()->toDateString();
-
-        foreach ($request->absensi as $nipd_mhs => $status) {
-            $mahasiswa = Mahasiswa::where('nipd', $nipd_mhs)->first();
-
-            AbsensiLkm::create([
-                'nidn'         => $nidn,
-                'id_kelas'     => $mahasiswa->id_kelas,
-                'kode_mk'      => $kode_mk,
-                'tanggal'      => $tanggalSkrg,
-                'id_pertemuan' => $request->id_pertemuan,
-                'nipd'         => $nipd_mhs,
-                'nama_mhs'     => $mahasiswa->nama_mhs,
-                'status'       => $status
-            ]);
-        }
-
-        // Hitung honor
-        $matkul = Matakuliah::where('kode_mk', $kode_mk)->first();
-        if ($matkul) {
-            $exist = Honor::where('nidn', $nidn)
-                ->where('kode_mk', $kode_mk)
-                ->where('id_pertemuan', $request->id_pertemuan)
-                ->exists();
-
-            if (!$exist) {
-                Honor::create([
-                    'nidn'          => $nidn,
-                    'kode_mk'       => $kode_mk,
-                    'semester'      => $request->semester,
-                    'tahun'         => date('Y'),
-                    'id_pertemuan'  => $request->id_pertemuan,
-                    'tanggal'       => $tanggalSkrg,
-                    'sks'           => $matkul->sks,
-                    'honor_per_sks' => $dosen->honor_per_sks,
-                    'gaji_total'    => $matkul->sks * $dosen->honor_per_sks
-                ]);
-            }
-        }
-
-        return redirect()->route(
-            'admin.dosen.lkm.form',
-            [$id_kelas, $kode_mk, $request->semester]
-        );
+{
+    if (!$request->absensi) {
+        return back()->with('error', 'Pilih absensi mahasiswa.');
     }
+
+    $dosen = Dosen::where('user_id', Auth::id())->firstOrFail();
+    $nidn = $dosen->nidn;
+    $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
+    $tanggal = now()->toDateString();
+
+
+    // ======================
+    // SIMPAN ABSENSI
+    // ======================
+    foreach ($request->absensi as $nipd => $status) {
+        $mhs = Mahasiswa::where('nipd', $nipd)->first();
+
+        AbsensiLkm::create([
+            'nidn'         => $nidn,
+            'id_kelas'     => $mhs->id_kelas,
+            'kode_mk'      => $kode_mk,
+            'tanggal'      => $tanggal,
+            'id_pertemuan' => $request->id_pertemuan,
+            'nipd'         => $nipd,
+            'nama_mhs'     => $mhs->nama_mhs,
+            'status'       => $status
+        ]);
+    }
+
+    // ======================
+    // HITUNG HONOR DOSEN
+    // ======================
+   $honorMengajar = $matkul->sks * $dosen->honor_per_sks;
+
+$uangSoal = $request->uang_pembuatan_soal ?? 0;
+$uangKoreksi = $request->uang_koreksi_jawaban ?? 0;
+
+$totalBruto = $honorMengajar + $uangSoal + $uangKoreksi;
+
+$ppn = intval($totalBruto * 0.05);
+$gajiBersih = $totalBruto - $ppn;
+
+Honor::create([
+    'nidn' => $nidn,
+    'kode_mk' => $kode_mk,
+    'semester' => $request->semester,
+    'tahun' => date('Y'),
+    'id_pertemuan' => $request->id_pertemuan,
+    'tanggal' => now()->toDateString(),
+
+    'sks' => $matkul->sks,
+    'honor_per_sks' => $dosen->honor_per_sks,
+
+    'honor_mengajar' => $honorMengajar,
+    'uang_pembuatan_soal' => $uangSoal,
+    'uang_koreksi_jawaban' => $uangKoreksi,
+
+    'total_bruto' => $totalBruto,
+    'ppn' => $ppn,
+    'gaji_bersih' => $gajiBersih,
+]);
+
+
+   
+
+    // ======================
+    // UPDATE TOTAL GAJI DOSEN
+    // ======================
+    $total = Honor::where('nidn', $nidn)->sum('gaji_bersih');
+
+    $dosen->update([
+        'total_gaji_diterima' => $total
+    ]);
+
+
+    return redirect()->route(
+        'admin.dosen.lkm.form',
+        [$id_kelas, $kode_mk, $request->semester]
+    )->with('success', 'Absensi & honor berhasil disimpan.');
+}
+
+
+
+
+    public function totalGaji()
+{
+    $dosen = Dosen::where('user_id', Auth::id())->firstOrFail();
+
+    $honor = Honor::where('nidn', $dosen->nidn)->get();
+
+    $total = $honor->sum('gaji_bersih');
+
+    return view('admin.dosen.gaji', compact('honor', 'total'));
+}
+
+
 
     // Form buat LKM
     public function createLkm($id_kelas, $kode_mk, $semester)
@@ -146,7 +186,7 @@ class AbsensiLkmController extends Controller
 
         $sks = $matkul->sks;
         $durasiJam = $sks;
-        $durasiMenit = $sks * 50;
+        $durasiMenit = $sks * 60;
 
         return view('admin.dosen.lkm.form', compact(
             'id_kelas',

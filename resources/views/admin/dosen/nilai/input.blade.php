@@ -3,7 +3,9 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 py-6">
 
-<form action="{{ route('nilai.store') }}" method="POST">
+<!-- <form action="{{ route('nilai.store') }}" method="POST" > -->
+    <form id="form-nilai" action="{{ route('nilai.store') }}" method="POST">
+
 @csrf
 
 <input type="hidden" name="id_kelas" value="{{ $id_kelas }}">
@@ -60,12 +62,12 @@
                     </td>
 
                     {{-- INPUT NILAI --}}
-                    @foreach(['nilai_sikap','nilai_formatif','nilai_tugas','nilai_uts','nilai_uas'] as $field)
+                   @foreach(['nilai_sikap','nilai_formatif','nilai_tugas','nilai_uts','nilai_uas'] as $field)
                     <td>
                         <input type="number"
                             name="{{ $field }}[]"
-                            min="0" max="100" required
-                            class="w-20 mx-auto text-center rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                            min="0" max="100"
+                            class="nilai-input w-20 mx-auto text-center rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                     </td>
                     @endforeach
 
@@ -91,4 +93,49 @@
 </div>
 </form>
 </div>
+@push('scripts')
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("form-nilai");
+    if (!form) return;
+
+    form.addEventListener("submit", function (e) {
+        const rows = document.querySelectorAll("tbody tr");
+
+        for (const row of rows) {
+            const inputs = row.querySelectorAll(".nilai-input");
+
+            let filled = 0;
+            inputs.forEach(i => {
+                if (i.value.trim() !== "") filled++;
+            });
+
+            // ❌ sebagian diisi
+            if (filled > 0 && filled < inputs.length) {
+                e.preventDefault();
+
+                const emptyInput = [...inputs].find(i => i.value.trim() === "");
+
+                emptyInput.required = true;
+                emptyInput.setCustomValidity("Harap lengkapi semua nilai pada baris mahasiswa yang sudah diisi");
+                emptyInput.reportValidity();
+                emptyInput.focus();
+
+                return;
+            }
+        }
+    });
+
+    // reset validasi saat ngetik
+    document.querySelectorAll(".nilai-input").forEach(input => {
+        input.addEventListener("input", () => {
+            input.required = false;
+            input.setCustomValidity("");
+        });
+    });
+
+});
+</script>
+@endpush
 @endsection

@@ -85,11 +85,12 @@ class NilaiController extends Controller
      * HITUNG ALPHA (TETAP)
      * =====================================
      */
-    $alphaCount = DB::table('absensi_lkm')
-        ->where('kode_mk', $kode_mk)
-        ->where('status', 'Alpha')
-        ->groupBy('nipd')
-        ->pluck(DB::raw('COUNT(*)'), 'nipd');
+  $tidakHadirCount = DB::table('absensi_lkm')
+    ->where('kode_mk', $kode_mk)
+    ->whereIn('status', ['Alpha', 'Sakit', 'Izin'])
+    ->groupBy('nipd')
+    ->pluck(DB::raw('COUNT(*)'), 'nipd');
+
 
     // $nilaiKehadiran = [];
     // foreach ($mahasiswa as $mhs) {
@@ -103,15 +104,15 @@ $nilaiPerPertemuan = 100 / $totalPertemuan;
 $nilaiKehadiran = [];
 
 foreach ($mahasiswa as $mhs) {
-    $alpha = $alphaCount[$mhs->nipd] ?? 0;
+    $tidakHadir = $tidakHadirCount[$mhs->nipd] ?? 0;
+    $nilai = 100 - ($tidakHadir * $nilaiPerPertemuan);
 
-    $nilai = 100 - ($alpha * $nilaiPerPertemuan);
 
     if ($nilai < 0) {
         $nilai = 0;
     }
+$nilaiKehadiran[$mhs->nipd] = max(round($nilai, 2), 0);
 
-    $nilaiKehadiran[$mhs->nipd] = round($nilai, 2);
 }
 
     return view('admin.dosen.nilai.input', compact(
@@ -147,16 +148,50 @@ foreach ($mahasiswa as $mhs) {
 
     foreach ($request->nipd as $i => $nipd) {
 
+         $fields = [
+        'nilai_sikap',
+        'nilai_formatif',
+        'nilai_tugas',
+        'nilai_uts',
+        'nilai_uas',
+    ];
+
+    $filled = 0;
+
+    foreach ($fields as $field) {
+        if (
+            isset($request->$field[$i]) &&
+            $request->$field[$i] !== ''
+        ) {
+            $filled++;
+        }
+    }
+
+    // ❌ sebagian diisi → STOP TOTAL
+    if ($filled > 0 && $filled < count($fields)) {
+        return back()
+            ->withErrors([
+                'error' => 'Ada mahasiswa yang nilainya belum lengkap.'
+            ])
+            ->withInput();
+    }
+
+    // ✅ kosong semua → lewati
+    if ($filled === 0) {
+        continue;
+    }
+    
         /**
          * ===============================
          *  HITUNG JUMLAH ALPHA
          * ===============================
          */
-        $jumlahAlpha = DB::table('absensi_lkm')
-            ->where('nipd', $nipd)
-            ->where('kode_mk', $request->kode_mk)
-            ->where('status', 'Alpha')
-            ->count();
+        $jumlahTidakHadir = DB::table('absensi_lkm')
+        ->where('nipd', $nipd)
+        ->where('kode_mk', $request->kode_mk)
+        ->whereIn('status', ['Alpha', 'Sakit', 'Izin'])
+        ->count();
+
 
         /**
          * ===============================
@@ -167,8 +202,9 @@ foreach ($mahasiswa as $mhs) {
         // if ($nilaiKehadiran < 0) {
         //     $nilaiKehadiran = 0;
         // }
-        $nilaiPerPertemuan = 100 / 14; // 7.14
-        $nilaiKehadiran = 100 - ($jumlahAlpha * $nilaiPerPertemuan);
+       $nilaiPerPertemuan = 100 / 14;
+
+        $nilaiKehadiran = 100 - ($jumlahTidakHadir * $nilaiPerPertemuan);
 
         if ($nilaiKehadiran < 0) {
             $nilaiKehadiran = 0;
@@ -180,13 +216,20 @@ foreach ($mahasiswa as $mhs) {
          * NILAI AKHIR
          * ===============================
          */
+        $nilaiSikap     = $request->nilai_sikap[$i]     ?? 0;
+        $nilaiTugas     = $request->nilai_tugas[$i]     ?? 0;
+        $nilaiFormatif  = $request->nilai_formatif[$i]  ?? 0;
+        $nilaiUTS       = $request->nilai_uts[$i]       ?? 0;
+        $nilaiUAS       = $request->nilai_uas[$i]       ?? 0;
+
         $nilaiAkhir =
-            ($nilaiKehadiran                 * 0.05) +
-            ($request->nilai_sikap[$i]       * 0.05) +
-            ($request->nilai_tugas[$i]       * 0.15) +
-            ($request->nilai_formatif[$i]   * 0.20) +
-            ($request->nilai_uts[$i]         * 0.25) +
-            ($request->nilai_uas[$i]         * 0.30);
+            ($nilaiKehadiran * 0.05) +
+            ($nilaiSikap     * 0.05) +
+            ($nilaiTugas     * 0.15) +
+            ($nilaiFormatif  * 0.20) +
+            ($nilaiUTS       * 0.25) +
+            ($nilaiUAS       * 0.30);
+
 
         /**
          * ===============================
@@ -214,11 +257,12 @@ foreach ($mahasiswa as $mhs) {
             'periode'        => $periode,
             'tahun_akademik' => $tahunAkademik,
             'nilai_kehadiran'=> $nilaiKehadiran,
-            'nilai_sikap'    => $request->nilai_sikap[$i],
-            'nilai_tugas'    => $request->nilai_tugas[$i],
-            'nilai_formatif' => $request->nilai_formatif[$i],
-            'nilai_uts'      => $request->nilai_uts[$i],
-            'nilai_uas'      => $request->nilai_uas[$i],
+            'nilai_sikap'    => $nilaiSikap,
+            'nilai_tugas'    => $nilaiTugas,
+            'nilai_formatif' => $nilaiFormatif,
+            'nilai_uts'      => $nilaiUTS,
+            'nilai_uas'      => $nilaiUAS,
+
             'nilai_akhir'    => round($nilaiAkhir, 2),
             'mutu'           => $mutu,
             'bobot_ip'       => $ip,

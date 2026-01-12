@@ -16,15 +16,16 @@ use App\Http\Controllers\ELecturer\MateriController;
 use App\Http\Controllers\ELecturer\AbsensiLkmController;
 use App\Http\Controllers\ELecturer\DashboardController;
 use App\Http\Controllers\ELecturer\HonorController;
+use App\Http\Controllers\Admin\HonorTambahanController;
+use App\Http\Controllers\Admin\HonorRekapController;
 
 
 // ==========================
 // HALAMAN AWAL
 // ==========================
 Route::get('/', function () {
-    return view('welcome');
-});
-
+    return view('auth.login');
+})->name('auth.login');
 // ==========================
 // AUTH (LOGIN)
 // ==========================
@@ -196,6 +197,12 @@ Route::middleware(['auth'])->prefix('dosen')->group(function () {
         [HonorController::class, 'rekap']
     )->name('dosen.honor.rekap');
 
+
+    Route::get('/dosen/gaji', [AbsensiLkmController::class, 'totalGaji'])
+     ->name('dosen.gaji');
+
+
+     
 });
 
 
@@ -280,4 +287,26 @@ Route::middleware(['auth', 'admin'])->group(function () {
     //  Bobot Nilai
     Route::get('/bobot-nilai', [BobotNilaiController::class, 'index'])->name('admin.bobot.index');
     Route::post('/bobot-nilai/store', [BobotNilaiController::class, 'store'])->name('admin.bobot.store');
+
+    // ==========================
+// HONOR TAMBAHAN DOSEN (AKADEMIK)
+// ==========================
+Route::prefix('admin/akademik')
+    ->name('admin.akademik.')
+    ->group(function () {
+
+        Route::get('/tambahan-honor', [HonorTambahanController::class, 'index'])
+            ->name('tambahan-honor');
+
+        Route::get('/tambahan-honor/create', [HonorTambahanController::class, 'create'])
+            ->name('tambahan-honor.create');
+
+        Route::post('/tambahan-honor', [HonorTambahanController::class, 'store'])
+            ->name('tambahan-honor.store');
+    });
+
+         Route::get('/admin/rekap-gaji-dosen',[HonorRekapController::class, 'index']
+            )->name('admin.rekap.gaji-dosen');
+
+
 });

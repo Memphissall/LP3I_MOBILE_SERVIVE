@@ -8,26 +8,41 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('honor', function (Blueprint $table) {
-            $table->id('id_honor');
+    $table->id('id_honor');
 
-            $table->string('nidn');
-            $table->string('kode_mk');
+    $table->string('nidn');
 
-            $table->integer('id_pertemuan');
-            $table->date('tanggal');
+    // ===== HONOR MENGAJAR =====
+    $table->string('kode_mk')->nullable();
+    $table->integer('id_pertemuan')->nullable();
+    $table->date('tanggal')->nullable();
+    $table->integer('sks')->nullable();
+    $table->integer('honor_per_sks')->default(0);
+    $table->integer('honor_mengajar')->default(0);
 
-            $table->integer('sks');
-            $table->integer('honor_per_sks');
+    // ===== HONOR TAMBAHAN =====
+    $table->string('jenis_honor')->nullable(); // pembuatan_soal / koreksi
+    $table->tinyInteger('bulan')->nullable(); // 1–12
+    $table->integer('uang_pembuatan_soal')->default(0);
+    $table->integer('uang_koreksi_jawaban')->default(0);
 
-            $table->integer('gaji_total');
+    // ===== PERHITUNGAN =====
+    $table->integer('total_kotor')->default(0);
+    $table->integer('ppn')->default(0);
+    $table->integer('gaji_bersih')->default(0);
 
-            $table->string('semester');
-            $table->year('tahun');
+    $table->string('semester');
+    $table->year('tahun');
 
-            $table->timestamps();
+    $table->timestamps();
 
-            $table->unique(['nidn', 'kode_mk', 'id_pertemuan']);
-        });
+    // 🔐 CEGAH DUPLIKASI
+    $table->unique(
+        ['nidn', 'semester', 'tahun', 'jenis_honor', 'bulan'],
+        'honor_unique_tambahan'
+    );
+});
+
     }
 
     public function down()

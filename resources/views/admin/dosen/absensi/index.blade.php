@@ -6,8 +6,8 @@
         <h2 class="text-xl font-bold mb-2">Input Presensi: {{ $matkul->nama_mk }}</h2>
         <div class="bg-blue-50 border border-blue-200 rounded p-3 mb-4 text-sm">
     <p><strong>Pertemuan:</strong> {{ $pertemuanSkrg }} / 14</p>
-    <p><strong>SKS:</strong> {{ $sks }}</p>
-    <p><strong>Durasi:</strong> {{ $durasiJam }} Jam ({{ $durasiMenit }} Menit)</p>
+    <p><strong>BK:</strong> {{ $sks }}</p>
+    <p><strong>Durasi:</strong> ({{ $durasiMenit }} Menit)</p>
 </div>
         {{-- Bagian Tanggal & Pertemuan --}}
         <div class="text-gray-600 mb-6 italic text-sm flex items-center gap-2">

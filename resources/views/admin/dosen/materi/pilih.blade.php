@@ -20,9 +20,9 @@
     </div>
 
     <div class="mb-6">
-        <label class="block mb-1 font-medium">Mata Kuliah</label>
+        <label class="block mb-1 font-medium">Materi Ajar</label>
         <select id="matkul" class="w-full border rounded p-2">
-            <option value="">-- Pilih Mata Kuliah --</option>
+            <option value="">-- Pilih Materi Ajar --</option>
         </select>
     </div>
 

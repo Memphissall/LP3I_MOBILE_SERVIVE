@@ -18,6 +18,7 @@ use App\Http\Controllers\ELecturer\DashboardController;
 use App\Http\Controllers\ELecturer\HonorController;
 use App\Http\Controllers\Admin\HonorTambahanController;
 use App\Http\Controllers\Admin\HonorRekapController;
+ use App\Http\Controllers\Admin\LkmRekapController;
 
 
 // ==========================
@@ -307,6 +308,14 @@ Route::prefix('admin/akademik')
 
          Route::get('/admin/rekap-gaji-dosen',[HonorRekapController::class, 'index']
             )->name('admin.rekap.gaji-dosen');
+
+           
+
+Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
+    Route::get('/rekap-lkm', [LkmRekapController::class, 'index'])
+        ->name('admin.rekap.lkm');
+});
+
 
 
 });

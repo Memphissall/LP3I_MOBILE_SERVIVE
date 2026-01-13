@@ -9,7 +9,7 @@
             Super Admin Dashboard
         </h1>
         <p class="text-gray-600 mt-2">
-            Kelola seluruh sistem akademik dan honor dosen
+            Kelola sistem akademik & honor dosen
         </p>
     </div>
 
@@ -27,37 +27,22 @@
                         Manajemen user, dosen, dan admin
                     </p>
                 </div>
-                <div class="text-5xl opacity-70 group-hover:opacity-100 transition">👥</div>
+                <div class="text-5xl opacity-70 group-hover:opacity-100">👥</div>
             </div>
         </a>
 
-        {{-- Manajemen Jadwal --}}
-        <a href="#"
-           class="group bg-gradient-to-br from-teal-500 to-teal-700 text-white p-7 rounded-2xl shadow-xl
+        {{-- Rekap LKM Dosen --}}
+        <a href="{{ route('admin.rekap.lkm') }}"
+           class="group bg-gradient-to-br from-indigo-600 to-indigo-800 text-white p-7 rounded-2xl shadow-xl
                   hover:shadow-2xl transform hover:-translate-y-1 transition duration-300">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-semibold">Manajemen Jadwal</h2>
-                    <p class="mt-1 text-sm opacity-90">
-                        Atur jadwal kuliah & dosen
+                    <h2 class="text-2xl font-semibold">Rekap LKM Dosen</h2>
+                    <p class="text-sm opacity-90">
+                        Monitoring aktivitas mengajar
                     </p>
                 </div>
-                <div class="text-5xl opacity-70 group-hover:opacity-100 transition">📆</div>
-            </div>
-        </a>
-
-        {{-- Rekap Absensi --}}
-        <a href="#"
-           class="group bg-gradient-to-br from-yellow-400 to-yellow-600 text-gray-900 p-7 rounded-2xl shadow-xl
-                  hover:shadow-2xl transform hover:-translate-y-1 transition duration-300">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-2xl font-semibold">Rekap Absensi</h2>
-                    <p class="mt-1 text-sm opacity-90">
-                        Pantau absensi dosen & mahasiswa
-                    </p>
-                </div>
-                <div class="text-5xl opacity-80 group-hover:opacity-100 transition">📝</div>
+                <div class="text-5xl">📚</div>
             </div>
         </a>
 
@@ -74,11 +59,11 @@
                         Input honor soal & koreksi
                     </p>
                 </div>
-                <div class="text-5xl opacity-70 group-hover:opacity-100 transition">💰</div>
+                <div class="text-5xl opacity-70 group-hover:opacity-100">💰</div>
             </div>
         </a>
 
-        {{-- 📊 MONITORING GAJI DOSEN (BARU) --}}
+        {{-- Monitoring Gaji Dosen --}}
         <a href="{{ route('admin.rekap.gaji-dosen') }}"
            class="group bg-gradient-to-br from-emerald-600 to-emerald-800 text-white p-7 rounded-2xl shadow-xl
                   hover:shadow-2xl transform hover:-translate-y-1 transition duration-300">
@@ -88,25 +73,10 @@
                         Monitoring Gaji Dosen
                     </h2>
                     <p class="mt-1 text-sm opacity-90">
-                        Pantau seluruh honor & gaji bersih dosen
+                        Total honor & gaji bersih dosen
                     </p>
                 </div>
-                <div class="text-5xl opacity-70 group-hover:opacity-100 transition">📊</div>
-            </div>
-        </a>
-
-        {{-- Laporan --}}
-        <a href="#"
-           class="group bg-gradient-to-br from-red-500 to-red-700 text-white p-7 rounded-2xl shadow-xl
-                  hover:shadow-2xl transform hover:-translate-y-1 transition duration-300">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-2xl font-semibold">Laporan</h2>
-                    <p class="mt-1 text-sm opacity-90">
-                        Rekap keseluruhan data gaji & absensi
-                    </p>
-                </div>
-                <div class="text-5xl opacity-70 group-hover:opacity-100 transition">📑</div>
+                <div class="text-5xl opacity-70 group-hover:opacity-100">📊</div>
             </div>
         </a>
 

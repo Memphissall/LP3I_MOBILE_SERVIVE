@@ -173,7 +173,8 @@
                     <col style="width: 100px;">
                     <col style="width: 150px;">
                     <col style="width: 90px;">
-                    <col style="width: 170px;">
+                    <col style="width: 150px;">
+                    <col style="width: 70px;">
                 </colgroup>
                 
                 @if($chunkIndex === 0)
@@ -188,6 +189,7 @@
                         <th>ALAMAT</th>
                         <th>NO TELP</th>
                         <th>EMAIL</th>
+                        <th>STATUS</th>
                     </tr>
                 </thead>
                 @endif
@@ -202,6 +204,7 @@
                         <td>{{ $mhs->alamat }}</td>
                         <td>{{ $mhs->no_tlp }}</td>
                         <td>{{ $mhs->email }}</td>
+                        <td>{{ $mhs->status }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -232,7 +235,8 @@
                         <th width="100">TANGGAL LAHIR</th>
                         <th width="150">ALAMAT</th>
                         <th width="90">NO TELP</th>
-                        <th width="170">EMAIL</th>
+                        <th width="150">EMAIL</th>
+                        <th width="70">STATUS</th>
                     </tr>
                 </thead>
                 <tbody>

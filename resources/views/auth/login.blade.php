@@ -6,12 +6,12 @@
     <title>Login Sistem E-Academic</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 font-sans antialiased flex items-center justify-center min-h-screen text-gray-800">
+<body class="bg-gray-100 font-sans antialiased text-gray-800">
 
-    <div class="flex max-w-5xl w-full mx-auto rounded-xl shadow-2xl overflow-hidden bg-white">
+    <div class="flex min-h-screen w-full bg-white">
         
         {{-- Bagian Kiri (Informasi Sistem) --}}
-        <div class="w-1/2 relative flex flex-col justify-between text-white p-10">
+        <div class="w-1/2 relative flex flex-col justify-between text-white p-12 hidden lg:flex">
             {{-- Background Image dengan Overlay --}}
             <div class="absolute inset-0 z-0">
                 <img src="{{ asset('images/gedung_lp3i.jpg') }}" alt="Gedung LP3I" class="w-full h-full object-cover">
@@ -22,17 +22,17 @@
             <div class="relative z-10">
                 {{-- Logo dan Nama Kampus --}}
                 <div class="flex items-center mb-6">
-                    <img src="{{ asset('images/logo_white.png') }}" alt="LP3I Logo" class="h-10 w-auto mr-3"> 
+                    <img src="{{ asset('images/logo_white.png') }}" alt="LP3I Logo" class="h-12 w-auto mr-3"> 
                 </div>
 
                 {{-- Judul Sistem --}}
-                <div class="text-2xl font-bold text-gray-800">
-                    <span class="text-3xl font-extrabold text-[#009DA5] mr-0.5">E</span><span class="text-3xl font-bold text-gray-400">|</span>
+                <div class="text-3xl font-bold text-gray-800">
+                    <span class="text-4xl font-extrabold text-[#009DA5] mr-0.5">E</span><span class="text-4xl font-bold text-gray-400">|</span>
                     <span class="text-[#F15B67]">Academic</span>
                 </div>
                 
                 {{-- Deskripsi Sistem --}}
-                <p class="text-white/90 text-sm leading-relaxed max-w-md mt-4">
+                <p class="text-white/90 text-lg leading-relaxed max-w-lg mt-6">
                     Sistem terintegrasi untuk operasional akademik, dosen, dan mahasiswa. Memudahkan pengelolaan data, jadwal, materi, hingga nilai dalam satu solusi.
                 </p>
             </div>
@@ -44,50 +44,58 @@
         </div>
 
         {{-- Bagian Kanan (Form Login) --}}
-        <div class="w-1/2 p-10 flex flex-col justify-center">
-            <h2 class="text-3xl font-bold mb-8 text-center text-gray-900">Login System</h2>
-            
-            <form action="{{ route('login') }}" method="POST" class="space-y-6">
-                @csrf {{-- Token CSRF untuk keamanan Laravel --}}
-
+        <div class="w-full lg:w-1/2 flex flex-col justify-center items-center p-12 bg-white">
+            <div class="w-full max-w-md space-y-8">
                 <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                    <div class="mt-1">
-                        <input type="text" name="username" id="username" required autofocus 
-                               class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 
-                                      focus:ring-[#009DA5] focus:border-[#009DA5] sm:text-sm transition duration-150 ease-in-out">
-                    </div>
+                    <h2 class="mt-6 text-center text-4xl font-extrabold text-gray-900">Login System</h2>
+                    <p class="mt-2 text-center text-sm text-gray-600">
+                        Silahkan masuk ke akun anda
+                    </p>
                 </div>
+                
+                <form action="{{ route('login') }}" method="POST" class="mt-8 space-y-6">
+                    @csrf {{-- Token CSRF untuk keamanan Laravel --}}
 
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <div class="mt-1">
-                        <input type="password" name="password" id="password" required 
-                               class="block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 
-                                      focus:ring-[#009DA5] focus:border-[#009DA5] sm:text-sm transition duration-150 ease-in-out">
-                    </div>
-                </div>
+                    <div class="space-y-5">
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                            <div class="mt-1">
+                                <input type="text" name="username" id="username" required autofocus 
+                                       class="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 
+                                              focus:outline-none focus:ring-[#009DA5] focus:border-[#009DA5] sm:text-sm transition duration-150 ease-in-out">
+                            </div>
+                        </div>
 
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="remember" name="remember" type="checkbox" 
-                               class="h-4 w-4 text-[#009DA5] focus:ring-[#009DA5] border-gray-300 rounded">
-                        <label for="remember" class="ml-2 block text-sm text-gray-900">Remember me</label>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                            <div class="mt-1">
+                                <input type="password" name="password" id="password" required 
+                                       class="appearance-none block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 
+                                              focus:outline-none focus:ring-[#009DA5] focus:border-[#009DA5] sm:text-sm transition duration-150 ease-in-out">
+                            </div>
+                        </div>
                     </div>
-                    {{-- Link Lupa Password (opsional, jika ada route-nya) --}}
-                    <a href="#" onclick="alert('Fitur Reset Password membutuhkan konfigurasi Email Server (SMTP).')" class="text-sm font-medium text-[#004269] hover:text-[#009DA5]">Forgot password?</a>
-                </div>
 
-                <div>
-                    <button type="submit" 
-                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg 
-                                   shadow-md text-base font-semibold text-white bg-gradient-to-r from-[#004269] to-[#009DA5] 
-                                   hover:from-[#003350] hover:to-[#00888f] focus:outline-none focus:ring-2 focus:ring-offset-2 
-                                   focus:ring-[#009DA5] transition duration-300 ease-in-out">
-                        Login
-                    </button>
-                </div>
-            </form>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember" name="remember" type="checkbox" 
+                                   class="h-4 w-4 text-[#009DA5] focus:ring-[#009DA5] border-gray-300 rounded">
+                            <label for="remember" class="ml-2 block text-sm text-gray-900">Remember me</label>
+                        </div>
+                        <a href="#" onclick="alert('Fitur Reset Password membutuhkan konfigurasi Email Server (SMTP).')" class="text-sm font-medium text-[#004269] hover:text-[#009DA5]">Forgot password?</a>
+                    </div>
+
+                    <div>
+                        <button type="submit" 
+                                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg 
+                                       shadow-md text-base font-semibold text-white bg-gradient-to-r from-[#004269] to-[#009DA5] 
+                                       hover:from-[#003350] hover:to-[#00888f] focus:outline-none focus:ring-2 focus:ring-offset-2 
+                                       focus:ring-[#009DA5] transition duration-300 ease-in-out transform hover:-translate-y-0.5">
+                            Login
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

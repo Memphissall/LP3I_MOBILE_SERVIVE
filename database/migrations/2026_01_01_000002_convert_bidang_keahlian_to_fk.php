@@ -5,26 +5,33 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::table('mata_kuliah', function (Blueprint $table) {
-            // Add foreign key column
-            $table->unsignedBigInteger('id_bidang_keahlian')->nullable()->after('semester');
-            
-            // Add foreign key constraint
-            $table->foreign('id_bidang_keahlian')
-                  ->references('id_bidang_keahlian')
-                  ->on('bidang_keahlian')
-                  ->onDelete('set null');
+            // Check if column doesn't exist before adding
+            if (!Schema::hasColumn('mata_kuliah', 'id_bidang_keahlian')) {
+                // Add foreign key column
+                $table->unsignedBigInteger('id_bidang_keahlian')->nullable()->after('semester');
+
+                // Add foreign key constraint
+                $table->foreign('id_bidang_keahlian')
+                    ->references('id_bidang_keahlian')
+                    ->on('bidang_keahlian')
+                    ->onDelete('set null');
+            }
         });
 
         // Migrate existing data: map string bidang_keahlian to id
+        // SQLite doesn't support UPDATE JOIN, so we use a subquery instead
         DB::statement("
-            UPDATE mata_kuliah mk
-            JOIN bidang_keahlian bk ON bk.nama = mk.bidang_keahlian
-            SET mk.id_bidang_keahlian = bk.id_bidang_keahlian
+            UPDATE mata_kuliah
+            SET id_bidang_keahlian = (
+                SELECT id_bidang_keahlian
+                FROM bidang_keahlian
+                WHERE bidang_keahlian.nama = mata_kuliah.bidang_keahlian
+            )
+            WHERE bidang_keahlian IS NOT NULL
         ");
 
         // Drop old string column
@@ -41,10 +48,15 @@ return new class extends Migration
         });
 
         // Migrate data back
+        // SQLite doesn't support UPDATE JOIN, so we use a subquery instead
         DB::statement("
-            UPDATE mata_kuliah mk
-            JOIN bidang_keahlian bk ON bk.id_bidang_keahlian = mk.id_bidang_keahlian
-            SET mk.bidang_keahlian = bk.nama
+            UPDATE mata_kuliah
+            SET bidang_keahlian = (
+                SELECT nama
+                FROM bidang_keahlian
+                WHERE bidang_keahlian.id_bidang_keahlian = mata_kuliah.id_bidang_keahlian
+            )
+            WHERE id_bidang_keahlian IS NOT NULL
         ");
 
         Schema::table('mata_kuliah', function (Blueprint $table) {

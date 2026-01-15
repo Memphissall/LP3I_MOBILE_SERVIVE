@@ -150,7 +150,7 @@
 
         <div class="info-cetak" id="waktu-cetak">Dicetak pada: Memuat waktu...</div>
 
-        <h3 class="judul-laporan">LAPORAN DATA MAHASISWA</h3>
+        <h3 class="judul-laporan">LAPORAN DATA MAHASISWA AKTIF</h3>
 
         @php
             $perPage = 12;
@@ -166,15 +166,14 @@
             <table>
                 {{-- Column widths definition for consistent layout --}}
                 <colgroup>
-                    <col style="width: 35px;">
-                    <col style="width: 85px;">
-                    <col style="width: 140px;">
-                    <col style="width: 120px;">
-                    <col style="width: 100px;">
-                    <col style="width: 150px;">
+                    <col style="width: 40px;">
                     <col style="width: 90px;">
                     <col style="width: 150px;">
-                    <col style="width: 70px;">
+                    <col style="width: 130px;">
+                    <col style="width: 110px;">
+                    <col style="width: 170px;">
+                    <col style="width: 100px;">
+                    <col style="width: 160px;">
                 </colgroup>
                 
                 @if($chunkIndex === 0)
@@ -189,7 +188,6 @@
                         <th>ALAMAT</th>
                         <th>NO TELP</th>
                         <th>EMAIL</th>
-                        <th>STATUS</th>
                     </tr>
                 </thead>
                 @endif
@@ -204,7 +202,6 @@
                         <td>{{ $mhs->alamat }}</td>
                         <td>{{ $mhs->no_tlp }}</td>
                         <td>{{ $mhs->email }}</td>
-                        <td>{{ $mhs->status }}</td>
                     </tr>
                     @endforeach
                 </tbody>

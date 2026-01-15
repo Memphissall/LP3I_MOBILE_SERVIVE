@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::table('krs', function (Blueprint $table) {
@@ -40,21 +39,27 @@ return new class extends Migration
         });
 
         // Add foreign keys if they don't exist
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
-        if (!DB::select("SHOW KEYS FROM krs WHERE Key_name='krs_id_kelas_foreign'")) {
+        // SQLite doesn't support FOREIGN_KEY_CHECKS or SHOW KEYS
+        // We'll use try-catch to handle foreign keys that already exist
+        try {
             Schema::table('krs', function (Blueprint $table) {
-                $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');
+                if (Schema::hasColumn('krs', 'id_kelas')) {
+                    $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');
+                }
             });
+        } catch (\Exception $e) {
+            // Foreign key already exists, ignore
         }
-        
-        if (!DB::select("SHOW KEYS FROM krs WHERE Key_name='krs_id_jadwal_foreign'")) {
+
+        try {
             Schema::table('krs', function (Blueprint $table) {
-                $table->foreign('id_jadwal')->references('id_jadwal')->on('jadwal')->onDelete('cascade');
+                if (Schema::hasColumn('krs', 'id_jadwal')) {
+                    $table->foreign('id_jadwal')->references('id_jadwal')->on('jadwal')->onDelete('cascade');
+                }
             });
+        } catch (\Exception $e) {
+            // Foreign key already exists, ignore
         }
-        
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     public function down(): void
@@ -63,8 +68,15 @@ return new class extends Migration
             $table->dropForeign(['id_kelas']);
             $table->dropForeign(['id_jadwal']);
             $table->dropColumn([
-                'nipd', 'nama_mhs', 'id_kelas', 'id_jadwal',
-                'semester', 'periode', 'tahun_akademik', 'status', 'catatan'
+                'nipd',
+                'nama_mhs',
+                'id_kelas',
+                'id_jadwal',
+                'semester',
+                'periode',
+                'tahun_akademik',
+                'status',
+                'catatan'
             ]);
         });
     }

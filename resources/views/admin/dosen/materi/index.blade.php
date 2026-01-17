@@ -43,12 +43,20 @@
                 <td class="p-2">{{ $m->dosen->nama_dosen }}</td>
 
                 <td class="p-2 text-center">
-                    <a href="{{ asset('storage/'.$m->file_materi) }}"
-                       target="_blank"
-                       class="text-blue-600 hover:underline">
-                        <i class="fa-solid fa-download"></i> Download
-                    </a>
-                </td>
+    @if($m->tipe_materi === 'file')
+        <a href="{{ asset('storage/'.$m->file_materi) }}"
+           target="_blank"
+           class="text-blue-600 hover:underline">
+            ⬇️ Download
+        </a>
+    @else
+        <a href="{{ $m->link_materi }}"
+           target="_blank"
+           class="text-green-600 hover:underline">
+            🔗 Buka Link
+        </a>
+    @endif
+</td>
 
                 <td class="p-2 text-center">
                     <div class="flex justify-center gap-2">

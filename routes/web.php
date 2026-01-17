@@ -213,6 +213,9 @@ Route::middleware(['auth'])->prefix('dosen')->group(function () {
 // ==========================
 Route::prefix('materi')->group(function () {
 
+Route::get('/get-by-semester', [MateriController::class, 'getBySemester'])
+        ->name('materi.getBySemester');
+
     // Pilih kelas & matkul
     Route::get('/pilih', [MateriController::class, 'pilihKelasMK'])
         ->name('materi.pilih');

@@ -12,7 +12,9 @@ return new class extends Migration {
 
             $table->string('judul_materi');
             $table->text('deskripsi')->nullable();
-            $table->string('file_materi');
+            $table->enum('tipe_materi', ['file', 'link']);
+            $table->string('file_materi')->nullable();
+            $table->text('link_materi')->nullable();
             $table->integer('pertemuan');
 
             $table->unsignedBigInteger('id_kelas');
@@ -41,7 +43,9 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('materi');
+        Schema::table('materi', function (Blueprint $table) {
+        $table->dropColumn('tipe_materi');
+    });
     }
 };
 

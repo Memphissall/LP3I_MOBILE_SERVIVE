@@ -42,7 +42,7 @@
                       class="w-full border rounded px-3 py-2">{{ old('deskripsi', $materi->deskripsi) }}</textarea>
         </div>
 
-        {{-- PERTEMUAN (DROPDOWN) --}}
+        {{-- PERTEMUAN --}}
         <div class="mb-4">
             <label class="block font-semibold mb-1">Pertemuan</label>
             <select name="pertemuan"
@@ -58,23 +58,59 @@
             </select>
         </div>
 
-        {{-- FILE --}}
+        {{-- TIPE MATERI --}}
         <div class="mb-4">
+            <label class="block font-semibold mb-2">Tipe Materi</label>
+            <div class="flex gap-6">
+                <label>
+                    <input type="radio"
+                           name="tipe_materi"
+                           value="file"
+                           {{ old('tipe_materi', $materi->tipe_materi) === 'file' ? 'checked' : '' }}>
+                    File
+                </label>
+                <label>
+                    <input type="radio"
+                           name="tipe_materi"
+                           value="link"
+                           {{ old('tipe_materi', $materi->tipe_materi) === 'link' ? 'checked' : '' }}>
+                    Link
+                </label>
+            </div>
+        </div>
+
+        {{-- FILE --}}
+        <div id="input-file"
+             class="mb-4 {{ old('tipe_materi', $materi->tipe_materi) !== 'file' ? 'hidden' : '' }}">
             <label class="block font-semibold mb-1">
                 File Materi (kosongkan jika tidak diganti)
             </label>
+
             <input type="file"
                    name="file_materi"
                    class="w-full border rounded px-3 py-2">
 
-            <p class="text-sm text-gray-600 mt-1">
-                File saat ini:
-                <a href="{{ asset('storage/'.$materi->file_materi) }}"
-                   target="_blank"
-                   class="text-blue-600 underline">
-                    Download
-                </a>
-            </p>
+            @if ($materi->file_materi)
+                <p class="text-sm text-gray-600 mt-1">
+                    File saat ini:
+                    <a href="{{ asset('storage/'.$materi->file_materi) }}"
+                       target="_blank"
+                       class="text-blue-600 underline">
+                        Download
+                    </a>
+                </p>
+            @endif
+        </div>
+
+        {{-- LINK --}}
+        <div id="input-link"
+             class="mb-4 {{ old('tipe_materi', $materi->tipe_materi) !== 'link' ? 'hidden' : '' }}">
+            <label class="block font-semibold mb-1">Link Materi</label>
+            <input type="url"
+                   name="link_materi"
+                   value="{{ old('link_materi', $materi->link_materi) }}"
+                   placeholder="https://..."
+                   class="w-full border rounded px-3 py-2">
         </div>
 
         {{-- BUTTON --}}
@@ -91,4 +127,16 @@
         </div>
     </form>
 </div>
+
+{{-- SCRIPT --}}
+<script>
+document.querySelectorAll('input[name="tipe_materi"]').forEach(el => {
+    el.addEventListener('change', function () {
+        document.getElementById('input-file')
+            .classList.toggle('hidden', this.value !== 'file');
+        document.getElementById('input-link')
+            .classList.toggle('hidden', this.value !== 'link');
+    });
+});
+</script>
 @endsection

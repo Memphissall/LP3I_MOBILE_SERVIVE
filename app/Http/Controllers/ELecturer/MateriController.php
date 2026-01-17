@@ -16,6 +16,19 @@ class MateriController extends Controller
     // ==========================
     // PILIH KELAS & MATA KULIAH
     // ==========================
+
+    public function getBySemester(Request $request)
+{
+    return Matakuliah::whereHas('kelas', function ($q) use ($request) {
+            $q->where('kelas_matakuliah.id_kelas', $request->id_kelas);
+        })
+        ->orderBy('nama_mk')
+        ->get([
+            'kode_mk as id_materi',
+            'nama_mk as judul_materi'
+        ]);
+}
+
     public function pilihKelasMK()
     {
         $kelas = Kelas::orderBy('nama_kelas')->get();
@@ -106,37 +119,42 @@ class MateriController extends Controller
 public function store(Request $request, $id_kelas, $kode_mk)
 {
     $request->validate([
-        'judul_materi' => 'required',
-        'pertemuan'    => 'required|integer',
-        'file_materi'  => 'required|file|mimes:pdf,doc,docx,ppt,pptx'
+        'judul_materi' => 'required|string|max:255',
+        'pertemuan'    => 'required|integer|min:1',
+        'tipe_materi'  => 'required|in:file,link',
+        'file_materi'  => 'required_if:tipe_materi,file|file|mimes:pdf,doc,docx,ppt,pptx|max:10240',
+        'link_materi'  => 'nullable:tipe_materi,link|url'
     ]);
 
-    try {
-        DB::beginTransaction();
+    $data = [
+        'id_kelas'     => $id_kelas,
+        'kode_mk'      => $kode_mk,
+        'judul_materi' => $request->judul_materi,
+        'deskripsi'    => $request->deskripsi,
+        'pertemuan'    => $request->pertemuan,
+        'tipe_materi'  => $request->tipe_materi,
+        'nidn'         => auth()->user()->dosen->nidn,
+    ];
 
-        $file = $request->file('file_materi')
+    // ➜ JIKA FILE
+    if ($request->tipe_materi === 'file') {
+        $data['file_materi'] = $request
+            ->file('file_materi')
             ->store('materi', 'public');
-
-        Materi::create([
-            'id_kelas'     => $id_kelas,
-            'kode_mk'      => $kode_mk,
-            'judul_materi' => $request->judul_materi,
-            'deskripsi'    => $request->deskripsi,
-            'file_materi'  => $file,
-            'pertemuan'    => $request->pertemuan,
-            'nidn'         => auth()->user()->dosen->nidn,
-        ]);
-
-        DB::commit(); // ⬅⬅⬅ PALING PENTING
-
-        return redirect()
-            ->route('materi.index', [$id_kelas, $kode_mk])
-            ->with('success', 'Materi berhasil diupload');
-
-    } catch (\Throwable $e) {
-        DB::rollBack();
-        return back()->withErrors($e->getMessage());
+        $data['link_materi'] = null;
     }
+
+    // ➜ JIKA LINK
+    if ($request->tipe_materi === 'link') {
+        $data['link_materi'] = $request->link_materi;
+        $data['file_materi'] = null;
+    }
+
+    Materi::create($data);
+
+    return redirect()
+        ->route('materi.index', [$id_kelas, $kode_mk])
+        ->with('success', 'Materi berhasil ditambahkan');
 }
 
 
@@ -155,30 +173,59 @@ public function store(Request $request, $id_kelas, $kode_mk)
     // UPDATE MATERI
     // ==========================
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'judul_materi' => 'required',
-            'pertemuan'    => 'required|integer'
-        ]);
+{
+    $materi = Materi::findOrFail($id);
 
-        $materi = Materi::findOrFail($id);
+    $request->validate([
+        'judul_materi' => 'required|string|max:255',
+        'pertemuan'    => 'required|integer|min:1',
+        'tipe_materi'  => 'required|in:file,link',
+        'file_materi'  => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx|max:10240',
+        'link_materi'  => 'nullable|url',
+    ]);
+
+    $materi->judul_materi = $request->judul_materi;
+    $materi->deskripsi   = $request->deskripsi;
+    $materi->pertemuan   = $request->pertemuan;
+    $materi->tipe_materi = $request->tipe_materi;
+
+    // ➜ UPDATE FILE BARU
+    if ($request->tipe_materi === 'file') {
 
         if ($request->hasFile('file_materi')) {
-            Storage::disk('public')->delete($materi->file_materi);
-            $materi->file_materi = $request->file('file_materi')
+
+            // hapus file lama
+            if ($materi->file_materi && Storage::disk('public')->exists($materi->file_materi)) {
+                Storage::disk('public')->delete($materi->file_materi);
+            }
+
+            $materi->file_materi = $request
+                ->file('file_materi')
                 ->store('materi', 'public');
         }
 
-        $materi->update([
-            'judul_materi' => $request->judul_materi,
-            'deskripsi'    => $request->deskripsi,
-            'pertemuan'    => $request->pertemuan
-        ]);
-
-        return redirect()
-            ->route('materi.index', [$materi->id_kelas, $materi->kode_mk])
-            ->with('success', 'Materi berhasil diperbarui');
+        $materi->link_materi = null;
     }
+
+    // ➜ UPDATE LINK
+    if ($request->tipe_materi === 'link') {
+
+        // hapus file lama jika ada
+        if ($materi->file_materi && Storage::disk('public')->exists($materi->file_materi)) {
+            Storage::disk('public')->delete($materi->file_materi);
+        }
+
+        $materi->file_materi = null;
+        $materi->link_materi = $request->link_materi;
+    }
+
+    $materi->save();
+
+    return redirect()
+    ->route('materi.index', [$materi->id_kelas, $materi->kode_mk])
+    ->with('success', 'Materi berhasil diperbarui');
+
+}
 
     // ==========================
     // HAPUS MATERI

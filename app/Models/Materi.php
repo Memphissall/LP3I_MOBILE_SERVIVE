@@ -12,14 +12,16 @@ class Materi extends Model
     protected $table = 'materi';
 
     protected $fillable = [
-        'judul_materi',
-        'deskripsi',
-        'file_materi',
-        'pertemuan',
-        'nidn',
-        'kode_mk',
-        'id_kelas'
-    ];
+    'judul_materi',
+    'deskripsi',
+    'file_materi',
+    'link_materi',
+    'tipe_materi',
+    'pertemuan',
+    'nidn',
+    'kode_mk',
+    'id_kelas'
+];
 
     // RELASI
     public function kelas()

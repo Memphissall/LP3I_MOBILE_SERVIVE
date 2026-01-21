@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
 
-    <h2 class="text-2xl font-bold mb-6">Edit User + Data Dosen</h2>
+    <h2 class="text-2xl font-bold mb-6">Edit User + Data Pendidik</h2>
 
     {{-- ALERT ERROR --}}
     @if ($errors->any())
@@ -48,7 +48,7 @@
             <select name="role" class="w-full border p-2 rounded" id="roleSelect">
                 <option value="">- Pilih Role -</option>
                 <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="dosen" {{ $user->role == 'dosen' ? 'selected' : '' }}>Dosen</option>
+                <option value="pendidik" {{ $user->role == 'pendidik' ? 'selected' : '' }}>Pendidik</option>
             </select>
         </div>
 
@@ -62,28 +62,28 @@
         </div>
 
         {{-- ============================
-            SECTION DOSEN
+            SECTION PENDIDIK
         ============================= --}}
-        <h3 class="text-lg font-semibold mt-8">Data Dosen</h3>
-        <p class="text-sm text-gray-600 mb-3">Data ini hanya dipakai jika role = dosen.</p>
+        <h3 class="text-lg font-semibold mt-8">Data Pendidik</h3>
+        <p class="text-sm text-gray-600 mb-3">Data ini hanya dipakai jika role = pendidik.</p>
 
         @php
-            $d = $user->dosen; // relasi
+            $d = $user->pendidik; // relasi
         @endphp
 
-        <div id="dosenFields" class="{{ $user->role !== 'dosen' ? 'hidden' : '' }}">
+        <div id="pendidikFields" class="{{ $user->role !== 'pendidik' ? 'hidden' : '' }}">
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label>NIDN</label>
-                    <input type="text" name="nidn" class="w-full border p-2 rounded"
-                        value="{{ old('nidn', $d->nidn ?? '') }}">
+                    <label>id_pendidik</label>
+                    <input type="text" name="id_pendidik" class="w-full border p-2 rounded"
+                        value="{{ old('id_pendidik', $d->id_pendidik ?? '') }}">
                 </div>
 
                 <div>
-                    <label>Nama Dosen</label>
-                    <input type="text" name="nama_dosen" class="w-full border p-2 rounded"
-                        value="{{ old('nama_dosen', $d->nama_dosen ?? '') }}">
+                    <label>Nama Pendidik</label>
+                    <input type="text" name="nama_pendidik" class="w-full border p-2 rounded"
+                        value="{{ old('nama_pendidik', $d->nama_pendidik ?? '') }}">
                 </div>
 
                 <div>
@@ -132,9 +132,9 @@
                 </div>
 
                 <div>
-                    <label>Email Dosen</label>
-                    <input type="email" name="email_dosen" class="w-full border p-2 rounded"
-                        value="{{ old('email_dosen', $d->email ?? '') }}">
+                    <label>Email Pendidik</label>
+                    <input type="email" name="email_pendidik" class="w-full border p-2 rounded"
+                        value="{{ old('email_pendidik', $d->email ?? '') }}">
                 </div>
 
                 <div>
@@ -161,11 +161,11 @@
     </form>
 </div>
 
-{{-- JS: Hide/Show Data Dosen --}}
+{{-- JS: Hide/Show Data Pendidik --}}
 <script>
     document.getElementById('roleSelect').addEventListener('change', function(){
-        let isDosen = this.value === 'dosen';
-        document.getElementById('dosenFields').classList.toggle('hidden', !isDosen);
+        let isPendidik = this.value === 'pendidik';
+        document.getElementById('pendidikFields').classList.toggle('hidden', !isPendidik);
     });
 </script>
 @endsection

@@ -8,7 +8,7 @@
         {{-- HEADER --}}
         <div class="border-b px-6 py-4">
             <h2 class="text-lg font-semibold text-gray-800">
-                💼 Input Honor Tambahan Dosen
+                💼 Input Honor Tambahan Pendidik
             </h2>
             <p class="text-sm text-gray-500">
                 Honor pembuatan soal & koreksi jawaban
@@ -21,15 +21,15 @@
 
             <div class="p-6 space-y-5">
 
-                {{-- DOSEN --}}
+                {{-- PENDIDIK --}}
                 <div>
-                    <label class="block text-sm font-medium mb-1">Dosen</label>
-                    <select name="nidn" required
+                    <label class="block text-sm font-medium mb-1">Pendidik</label>
+                    <select name="id_pendidik" required
                         class="w-full rounded-lg border-gray-300 focus:ring focus:ring-blue-200">
-                        <option value="">-- Pilih Dosen --</option>
-                        @foreach ($dosen as $d)
-                            <option value="{{ $d->nidn }}">
-                                {{ $d->nidn }} - {{ $d->nama_dosen }}
+                        <option value="">-- Pilih Pendidik --</option>
+                        @foreach ($pendidik as $d)
+                            <option value="{{ $d->id_pendidik }}">
+                                {{ $d->id_pendidik }} - {{ $d->nama_pendidik }}
                             </option>
                         @endforeach
                     </select>

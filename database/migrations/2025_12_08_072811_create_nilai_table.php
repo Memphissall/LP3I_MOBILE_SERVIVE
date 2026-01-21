@@ -11,7 +11,7 @@ return new class extends Migration {
     $table->id('id_nilai');
 
     // Identitas
-    $table->string('nidn');
+    $table->string('id_pendidik');
     $table->string('nipd');
     $table->string('nama_mhs');
 

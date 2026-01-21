@@ -10,7 +10,7 @@ class AbsensiLkm extends Model
     protected $primaryKey = 'id_absensi';
 
     protected $fillable = [
-        'nidn',
+        'id_pendidik',
         'nipd',
         'id_kelas', 
         'nama_mhs',

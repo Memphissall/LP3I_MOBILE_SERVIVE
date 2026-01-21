@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Honor;
-use App\Models\Dosen;
+use App\Models\Pendidik;
 use Illuminate\Http\Request;
 
 class HonorRekapController extends Controller
@@ -12,14 +12,14 @@ class HonorRekapController extends Controller
     public function index(Request $request)
 {
     $query = Honor::query()
-        ->join('dosen', 'dosen.nidn', '=', 'honor.nidn')
+        ->join('pendidik', 'pendidik.id_pendidik', '=', 'honor.id_pendidik')
         ->select(
             'honor.*',
-            'dosen.nama_dosen'
+            'pendidik.nama_pendidik'
         );
 
-    if ($request->nidn) {
-        $query->where('honor.nidn', $request->nidn);
+    if ($request->id_pendidik) {
+        $query->where('honor.id_pendidik', $request->id_pendidik);
     }
 
     if ($request->bulan) {
@@ -34,11 +34,11 @@ class HonorRekapController extends Controller
 
     // 👉 TOTAL HANYA DIHITUNG JIKA ADA FILTER
     $totalGaji = null;
-    if ($request->nidn || $request->bulan) {
+    if ($request->id_pendidik || $request->bulan) {
         $totalGaji = $data->sum('gaji_bersih');
     }
 
-   return view('admin.akademik.rekap_gaji_dosen', compact(
+   return view('admin.akademik.rekap_gaji_pendidik', compact(
     'data',
     'totalGaji'
 ));

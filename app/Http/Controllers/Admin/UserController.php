@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Dosen;
+use App\Models\Pendidik;
 use App\Models\User;
 
 class UserController extends Controller
@@ -27,7 +27,7 @@ class UserController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
-            'role'     => 'required|in:mahasiswa,dosen,admin',
+            'role'     => 'required|in:mahasiswa,pendidik,admin',
         ]);
 
         // Buat user
@@ -38,38 +38,38 @@ class UserController extends Controller
         $user->role     = $request->role;
         $user->save();
 
-        // Jika role dosen, simpan data dosen
-        if ($request->role === 'dosen') {
+        // Jika role pendidik, simpan data pendidik
+        if ($request->role === 'pendidik') {
             $request->validate([
-                'nidn'          => 'required|unique:dosen,nidn',
-                'nama_dosen'    => 'required',
+                'id_pendidik'          => 'required|unique:pendidik,id_pendidik',
+                'nama_pendidik'    => 'required',
                 'pendidikan'    => 'required',
                 'bidang'        => 'required',
                 'tempat'        => 'required',
                 'tanggal_lahir' => 'required|date',
                 'jenis_kelamin' => 'required',
                 'agama'         => 'required',
-                'email_dosen'   => 'required|email|unique:dosen,email',
+                'email_pendidik'   => 'required|email|unique:pendidik,email',
                 'no_telp'       => 'required',
                 'honor_per_sks' => 'required',
             ]);
 
             $fotoPath = null;
             if ($request->hasFile('foto')) {
-                $fotoPath = $request->file('foto')->store('foto_dosen', 'public');
+                $fotoPath = $request->file('foto')->store('foto_pendidik', 'public');
             }
 
-            Dosen::create([
+            Pendidik::create([
                 'user_id'       => $user->id,
-                'nidn'          => $request->nidn,
-                'nama_dosen'    => $request->nama_dosen,
+                'id_pendidik'          => $request->id_pendidik,
+                'nama_pendidik'    => $request->nama_pendidik,
                 'pendidikan'    => $request->pendidikan,
                 'bidang'        => $request->bidang,
                 'tempat'        => $request->tempat,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'agama'         => $request->agama,
-                'email'         => $request->email_dosen,
+                'email'         => $request->email_pendidik,
                 'no_telp'       => $request->no_telp,
                 'honor_per_sks' => $request->honor_per_sks,
                 'foto'          => $fotoPath,
@@ -83,8 +83,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        if ($user->role === 'dosen') {
-            Dosen::where('user_id', $user->id)->delete();
+        if ($user->role === 'pendidik') {
+            Pendidik::where('user_id', $user->id)->delete();
         }
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus!');
@@ -104,7 +104,7 @@ public function update(Request $request, $id)
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email,' . $user->id,
-        'role' => 'required|in:mahasiswa,dosen,admin',
+        'role' => 'required|in:mahasiswa,pendidik,admin',
     ]);
 
     $user->update([

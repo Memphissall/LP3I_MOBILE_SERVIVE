@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             MataKuliahSeeder::class,
 
             // ===== AKTOR =====
-            DosenSeeder::class,       // ⬅️ BUTUH users
+            PendidikSeeder::class,       // ⬅️ BUTUH users
             MahasiswaSeeder::class,
 
             // ===== TRANSAKSI =====

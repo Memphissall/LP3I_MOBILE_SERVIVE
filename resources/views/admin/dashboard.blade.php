@@ -9,7 +9,7 @@
             Super Admin Dashboard
         </h1>
         <p class="text-gray-600 mt-2">
-            Kelola sistem akademik & honor dosen
+            Kelola sistem akademik & honor pendidik
         </p>
     </div>
 
@@ -24,20 +24,20 @@
                 <div>
                     <h2 class="text-2xl font-semibold">Kelola Akun</h2>
                     <p class="mt-1 text-sm opacity-90">
-                        Manajemen user, dosen, dan admin
+                        Manajemen user, pendidik, dan admin
                     </p>
                 </div>
                 <div class="text-5xl opacity-70 group-hover:opacity-100">👥</div>
             </div>
         </a>
 
-        {{-- Rekap LKM Dosen --}}
+        {{-- Rekap LKM Pendidik --}}
         <a href="{{ route('admin.rekap.lkm') }}"
            class="group bg-gradient-to-br from-indigo-600 to-indigo-800 text-white p-7 rounded-2xl shadow-xl
                   hover:shadow-2xl transform hover:-translate-y-1 transition duration-300">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-2xl font-semibold">Rekap LKM Dosen</h2>
+                    <h2 class="text-2xl font-semibold">Rekap LKM Pendidik</h2>
                     <p class="text-sm opacity-90">
                         Monitoring aktivitas mengajar
                     </p>
@@ -53,7 +53,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h2 class="text-2xl font-semibold">
-                        Honor Tambahan Dosen
+                        Honor Tambahan Pendidik
                     </h2>
                     <p class="mt-1 text-sm opacity-90">
                         Input honor soal & koreksi
@@ -63,17 +63,17 @@
             </div>
         </a>
 
-        {{-- Monitoring Gaji Dosen --}}
-        <a href="{{ route('admin.rekap.gaji-dosen') }}"
+        {{-- Monitoring Gaji Pendidik --}}
+        <a href="{{ route('admin.rekap.gaji-pendidik') }}"
            class="group bg-gradient-to-br from-emerald-600 to-emerald-800 text-white p-7 rounded-2xl shadow-xl
                   hover:shadow-2xl transform hover:-translate-y-1 transition duration-300">
             <div class="flex items-center justify-between">
                 <div>
                     <h2 class="text-2xl font-semibold">
-                        Monitoring Gaji Dosen
+                        Monitoring Gaji Pendidik
                     </h2>
                     <p class="mt-1 text-sm opacity-90">
-                        Total honor & gaji bersih dosen
+                        Total honor & gaji bersih pendidik
                     </p>
                 </div>
                 <div class="text-5xl opacity-70 group-hover:opacity-100">📊</div>

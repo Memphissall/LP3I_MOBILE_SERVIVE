@@ -11,7 +11,7 @@ class Nilai extends Model
     protected $primaryKey = 'id_nilai';
 
     protected $fillable = [
-        'nidn',
+        'id_pendidik',
         'nipd',
         'nama_mhs',
         'id_kelas',

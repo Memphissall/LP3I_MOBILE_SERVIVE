@@ -14,7 +14,7 @@ return new class extends Migration
        Schema::create('jadwal', function (Blueprint $table) {
     $table->id('id_jadwal');
     $table->string('id_ruangan'); 
-    $table->string('nidn');
+    $table->string('id_pendidik');
     $table->unsignedBigInteger('id_kelas');
     $table->string('kode_mk');
     $table->string('hari');
@@ -22,7 +22,7 @@ return new class extends Migration
     $table->time('jam_selesai')->nullable();
     $table->timestamps();
     $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan'); 
-    $table->foreign('nidn')->references('nidn')->on('dosen'); 
+    $table->foreign('id_pendidik')->references('id_pendidik')->on('pendidik'); 
     $table->foreign('id_kelas')->references('id_kelas')->on('kelas'); 
     $table->foreign('kode_mk')->references('kode_mk')->on('matakuliah');
 });

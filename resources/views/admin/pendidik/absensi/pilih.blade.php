@@ -126,13 +126,13 @@ $(document).ready(function () {
     // INPUT ABSENSI
     $('#btnInput').on('click', function () {
         window.location.href =
-            `/dosen/absensi/create/${$('#kelas').val()}/${$('#matkul').val()}/${$('#semester').val()}`;
+            `/pendidik/absensi/create/${$('#kelas').val()}/${$('#matkul').val()}/${$('#semester').val()}`;
     });
 
     // VIEW LIST LKM (SESUI TUJUAN KAMU)
     $('#btnLihat').on('click', function () {
         window.location.href =
-            `/dosen/absensi/list/${$('#kelas').val()}/${$('#matkul').val()}`;
+            `/pendidik/absensi/list/${$('#kelas').val()}/${$('#matkul').val()}`;
     });
 
 });

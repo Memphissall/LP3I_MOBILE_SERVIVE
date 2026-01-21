@@ -32,7 +32,7 @@ class MateriController extends Controller
     public function pilihKelasMK()
     {
         $kelas = Kelas::orderBy('nama_kelas')->get();
-        return view('admin.dosen.materi.pilih', compact('kelas'));
+        return view('admin.pendidik.materi.pilih', compact('kelas'));
     }
 
     // ==========================
@@ -85,7 +85,7 @@ class MateriController extends Controller
             ->orderBy('pertemuan')
             ->get();
 
-        return view('admin.dosen.materi.index', compact(
+        return view('admin.pendidik.materi.index', compact(
             'kelas',
             'matkul',
             'materi',
@@ -102,7 +102,7 @@ class MateriController extends Controller
     $kelas  = Kelas::where('id_kelas', $id_kelas)->firstOrFail();
     $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
 
-    return view('admin.dosen.materi.tambah', compact(
+    return view('admin.pendidik.materi.tambah', compact(
         'kelas',
         'matkul',
         'id_kelas',
@@ -133,7 +133,7 @@ public function store(Request $request, $id_kelas, $kode_mk)
         'deskripsi'    => $request->deskripsi,
         'pertemuan'    => $request->pertemuan,
         'tipe_materi'  => $request->tipe_materi,
-        'nidn'         => auth()->user()->dosen->nidn,
+        'id_pendidik'         => auth()->user()->pendidik->id_pendidik,
     ];
 
     // ➜ JIKA FILE
@@ -166,7 +166,7 @@ public function store(Request $request, $id_kelas, $kode_mk)
     public function edit($id)
     {
         $materi = Materi::findOrFail($id);
-        return view('admin.dosen.materi.edit', compact('materi'));
+        return view('admin.pendidik.materi.edit', compact('materi'));
     }
 
     // ==========================
@@ -252,7 +252,7 @@ public function store(Request $request, $id_kelas, $kode_mk)
             ->orderBy('pertemuan')
             ->get();
 
-        return view('admin.dosen.materi.view', compact(
+        return view('admin.pendidik.materi.view', compact(
             'kelas',
             'matkul',
             'materi'

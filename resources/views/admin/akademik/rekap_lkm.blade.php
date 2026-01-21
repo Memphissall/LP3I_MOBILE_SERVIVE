@@ -3,15 +3,15 @@
 @section('content')
 <div class="max-w-7xl mx-auto p-6">
 
-    <h1 class="text-3xl font-bold mb-6">📘 Rekap LKM Dosen</h1>
+    <h1 class="text-3xl font-bold mb-6">📘 Rekap LKM Pendidik</h1>
 
     {{-- FILTER --}}
     <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <select name="nidn" class="border rounded-lg p-2">
-            <option value="">Semua Dosen</option>
-            @foreach($dosen as $d)
-                <option value="{{ $d->nidn }}" @selected(request('nidn')==$d->nidn)>
-                    {{ $d->nama_dosen }}
+        <select name="id_pendidik" class="border rounded-lg p-2">
+            <option value="">Semua Pendidik</option>
+            @foreach($pendidik as $d)
+                <option value="{{ $d->id_pendidik }}" @selected(request('id_pendidik')==$d->id_pendidik)>
+                    {{ $d->nama_pendidik }}
                 </option>
             @endforeach
         </select>
@@ -45,7 +45,7 @@
             <thead class="bg-gray-100">
                 <tr>
                     <th class="p-3 text-left">Tanggal</th>
-                    <th class="p-3">Dosen</th>
+                    <th class="p-3">Pendidik</th>
                     <th class="p-3">Matakuliah</th>
                     <th class="p-3">Kelas</th>
                     <th class="p-3">Pertemuan</th>
@@ -57,7 +57,7 @@
                 @forelse($data as $row)
                 <tr class="border-b">
                     <td class="p-3">{{ \Carbon\Carbon::parse($row->tanggal)->format('d M Y') }}</td>
-                    <td class="p-3">{{ $row->nama_dosen }}</td>
+                    <td class="p-3">{{ $row->nama_pendidik }}</td>
                     <td class="p-3">{{ $row->nama_mk }}</td>
                     <td class="p-3">{{ $row->nama_kelas }}</td>
                     <td class="p-3 text-center">Ke-{{ $row->id_pertemuan }}</td>

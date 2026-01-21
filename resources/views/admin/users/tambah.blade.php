@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-3xl mx-auto p-6">
 
-    <h2 class="text-2xl font-bold mb-4">Tambah User Dosen</h2>
+    <h2 class="text-2xl font-bold mb-4">Tambah User Pendidik</h2>
 
     @if (session('success'))
         <div class="bg-green-200 p-3 rounded mb-3">
@@ -22,13 +22,13 @@
         <label>Password Login</label>
         <input type="password" name="password" class="border w-full p-2 mb-3">
 
-        <h3 class="font-semibold text-lg mt-4">Data Dosen</h3>
+        <h3 class="font-semibold text-lg mt-4">Data Pendidik</h3>
 
-        <label>NIDN</label>
-        <input type="text" name="nidn" class="border w-full p-2 mb-3">
+        <label>Id_Pendidik</label>
+        <input type="text" name="id_pendidik" class="border w-full p-2 mb-3">
 
-        <label>Nama Dosen</label>
-        <input type="text" name="nama_dosen" class="border w-full p-2 mb-3">
+        <label>Nama Pendidik</label>
+        <input type="text" name="nama_pendidik" class="border w-full p-2 mb-3">
 
         <label>Pendidikan</label>
         <input type="text" name="pendidikan" class="border w-full p-2 mb-3">
@@ -51,8 +51,8 @@
         <label>Agama</label>
         <input type="text" name="agama" class="border w-full p-2 mb-3">
 
-        <label>Email Dosen</label>
-        <input type="email" name="email_dosen" class="border w-full p-2 mb-3">
+        <label>Email Pendidik</label>
+        <input type="email" name="email_pendidik" class="border w-full p-2 mb-3">
 
         <label>No Telp</label>
         <input type="text" name="no_telp" class="border w-full p-2 mb-3">

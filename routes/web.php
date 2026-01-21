@@ -7,7 +7,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\DosenController;
+use App\Http\Controllers\Admin\PendidikController;
 use App\Http\Controllers\Admin\MahasiswaController;
 use App\Http\Controllers\Admin\BobotNilaiController;
 use App\Http\Controllers\ELecturer\TugasController;
@@ -44,56 +44,56 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('user.dashboard');
 
-    // Jadwal dosen
-    Route::get('/dosen/jadwal', [\App\Http\Controllers\ELecturer\JadwalController::class, 'index'])
-        ->name('dosen.jadwal.index');
+    // Jadwal pendidik
+    Route::get('/pendidik/jadwal', [\App\Http\Controllers\ELecturer\JadwalController::class, 'index'])
+        ->name('pendidik.jadwal.index');
 
     // ==========================================================
-    // BAGIAN FITUR ABSENSI & LKM DOSEN (DIPERBAIKI)
+    // BAGIAN FITUR ABSENSI & LKM PENDIDIK (DIPERBAIKI)
     // ==========================================================
-    Route::prefix('dosen')->group(function () {
+    Route::prefix('pendidik')->group(function () {
         // 1. Halaman Pilih (Sudah Oke)
         Route::get('/absen', [AbsensiLkmController::class, 'pilihKelasMK'])
-            ->name('dosen.absen');
+            ->name('pendidik.absen');
         // 2. get matakuliah
        Route::get('/absensi/get-matkul',[AbsensiLkmController::class, 'getMatkulBySemester'])->name('absensi.getMatkul');
 
         // 3. Halaman Input Absen Mahasiswa (TAMBAHKAN parameter {semester})
         Route::get('/absensi/create/{id_kelas}/{kode_mk}/{semester}', [AbsensiLkmController::class, 'create'])
-            ->name('admin.dosen.absen.create');
+            ->name('admin.pendidik.absen.create');
 
         // 4. Simpan Absen
         Route::post('/absensi/store/{id_kelas}/{kode_mk}', [AbsensiLkmController::class, 'storeAbsen'])
-            ->name('admin.dosen.absen.store');
+            ->name('admin.pendidik.absen.store');
 
         // 5. Halaman Form LKM (Tambahkan semester agar alur tidak putus)
         Route::get('/lkm/form/{id_kelas}/{kode_mk}/{semester}', [AbsensiLkmController::class, 'createLkm'])
-            ->name('admin.dosen.lkm.form');
+            ->name('admin.pendidik.lkm.form');
 
         // 6. Simpan LKM
         Route::post('/lkm/store/{id_kelas}/{kode_mk}', [AbsensiLkmController::class, 'storeLkm'])
-            ->name('dosen.lkm.store');
+            ->name('pendidik.lkm.store');
 
         // 7. Riwayat LKM
         Route::get('/absensi/list/{id_kelas}/{kode_mk}', [AbsensiLkmController::class, 'listLkm'])
-            ->name('dosen.lkm.list');
+            ->name('pendidik.lkm.list');
 
         // --- FITUR BARU: ROUTE UNTUK EDIT LKM ---
         Route::get('/lkm/edit/{id_kelas}/{kode_mk}/{id_pertemuan}', [AbsensiLkmController::class, 'editLkm'])
-            ->name('admin.dosen.lkm.edit');
+            ->name('admin.pendidik.lkm.edit');
         
         
 
         // hapus lkm
-        Route::delete('/lkm/delete/{id_kelas}/{kode_mk}/{id_pertemuan}',[AbsensiLkmController::class, 'destroy'])->name('dosen.lkm.delete');
+        Route::delete('/lkm/delete/{id_kelas}/{kode_mk}/{id_pertemuan}',[AbsensiLkmController::class, 'destroy'])->name('pendidik.lkm.delete');
 
-        Route::get('/dosen/lkm/detail/{id_kelas}/{kode_mk}/{id_pertemuan}',[AbsensiLkmController::class, 'detailAbsensi'])->name('dosen.lkm.detail');
+        Route::get('/pendidik/lkm/detail/{id_kelas}/{kode_mk}/{id_pertemuan}',[AbsensiLkmController::class, 'detailAbsensi'])->name('pendidik.lkm.detail');
 
     });
 
 
     // ==========================
-    // FITUR TUGAS DOSEN
+    // FITUR TUGAS PENDIDIK
     // ==========================
 
     Route::get('/tugas/get-matkul',  [TugasController::class, 'getMatkulBySemester'])->name('tugas.getMatkulBySemester');
@@ -146,7 +146,7 @@ Route::middleware(['auth'])->group(function () {
     // Ajax get matkul
     
     // ==========================
-// CRUD NILAI DOSEN
+// CRUD NILAI PENDIDIK
 // ==========================
     Route::prefix('nilai')->group(function () {
 
@@ -184,23 +184,23 @@ Route::middleware(['auth'])->group(function () {
 
 
 // ==========================
-// HONOR / GAJI DOSEN
+// HONOR / GAJI PENDIDIK
 // ==========================
-Route::middleware(['auth'])->prefix('dosen')->group(function () {
+Route::middleware(['auth'])->prefix('pendidik')->group(function () {
 
     Route::get(
         '/honor/hitung/{semester}/{tahun}',
-        [HonorController::class, 'hitungGajiDosen']
-    )->name('dosen.honor.hitung');
+        [HonorController::class, 'hitungGajiPendidik']
+    )->name('pendidik.honor.hitung');
 
     Route::get(
         '/honor/rekap/{semester}/{tahun}',
         [HonorController::class, 'rekap']
-    )->name('dosen.honor.rekap');
+    )->name('pendidik.honor.rekap');
 
 
-    Route::get('/dosen/gaji', [AbsensiLkmController::class, 'totalGaji'])
-     ->name('dosen.gaji');
+    Route::get('/pendidik/gaji', [AbsensiLkmController::class, 'totalGaji'])
+     ->name('pendidik.gaji');
 
 
      
@@ -209,7 +209,7 @@ Route::middleware(['auth'])->prefix('dosen')->group(function () {
 
 
 // ==========================
-// FITUR MATERI DOSEN
+// FITUR MATERI PENDIDIK
 // ==========================
 Route::prefix('materi')->group(function () {
 
@@ -278,8 +278,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // CRUD User
     Route::resource('/admin/users', UserController::class)->names('admin.users');
 
-    // CRUD Dosen
-    Route::resource('/admin/dosen', DosenController::class)->names('admin.dosen');
+    // CRUD Pendidik
+    Route::resource('/admin/pendidik', PendidikController::class)->names('admin.pendidik');
 
     // CRUD Mahasiswa
     Route::resource('/admin/mahasiswa', MahasiswaController::class)->names('admin.mahasiswa');
@@ -293,7 +293,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/bobot-nilai/store', [BobotNilaiController::class, 'store'])->name('admin.bobot.store');
 
     // ==========================
-// HONOR TAMBAHAN DOSEN (AKADEMIK)
+// HONOR TAMBAHAN PENDIDIK (AKADEMIK)
 // ==========================
 Route::prefix('admin/akademik')
     ->name('admin.akademik.')
@@ -309,8 +309,8 @@ Route::prefix('admin/akademik')
             ->name('tambahan-honor.store');
     });
 
-         Route::get('/admin/rekap-gaji-dosen',[HonorRekapController::class, 'index']
-            )->name('admin.rekap.gaji-dosen');
+         Route::get('/admin/rekap-gaji-pendidik',[HonorRekapController::class, 'index']
+            )->name('admin.rekap.gaji-pendidik');
 
            
 

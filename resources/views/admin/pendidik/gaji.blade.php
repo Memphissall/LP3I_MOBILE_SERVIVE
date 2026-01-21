@@ -8,7 +8,7 @@
         {{-- HEADER --}}
         <div class="border-b border-gray-200 pb-6 mb-8">
             <h2 class="text-2xl font-semibold text-[#004269]">
-                Rekapitulasi Gaji Dosen
+                Rekapitulasi Gaji Pendidik
             </h2>
             <p class="text-sm text-gray-500 mt-1">
                 Total gaji bersih yang diterima
@@ -68,7 +68,7 @@
                                 </span>
 
                             @else
-                                Honor Dosen
+                                Honor Pendidik
                             @endif
                         </td>
 

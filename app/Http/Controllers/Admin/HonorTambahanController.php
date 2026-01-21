@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Dosen;
+use App\Models\Pendidik;
 use App\Models\Honor;
 
 class HonorTambahanController extends Controller
@@ -14,8 +14,8 @@ class HonorTambahanController extends Controller
      */
     public function index()
     {
-        $dosen = Dosen::orderBy('nama_dosen')->get();
-        return view('admin.akademik.tambahan_honor', compact('dosen'));
+        $pendidik = Pendidik::orderBy('nama_pendidik')->get();
+        return view('admin.akademik.tambahan_honor', compact('pendidik'));
     }
 
     /**
@@ -33,7 +33,7 @@ class HonorTambahanController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'nidn' => 'required',
+        'id_pendidik' => 'required',
         'semester' => 'required',
         'jenis_honor' => 'required',
         'bulan' => 'required|integer|min:1|max:12',
@@ -44,7 +44,7 @@ class HonorTambahanController extends Controller
     $tahun = date('Y');
 
     // 🔒 CEK DATA SAMA
-    $cek = Honor::where('nidn', $request->nidn)
+    $cek = Honor::where('id_pendidik', $request->id_pendidik)
         ->where('semester', $request->semester)
         ->where('tahun', $tahun)
         ->where('jenis_honor', $request->jenis_honor)
@@ -62,7 +62,7 @@ class HonorTambahanController extends Controller
     $ppn = (int) ($totalKotor * 0.05);
 
     Honor::create([
-        'nidn' => $request->nidn,
+        'id_pendidik' => $request->id_pendidik,
         'semester' => $request->semester,
         'tahun' => $tahun,
         'jenis_honor' => $request->jenis_honor,

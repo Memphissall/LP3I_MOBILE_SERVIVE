@@ -9,7 +9,7 @@
             Data Honor Mengajar & Honor Tambahan
         </h2>
         <p class="text-sm text-gray-500 mt-1">
-            Rekap gaji bersih dosen berdasarkan filter
+            Rekap gaji bersih pendidik berdasarkan filter
         </p>
     </div>
 
@@ -17,13 +17,13 @@
     <form method="GET" class="bg-white rounded-xl shadow-sm border p-6 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
-            {{-- DOSEN --}}
-            <select name="nidn" class="rounded-lg border-gray-300">
-                <option value="">Semua Dosen</option>
-                @foreach($data->unique('nidn') as $row)
-                    <option value="{{ $row->nidn }}"
-                        {{ request('nidn') == $row->nidn ? 'selected' : '' }}>
-                        {{ $row->nama_dosen }}
+            {{-- PENDIDIK --}}
+            <select name="id_pendidik" class="rounded-lg border-gray-300">
+                <option value="">Semua Pendidik</option>
+                @foreach($data->unique('id_pendidik') as $row)
+                    <option value="{{ $row->id_pendidik }}"
+                        {{ request('id_pendidik') == $row->id_pendidik ? 'selected' : '' }}>
+                        {{ $row->nama_pendidik }}
                     </option>
                 @endforeach
             </select>
@@ -71,7 +71,7 @@
             <thead class="bg-gray-50 border-b">
                 <tr class="text-left text-gray-600">
                     <th class="px-6 py-4">Tanggal</th>
-                    <th class="px-6 py-4">Dosen</th>
+                    <th class="px-6 py-4">Pendidik</th>
                     <th class="px-6 py-4">Keterangan</th>
                     <th class="px-6 py-4 text-right">Gaji Bersih</th>
                 </tr>
@@ -83,7 +83,7 @@
                         {{ \Carbon\Carbon::parse($row->created_at)->translatedFormat('d M Y') }}
                     </td>
                     <td class="px-6 py-4 font-medium">
-                        {{ $row->nama_dosen }}
+                        {{ $row->nama_pendidik }}
                     </td>
                     <td class="px-6 py-4">
                         <div class="font-semibold">

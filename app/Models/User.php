@@ -30,9 +30,9 @@ class User extends Authenticatable
         ];
     }
 
-   public function dosen()
+   public function pendidik()
 {
-    return $this->hasOne(\App\Models\Dosen::class, 'user_id');
+    return $this->hasOne(\App\Models\Pendidik::class, 'user_id');
 }
 
 

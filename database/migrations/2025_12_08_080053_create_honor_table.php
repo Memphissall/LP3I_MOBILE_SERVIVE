@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('honor', function (Blueprint $table) {
     $table->id('id_honor');
 
-    $table->string('nidn');
+    $table->string('id_pendidik');
 
     // ===== HONOR MENGAJAR =====
     $table->string('kode_mk')->nullable();
@@ -38,7 +38,7 @@ return new class extends Migration {
 
     // 🔐 CEGAH DUPLIKASI
     $table->unique(
-        ['nidn', 'semester', 'tahun', 'jenis_honor', 'bulan'],
+        ['id_pendidik', 'semester', 'tahun', 'jenis_honor', 'bulan'],
         'honor_unique_tambahan'
     );
 });

@@ -9,7 +9,7 @@
         </div>
 
         {{-- Route diarahkan ke storeLkm karena di controller kamu storeLkm menggunakan sistem update --}}
-        <form action="{{ route('dosen.lkm.store', [$id_kelas, $kode_mk]) }}" method="POST">
+        <form action="{{ route('pendidik.lkm.store', [$id_kelas, $kode_mk]) }}" method="POST">
             @csrf
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -54,7 +54,7 @@
             </div>
 
             <div class="flex justify-end gap-3">
-                <a href="{{ url('/dosen/absensi/list/'.$id_kelas.'/'.$kode_mk) }}" class="bg-gray-100 text-gray-600 px-6 py-2.5 rounded font-bold hover:bg-gray-200 transition text-sm">
+                <a href="{{ url('/pendidik/absensi/list/'.$id_kelas.'/'.$kode_mk) }}" class="bg-gray-100 text-gray-600 px-6 py-2.5 rounded font-bold hover:bg-gray-200 transition text-sm">
                     BATAL
                 </a>
                 <button type="submit" class="bg-amber-500 text-white px-8 py-2.5 rounded shadow-lg font-bold hover:bg-amber-600 active:scale-95 transition-all text-sm">

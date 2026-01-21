@@ -19,7 +19,7 @@ class NilaiController extends Controller
     public function index()
     {
         $kelas = Kelas::orderBy('nama_kelas')->get();
-        return view('admin.dosen.nilai.index', compact('kelas'));
+        return view('admin.pendidik.nilai.index', compact('kelas'));
     }
 
     // =======================
@@ -115,7 +115,7 @@ $nilaiKehadiran[$mhs->nipd] = max(round($nilai, 2), 0);
 
 }
 
-    return view('admin.dosen.nilai.input', compact(
+    return view('admin.pendidik.nilai.input', compact(
         'mahasiswa',
         'id_kelas',
         'kode_mk',
@@ -136,7 +136,7 @@ $nilaiKehadiran[$mhs->nipd] = max(round($nilai, 2), 0);
         'nipd'     => 'required|array'
     ]);
 
-    $nidn = auth()->user()->dosen->nidn;
+    $id_pendidik = auth()->user()->pendidik->id_pendidik;
 
     $semester = $request->semester;
     $periode  = $semester % 2 == 1 ? 'Ganjil' : 'Genap';
@@ -248,7 +248,7 @@ $nilaiKehadiran[$mhs->nipd] = max(round($nilai, 2), 0);
         else                        { $mutu = 'E';  $ip = 1.00; }
 
         Nilai::create([
-            'nidn'           => $nidn,
+            'id_pendidik'           => $id_pendidik,
             'nipd'           => $nipd,
             'nama_mhs'       => $request->nama_mhs[$i],
             'id_kelas'       => $request->id_kelas,
@@ -288,7 +288,7 @@ $nilaiKehadiran[$mhs->nipd] = max(round($nilai, 2), 0);
 
     $matakuliah = Matakuliah::where('kode_mk', $kode_mk)->first();
 
-    return view('admin.dosen.nilai.view', compact(
+    return view('admin.pendidik.nilai.view', compact(
         'nilai',
         'matakuliah',
         'id_kelas',
@@ -302,7 +302,7 @@ public function edit($id_nilai)
 {
     $nilai = Nilai::findOrFail($id_nilai);
 
-    return view('admin.dosen.nilai.edit', compact('nilai'));
+    return view('admin.pendidik.nilai.edit', compact('nilai'));
 }
 
 

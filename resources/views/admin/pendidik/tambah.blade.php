@@ -40,28 +40,28 @@
             <label class="font-medium">Role</label>
             <select name="role" id="role" class="w-full border px-3 py-2 rounded" required>
                 <option value="">- Pilih Role -</option>
-                <option value="dosen">Dosen</option>
+                <option value="pendidik">Pendidik</option>
                 <option value="mahasiswa">Mahasiswa</option>
                 <option value="admin">Admin</option>
             </select>
         </div>
 
         <div class="mb-4">
-            <label class="font-medium">Foto (opsional, hanya untuk dosen)</label>
+            <label class="font-medium">Foto (opsional, hanya untuk pendidik)</label>
             <input type="file" name="foto" class="w-full border px-3 py-2 rounded">
         </div>
 
-        {{-- FORM DOSEN --}}
-        <div id="form-dosen" class="hidden">
-            <h3 class="text-xl font-semibold mb-2">Data Dosen</h3>
+        {{-- FORM PENDIDIK --}}
+        <div id="form-pendidik" class="hidden">
+            <h3 class="text-xl font-semibold mb-2">Data Pendidik</h3>
             <div class="grid grid-cols-2 gap-4">
                 <div class="mb-3">
-                    <label class="font-medium">NIDN</label>
-                    <input type="text" name="nidn" class="w-full border px-3 py-2 rounded">
+                    <label class="font-medium">Id_Pendidik</label>
+                    <input type="text" name="id_pendidik" class="w-full border px-3 py-2 rounded">
                 </div>
                 <div class="mb-3">
-                    <label class="font-medium">Nama Dosen</label>
-                    <input type="text" name="nama_dosen" class="w-full border px-3 py-2 rounded">
+                    <label class="font-medium">Nama Pendidik</label>
+                    <input type="text" name="nama_pendidik" class="w-full border px-3 py-2 rounded">
                 </div>
                 <div class="mb-3">
                     <label class="font-medium">Pendidikan</label>
@@ -92,8 +92,8 @@
                     <input type="text" name="agama" class="w-full border px-3 py-2 rounded">
                 </div>
                 <div class="mb-3">
-                    <label class="font-medium">Email Dosen</label>
-                    <input type="email" name="email_dosen" class="w-full border px-3 py-2 rounded">
+                    <label class="font-medium">Email Pendidik</label>
+                    <input type="email" name="email_pendidik" class="w-full border px-3 py-2 rounded">
                 </div>
                 <div class="mb-3">
                     <label class="font-medium">No. Telepon</label>
@@ -113,10 +113,10 @@
 
 <script>
     const roleSelect = document.getElementById('role');
-    const formDosen = document.getElementById('form-dosen');
+    const formPendidik = document.getElementById('form-pendidik');
 
     roleSelect.addEventListener('change', function() {
-        formDosen.classList.toggle('hidden', this.value !== 'dosen');
+        formPendidik.classList.toggle('hidden', this.value !== 'pendidik');
     });
 </script>
 

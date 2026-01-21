@@ -17,7 +17,7 @@ class TugasController extends Controller
     public function pilihKelasMK()
     {
         $kelas = Kelas::orderBy('nama_kelas')->get();
-        return view('admin.dosen.tugas.pilih', compact('kelas'));
+        return view('admin.pendidik.tugas.pilih', compact('kelas'));
     }
 
     // ==========================
@@ -61,7 +61,7 @@ class TugasController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('admin.dosen.tugas.index', compact(
+        return view('admin.pendidik.tugas.index', compact(
             'kelas',
             'matkul',
             'tugas',
@@ -78,7 +78,7 @@ class TugasController extends Controller
         $kelas  = Kelas::where('id_kelas', $id_kelas)->firstOrFail();
         $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
 
-        return view('admin.dosen.tugas.tambah', compact(
+        return view('admin.pendidik.tugas.tambah', compact(
             'kelas',
             'matkul',
             'id_kelas',
@@ -103,7 +103,7 @@ class TugasController extends Controller
             'deskripsi'      => $request->deskripsi,
             'deadline'       => $request->deadline,
             'tanggal_upload' => Carbon::now(),
-            'nidn'           => auth()->user()->dosen->nidn
+            'id_pendidik'           => auth()->user()->pendidik->id_pendidik
         ]);
 
         return redirect()
@@ -117,7 +117,7 @@ class TugasController extends Controller
     public function edit($id)
     {
         $tugas = Tugas::findOrFail($id);
-        return view('admin.dosen.tugas.edit', compact('tugas'));
+        return view('admin.pendidik.tugas.edit', compact('tugas'));
     }
 
     // ==========================
@@ -167,7 +167,7 @@ class TugasController extends Controller
             ->orderBy('deadline')
             ->get();
 
-        return view('admin.dosen.tugas.view', compact(
+        return view('admin.pendidik.tugas.view', compact(
             'kelas',
             'matkul',
             'tugas'
@@ -182,7 +182,7 @@ class TugasController extends Controller
         ->with('mahasiswa') // nanti relasi
         ->get();
 
-    return view('admin.dosen.tugas.submissi.index', compact(
+    return view('admin.pendidik.tugas.submissi.index', compact(
         'tugas',
         'submissions',
         'id_kelas',

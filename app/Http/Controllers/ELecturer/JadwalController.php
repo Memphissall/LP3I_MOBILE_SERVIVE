@@ -10,18 +10,18 @@ class JadwalController extends Controller
 {
   public function index()
     {
-        // Ambil data dosen dari user yang login
-        $dosen = Auth::user()->dosen;
+        // Ambil data pendidik dari user yang login
+        $pendidik = Auth::user()->pendidik;
 
-        if (!$dosen) {
-            return back()->with('error', 'Data dosen tidak ditemukan untuk akun ini.');
+        if (!$pendidik) {
+            return back()->with('error', 'Data pendidik tidak ditemukan untuk akun ini.');
         }
 
-        $jadwal = Jadwal::with(['matakuliah', 'kelas', 'ruangan', 'dosen'])
-            ->where('nidn', $dosen->nidn)
+        $jadwal = Jadwal::with(['matakuliah', 'kelas', 'ruangan', 'pendidik'])
+            ->where('id_pendidik', $pendidik->id_pendidik)
             ->get();
 
-        return view('admin.dosen.jadwal.index', compact('jadwal'));
+        return view('admin.pendidik.jadwal.index', compact('jadwal'));
     }
 
 

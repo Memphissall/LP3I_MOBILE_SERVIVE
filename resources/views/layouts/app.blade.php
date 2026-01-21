@@ -170,16 +170,16 @@
                 </a>
             @endif
 
-            @if(Auth::user()->role === 'dosen')
+            @if(Auth::user()->role === 'pendidik')
                 <a href="{{ route('user.dashboard') }}" class="{{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
                     <i class="fa-solid fa-chart-line"></i> Dashboard
                 </a>
 
-                <a href="{{ route('dosen.jadwal.index') }}">
+                <a href="{{ route('pendidik.jadwal.index') }}">
                     <i class="fa-solid fa-calendar-days"></i> Jadwal Mengajar
                 </a>
 
-                <a href="{{ route('dosen.absen') }}" class="{{ request()->routeIs('dosen.absen') ? 'active' : '' }}">
+                <a href="{{ route('pendidik.absen') }}" class="{{ request()->routeIs('pendidik.absen') ? 'active' : '' }}">
                     <i class="fa-solid fa-user-check"></i> Absensi
                 </a>
 
@@ -195,7 +195,7 @@
                     <i class="fa-solid fa-list-check"></i> Tugas
                 </a>
 
-                <a href="{{ route('dosen.gaji') }}" class="{{ request()->routeIs('dosen.gaji') ? 'active' : '' }}">
+                <a href="{{ route('pendidik.gaji') }}" class="{{ request()->routeIs('pendidik.gaji') ? 'active' : '' }}">
                     <i class="fa-solid fa-money-bill-wave"></i> Lihat Gaji
                 </a>
 

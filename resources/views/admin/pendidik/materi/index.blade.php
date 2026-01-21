@@ -19,7 +19,7 @@
                 <th class="p-2 text-center w-12">No</th>
                 <th class="p-2 text-left">Judul</th>
                 <th class="p-2 text-center">Pertemuan</th>
-                <th class="p-2 text-left">Dosen</th>
+                <th class="p-2 text-left">Pendidik</th>
                 <th class="p-2 text-center">File</th>
                 <th class="p-2 text-center">Aksi</th>
             </tr>
@@ -40,7 +40,7 @@
                     Pertemuan {{ $m->pertemuan }}
                 </td>
 
-                <td class="p-2">{{ $m->dosen->nama_dosen }}</td>
+                <td class="p-2">{{ $m->pendidik->nama_pendidik }}</td>
 
                 <td class="p-2 text-center">
     @if($m->tipe_materi === 'file')

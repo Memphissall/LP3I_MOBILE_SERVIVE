@@ -18,7 +18,7 @@ class Materi extends Model
     'link_materi',
     'tipe_materi',
     'pertemuan',
-    'nidn',
+    'id_pendidik',
     'kode_mk',
     'id_kelas'
 ];
@@ -34,8 +34,8 @@ class Materi extends Model
         return $this->belongsTo(Matakuliah::class, 'kode_mk', 'kode_mk');
     }
 
-    public function dosen()
+    public function pendidik()
     {
-        return $this->belongsTo(Dosen::class, 'nidn', 'nidn');
+        return $this->belongsTo(Pendidik::class, 'id_pendidik', 'id_pendidik');
     }
 }

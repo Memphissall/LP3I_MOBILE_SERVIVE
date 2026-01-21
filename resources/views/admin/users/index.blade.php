@@ -13,7 +13,7 @@
 
         <h1 class="text-3xl font-bold text-gray-800">Kelola Akun</h1>
 
-        <a href="{{ route('admin.dosen.create') }}"
+        <a href="{{ route('admin.pendidik.create') }}"
            class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">
             + Add User
         </a>

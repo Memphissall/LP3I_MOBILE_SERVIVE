@@ -13,7 +13,7 @@ public function up()
             $table->id('id_absensi');
 
             // Relasi / Identitas
-            $table->string('nidn');                     // NIDN dosen
+            $table->string('id_pendidik');                     // id_pendidik pendidik
             $table->string('kode_mk');                  // Kode matakuliah
             $table->unsignedBigInteger('id_kelas');     // Kelas
             $table->string('nipd')->nullable();         // NIM / Nipd mahasiswa

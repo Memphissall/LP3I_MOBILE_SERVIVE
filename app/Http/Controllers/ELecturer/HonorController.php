@@ -5,7 +5,7 @@ namespace App\Http\Controllers\ELecturer;
 use App\Http\Controllers\Controller;
 use App\Models\Honor;
 use App\Models\Matakuliah;
-use App\Models\Dosen;
+use App\Models\Pendidik;
 use App\Models\AbsensiLkm;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,10 +13,10 @@ class HonorController extends Controller
 {
     public static function hitungHonor($kode_mk, $id_pertemuan)
     {
-        $nidn = Auth::id();
+        $id_pendidik = Auth::id();
 
         // CEK SUDAH PERNAH DIHITUNG ATAU BELUM
-        $cek = Honor::where('nidn', $nidn)
+        $cek = Honor::where('id_pendidik', $id_pendidik)
             ->where('kode_mk', $kode_mk)
             ->where('id_pertemuan', $id_pertemuan)
             ->first();
@@ -28,16 +28,16 @@ class HonorController extends Controller
         // AMBIL MATKUL
         $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
 
-        // AMBIL DOSEN
-        $dosen = Dosen::where('nidn', $nidn)->firstOrFail();
+        // AMBIL PENDIDIK
+        $pendidik = Pendidik::where('id_pendidik', $id_pendidik)->firstOrFail();
 
         $sks = $matkul->sks;
-        $honorPerSks = $dosen->honor_per_sks;
+        $honorPerSks = $pendidik->honor_per_sks;
 
         $totalGaji = $sks * $honorPerSks;
 
         Honor::create([
-            'nidn'          => $nidn,
+            'id_pendidik'          => $id_pendidik,
             'kode_mk'       => $kode_mk,
             'id_pertemuan'  => $id_pertemuan,
             'sks'           => $sks,

@@ -6,15 +6,15 @@
 
         {{-- HEADER --}}
         <div class="bg-[#004269] px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-bold text-white">Riwayat LKM Dosen</h2>
+            <h2 class="text-xl font-bold text-white">Riwayat LKM Pendidik</h2>
 
             <div class="flex gap-2">
-                <a href="{{ url('/dosen/absen') }}"
+                <a href="{{ url('/pendidik/absen') }}"
                    class="bg-gray-200 text-[#004269] px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-300 transition shadow-sm">
                     ← KEMBALI
                 </a>
 
-                <a href="{{ url('/dosen/absensi/create/'.$id_kelas.'/'.$kode_mk.'/1') }}"
+                <a href="{{ url('/pendidik/absensi/create/'.$id_kelas.'/'.$kode_mk.'/1') }}"
                    class="bg-white text-[#009DA5] px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-100 transition shadow-sm">
                     + INPUT BARU
                 </a>
@@ -107,17 +107,17 @@
                         <td class="px-6 py-4">
                             <div class="flex justify-center gap-1 flex-nowrap">
 
-                                <a href="{{ url('/dosen/lkm/edit/'.$id_kelas.'/'.$kode_mk.'/'.$lkm->id_pertemuan) }}"
+                                <a href="{{ url('/pendidik/lkm/edit/'.$id_kelas.'/'.$kode_mk.'/'.$lkm->id_pertemuan) }}"
                                    class="bg-[#009DA5] hover:bg-[#007C82] text-white px-3 py-1.5 rounded text-[10px] font-bold transition shadow-sm whitespace-nowrap">
                                     EDIT
                                 </a>
 
-                                <a href="{{ route('dosen.lkm.detail', [$id_kelas, $kode_mk, $lkm->id_pertemuan]) }}"
+                                <a href="{{ route('pendidik.lkm.detail', [$id_kelas, $kode_mk, $lkm->id_pertemuan]) }}"
                                    class="bg-[#004269] hover:bg-[#00304B] text-white px-3 py-1.5 rounded text-[10px] font-bold transition shadow-sm whitespace-nowrap">
                                     DETAIL
                                 </a>
 
-                                <form action="{{ url('/dosen/lkm/delete/'.$id_kelas.'/'.$kode_mk.'/'.$lkm->id_pertemuan) }}"
+                                <form action="{{ url('/pendidik/lkm/delete/'.$id_kelas.'/'.$kode_mk.'/'.$lkm->id_pertemuan) }}"
                                       method="POST"
                                       onsubmit="return confirm('Yakin ingin menghapus LKM ini?')">
                                     @csrf

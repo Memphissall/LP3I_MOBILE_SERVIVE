@@ -11,7 +11,7 @@
     <div class="bg-white shadow-2xl rounded-2xl p-10 max-w-lg text-center transform transition duration-500 hover:scale-105">
         <div class="mb-6">
             <h1 class="text-4xl font-extrabold text-blue-900 mb-2">E-Lecturer System</h1>
-            <p class="text-gray-600">Sistem Manajemen Dosen Digital</p>
+            <p class="text-gray-600">Sistem Manajemen Pendidik Digital</p>
         </div>
 
         <div class="my-8 border-t border-gray-300"></div>

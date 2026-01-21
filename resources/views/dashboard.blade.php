@@ -151,7 +151,7 @@
     <div>
         <div class="welcome">
             <h2>HII, {{ Auth::user()->name }}!</h2>
-            <p>Dashboard Dosen</p>
+            <p>Dashboard Pendidik</p>
             <p id="datetime"></p>
         </div>
 
@@ -160,7 +160,7 @@
                 <i class="fa-solid fa-calendar-days"></i>
                 <h3>Jadwal Mengajar</h3>
                 <p>Lihat jadwal Anda minggu ini.</p>
-                <a href="{{ route('dosen.jadwal.index') }}">Lihat Jadwal →</a>
+                <a href="{{ route('pendidik.jadwal.index') }}">Lihat Jadwal →</a>
             </div>
 
             <div class="card">
@@ -179,12 +179,12 @@
         </div>
 
         <div class="icon-grid">
-            <a href="{{ route('dosen.absen') }}" class="icon-card">
+            <a href="{{ route('pendidik.absen') }}" class="icon-card">
                 <i class="fa-solid fa-user-check"></i>
                 <p>Absensi</p>
             </a>
 
-            <a href="{{ route('dosen.gaji') }}" class="icon-card">
+            <a href="{{ route('pendidik.gaji') }}" class="icon-card">
                 <i class="fa-solid fa-money-bill-wave"></i>
                 <p>Gaji</p>
             </a>

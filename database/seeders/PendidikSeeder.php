@@ -5,22 +5,22 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class DosenSeeder extends Seeder
+class PendidikSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('dosen')->insert([
+        DB::table('pendidik')->insert([
             [
                 'user_id' => 1,
-                'nidn' => '1234567890',
-                'nama_dosen' => 'Dosen Satu',
+                'id_pendidik' => '1234567890',
+                'nama_pendidik' => 'Pendidik Satu',
                 'pendidikan' => 'S2',
                 'bidang' => 'Informatika',
                 'tempat' => 'Jakarta',
                 'tanggal_lahir' => '1980-01-01',
                 'jenis_kelamin' => 'Laki-laki',
                 'agama' => 'Islam',
-                'email' => 'dosen1@example.com',
+                'email' => 'pendidik1@example.com',
                 'no_telp' => '081234567890',
                 'honor_per_sks' => 100000,
                 'status' => 'aktif',
@@ -28,15 +28,15 @@ class DosenSeeder extends Seeder
             ],
             [
                 'user_id' => 2,
-                'nidn' => '2345678901',
-                'nama_dosen' => 'Dosen Dua',
+                'id_pendidik' => '2345678901',
+                'nama_pendidik' => 'Pendidik Dua',
                 'pendidikan' => 'S1',
                 'bidang' => 'Sistem Informasi',
                 'tempat' => 'Bandung',
                 'tanggal_lahir' => '1985-02-02',
                 'jenis_kelamin' => 'Perempuan',
                 'agama' => 'Islam',
-                'email' => 'dosen2@example.com',
+                'email' => 'pendidik2@example.com',
                 'no_telp' => '081234567891',
                 'honor_per_sks' => 120000,
                 'status' => 'aktif',
@@ -44,15 +44,15 @@ class DosenSeeder extends Seeder
             ],
             [
                 'user_id' => 3,
-                'nidn' => '3456789012',
-                'nama_dosen' => 'Dosen Tiga',
+                'id_pendidik' => '3456789012',
+                'nama_pendidik' => 'Pendidik Tiga',
                 'pendidikan' => 'S3',
                 'bidang' => 'Komputer',
                 'tempat' => 'Bekasi',
                 'tanggal_lahir' => '1978-03-03',
                 'jenis_kelamin' => 'Laki-laki',
                 'agama' => 'Islam',
-                'email' => 'dosen3@example.com',
+                'email' => 'pendidik3@example.com',
                 'no_telp' => '081234567892',
                 'honor_per_sks' => 150000,
                 'status' => 'aktif',

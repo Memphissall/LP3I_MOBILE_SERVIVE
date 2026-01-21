@@ -8,11 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('dosen', function (Blueprint $table) {
+        Schema::create('pendidik', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->unique();
-            $table->string('nidn')->unique();
-            $table->string('nama_dosen');
+            $table->string('id_pendidik')->unique();
+            $table->string('nama_pendidik');
             $table->string('pendidikan');
             $table->string('bidang');
             $table->string('tempat');
@@ -47,6 +47,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('dosen');
+        Schema::dropIfExists('pendidik');
     }
 };

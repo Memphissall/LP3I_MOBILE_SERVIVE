@@ -12,7 +12,7 @@ class JadwalSeeder extends Seeder
         DB::table('jadwal')->insert([
             [
                 'id_ruangan'   => 'R101',
-                'nidn'         => '1234567890',  // Dosen Satu
+                'id_pendidik'         => '1234567890',  // Pendidik Satu
                 'id_kelas'     => 1,             // Pastikan kelas id=1 ada
                 'kode_mk'      => 'AIS001',      // Pastikan MK001 ada
                 'hari'         => 'Senin',
@@ -23,7 +23,7 @@ class JadwalSeeder extends Seeder
             ],
             [
                 'id_ruangan'   => 'R102',
-                'nidn'         => '2345678901',  // Dosen Dua
+                'id_pendidik'         => '2345678901',  // Pendidik Dua
                 'id_kelas'     => 2,
                 'kode_mk'      => 'ASE001',
                 'hari'         => 'Selasa',
@@ -34,7 +34,7 @@ class JadwalSeeder extends Seeder
             ],
             [
                 'id_ruangan'   => 'R103',
-                'nidn'         => '3456789012', // Dosen Tiga
+                'id_pendidik'         => '3456789012', // Pendidik Tiga
                 'id_kelas'     => 3,
                 'kode_mk'      => 'OAA001',
                 'hari'         => 'Rabu',

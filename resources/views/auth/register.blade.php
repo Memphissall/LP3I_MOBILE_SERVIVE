@@ -7,7 +7,7 @@
                   <img src="{{ asset('images/logo_white.png') }}" alt="Logo" 
      class="mx-auto mb-3 max-h-20 w-auto object-contain drop-shadow-lg">
                 <h2 class="text-2xl font-bold text-white mb-1">e-Lecturer System</h2>
-                <p class="text-blue-100 text-sm">Buat akun dosen baru</p>
+                <p class="text-blue-100 text-sm">Buat akun pendidik baru</p>
             </div>
 
             {{-- Form Register --}}

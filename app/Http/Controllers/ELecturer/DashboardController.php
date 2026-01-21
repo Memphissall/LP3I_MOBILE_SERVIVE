@@ -11,15 +11,15 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $nidn = Auth::user()->nidn ?? Auth::id();
+        $id_pendidik = Auth::user()->id_pendidik ?? Auth::id();
 
         $jadwal = Jadwal::with('matakuliah')
-            ->where('nidn', $nidn)
+            ->where('id_pendidik', $id_pendidik)
             ->get();
 
-        $progressMengajar = $jadwal->map(function ($j) use ($nidn) {
+        $progressMengajar = $jadwal->map(function ($j) use ($id_pendidik) {
 
-            $pertemuan = AbsensiLkm::where('nidn', $nidn)
+            $pertemuan = AbsensiLkm::where('id_pendidik', $id_pendidik)
                 ->where('kode_mk', $j->kode_mk)
                 ->distinct('id_pertemuan')
                 ->count('id_pertemuan');

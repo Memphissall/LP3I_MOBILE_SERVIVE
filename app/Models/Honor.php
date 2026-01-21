@@ -12,7 +12,7 @@ class Honor extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'nidn',
+        'id_pendidik',
         'kode_mk',
         'id_pertemuan',
         'tanggal',
@@ -32,9 +32,9 @@ class Honor extends Model
         'tahun',
     ];
     
-    public function dosen()
+    public function pendidik()
 {
-    return $this->belongsTo(Dosen::class, 'nidn', 'nidn');
+    return $this->belongsTo(Pendidik::class, 'id_pendidik', 'id_pendidik');
 }
 
 }

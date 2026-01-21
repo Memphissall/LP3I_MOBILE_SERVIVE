@@ -26,7 +26,7 @@
         </div>
 
         {{-- Menambahkan id="absenForm" agar dropdown di atas bisa ikut terkirim --}}
-        <form id="absenForm" action="{{ route('admin.dosen.absen.store', [$id_kelas, $kode_mk]) }}" method="POST">
+        <form id="absenForm" action="{{ route('admin.pendidik.absen.store', [$id_kelas, $kode_mk]) }}" method="POST">
             @csrf
             {{-- Input hidden id_pertemuan dihapus karena sudah ada select di atas --}}
             <input type="hidden" name="semester" value="{{ $semester }}"> 

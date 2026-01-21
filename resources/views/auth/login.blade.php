@@ -5,13 +5,13 @@
 
     <div class="min-h-screen flex font-['Poppins']">
         <div class="hidden lg:flex w-1/2 bg-cover bg-center relative"
-             style="background-image: url('{{ asset('images/dosen.jpg') }}');">
+             style="background-image: url('{{ asset('images/pendidik.jpg') }}');">
             <div class="absolute inset-0 bg-white bg-opacity-40 backdrop-blur-[1px]"></div>
 
             <div class="relative z-10 flex flex-col justify-center items-center w-full px-10 text-center">
                 <h1 class="text-4xl font-bold text-blue-800 mb-4">E-Lecturer System</h1>
                 <p class="text-gray-700 max-w-md text-lg leading-relaxed">
-                    Platform untuk dosen mengelola data akademik, nilai, dan presensi secara efisien.
+                    Platform untuk pendidik mengelola data akademik, nilai, dan presensi secara efisien.
                 </p>
             </div>
         </div>
@@ -22,7 +22,7 @@
                    <img src="{{ asset('images/logo_white.png') }}" alt="Logo" 
                         class="mx-auto mb-3 max-h-20 w-auto object-contain drop-shadow-lg">
                     <h2 class="text-3xl font-bold tracking-tight">E-Lecturer System</h2>
-                    <p class="text-blue-200 text-sm mt-1">Masuk ke akun dosen Anda</p>
+                    <p class="text-blue-200 text-sm mt-1">Masuk ke akun pendidik Anda</p>
                 </div>
 
                 <form method="POST" action="{{ route('login') }}">

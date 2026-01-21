@@ -19,7 +19,7 @@ return new class extends Migration {
 
             $table->unsignedBigInteger('id_kelas');
             $table->string('kode_mk');
-            $table->string('nidn');
+            $table->string('id_pendidik');
 
             $table->timestamps();
 
@@ -34,9 +34,9 @@ return new class extends Migration {
                   ->on('matakuliah')
                   ->cascadeOnDelete();
 
-            $table->foreign('nidn')
-                  ->references('nidn')
-                  ->on('dosen')
+            $table->foreign('id_pendidik')
+                  ->references('id_pendidik')
+                  ->on('pendidik')
                   ->cascadeOnDelete();
         });
     }

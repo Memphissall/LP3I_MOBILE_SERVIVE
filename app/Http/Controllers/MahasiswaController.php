@@ -149,9 +149,10 @@ class MahasiswaController extends Controller
         // For now, set it to NULL so it's not generated during initial registration
         $validated['nipd'] = null;
 
-        // create the mahasiswa record inside a try/catch to handle unique-constraint races
+        // create the mahasiswa record using regular create (not createWithUniqueNipd)
+        // NIPD will be generated manually when marketing approves registration payment
         try {
-            $mahasiswa = Mahasiswa::createWithUniqueNipd($validated);
+            $mahasiswa = Mahasiswa::create($validated);
         } catch (\Illuminate\Database\QueryException $e) {
             // duplicate entry (unique index on email/jurusan/no_hp) -> find existing and redirect gracefully
             if (strpos(strtolower($e->getMessage()), 'duplicate') !== false || $e->getCode() === '23000') {

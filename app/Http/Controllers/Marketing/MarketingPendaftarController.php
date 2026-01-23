@@ -86,7 +86,7 @@ class MarketingPendaftarController extends Controller
             $query->where('jurusan', $jurusan);
         }
 
-        $data = $query->orderBy('created_at', 'desc')->get(['id','nama_mhs','email','nipd','no_hp','jurusan','status_verifikasi','created_at']);
+        $data = $query->orderBy('created_at', 'desc')->get(['id','nama_mhs','email','nipd','no_hp','jurusan','status_verifikasi','registration_payment_status','created_at']);
         return response()->json(['success' => true, 'data' => $data]);
     }
 
@@ -428,39 +428,50 @@ class MarketingPendaftarController extends Controller
 
     public function updateRegistrationPayment(Request $request)
     {
-        $id = $request->input('id');
-        $status = $request->input('status');
-        if (!in_array($status, ['unpaid', 'paid'])) {
-            return response()->json(['success' => false, 'error' => 'Status pembayaran registrasi tidak valid']);
-        }
-        $m = Mahasiswa::find($id);
-        if (!$m) return response()->json(['success' => false, 'error' => 'Pendaftar tidak ditemukan']);
-        
-        $m->registration_payment_status = $status;
-        
-        // Issue NIPD when marketing approves registration payment ('paid')
-        if ($status === 'paid' && (!$m->nipd || $m->nipd === '')) {
-            $m->nipd = Mahasiswa::generateNipd($m->jurusan ?? null);
-        }
-        
-        $m->save();
+        try {
+            $id = $request->input('id');
+            $status = $request->input('status');
+            if (!in_array($status, ['unpaid', 'paid'])) {
+                return response()->json(['success' => false, 'error' => 'Status pembayaran registrasi tidak valid']);
+            }
+            $m = Mahasiswa::find($id);
+            if (!$m) return response()->json(['success' => false, 'error' => 'Pendaftar tidak ditemukan']);
+            
+            $m->registration_payment_status = $status;
+            
+            // Issue NIPD when marketing approves registration payment ('paid')
+            if ($status === 'paid' && (!$m->nipd || $m->nipd === '')) {
+                $m->nipd = Mahasiswa::generateNipd($m->jurusan ?? null);
+                $m->nipd_issued_at = now();  // Track when NIPD was issued
+            }
+            
+            $m->save();
 
-        return response()->json(['success' => true, 'data' => $m]);
+            return response()->json(['success' => true, 'data' => $m]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('updateRegistrationPayment error', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json(['success' => false, 'error' => 'Server error: ' . $e->getMessage()], 500);
+        }
     }
 
     public function updateRegistrationVerification(Request $request)
     {
-        $id = $request->input('id');
-        $status = $request->input('status');
-        if (!in_array($status, ['pending', 'verified', 'rejected'])) {
-            return response()->json(['success' => false, 'error' => 'Status verifikasi registrasi tidak valid']);
-        }
-        $m = Mahasiswa::find($id);
-        if (!$m) return response()->json(['success' => false, 'error' => 'Pendaftar tidak ditemukan']);
-        
-        $m->registration_verification_status = $status;
-        $m->save();
+        try {
+            $id = $request->input('id');
+            $status = $request->input('status');
+            if (!in_array($status, ['pending', 'verified', 'rejected'])) {
+                return response()->json(['success' => false, 'error' => 'Status verifikasi registrasi tidak valid']);
+            }
+            $m = Mahasiswa::find($id);
+            if (!$m) return response()->json(['success' => false, 'error' => 'Pendaftar tidak ditemukan']);
+            
+            $m->registration_verification_status = $status;
+            $m->save();
 
-        return response()->json(['success' => true, 'data' => $m]);
+            return response()->json(['success' => true, 'data' => $m]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('updateRegistrationVerification error', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json(['success' => false, 'error' => 'Server error: ' . $e->getMessage()], 500);
+        }
     }
 }

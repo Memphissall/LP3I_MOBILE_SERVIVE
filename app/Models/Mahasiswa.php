@@ -12,7 +12,7 @@ class Mahasiswa extends Model
     protected $table = 'mahasiswas';
 
     protected $fillable = [
-        'user_id', 'nipd', 'nama_mhs', 'email', 'no_hp', 'jurusan', 'tahun_lulus', 'alamat', 'kecamatan',
+        'user_id', 'nipd', 'nipd_issued_at', 'nama_mhs', 'email', 'no_hp', 'jurusan', 'tahun_lulus', 'alamat', 'kecamatan',
         'tempat_lahir', 'tgl_lahir', 'jenis_kelamin', 'jenis_sekolah', 'kategori_sekolah', 'jenis_kelas',
         'status_verifikasi', 'payment_status', 'payment_amount', 'payment_method', 'payment_proof_path', 'payment_bank_origin', 'payment_account_name', 'payment_sender_name', 'payment_transfer_date', 'payment_expires_at', 'asal_sekolah', 'file_path', 'desa', 'kode_pos', 'marketing_notes', 'agama', 'status', 'registration_payment_status', 'registration_verification_status'
     ];
@@ -37,15 +37,31 @@ class Mahasiswa extends Model
         $deptCode = $programCodes[$programKey] ?? '000';
         $prefix = $branch . $deptCode;
 
-        // Find current max sequence for this prefix using a database query on nipd
-        $max = self::where('nipd', 'like', $prefix . '%')
-            ->selectRaw("MAX(CAST(SUBSTRING(nipd, -$seqDigits) AS UNSIGNED)) as max_seq")
-            ->value('max_seq');
+        // Count existing NIPDs with the same prefix that have been issued (nipd_issued_at is NOT NULL)
+        // The sequence should be based on the count of issued NIPDs, not the max sequence
+        $count = self::where('nipd', 'like', $prefix . '%')
+            ->whereNotNull('nipd_issued_at')
+            ->count();
 
-        $next = ((int)$max) + 1;
+        $next = $count + 1;
         $sequence = str_pad((string)$next, $seqDigits, '0', STR_PAD_LEFT);
+        $candidate = $prefix . $sequence;
 
-        return $prefix . $sequence;
+        // If this NIPD already exists, keep incrementing until we find an unused one
+        $maxAttempts = 1000;
+        $attempts = 0;
+        while (self::where('nipd', $candidate)->exists() && $attempts < $maxAttempts) {
+            $next++;
+            $sequence = str_pad((string)$next, $seqDigits, '0', STR_PAD_LEFT);
+            $candidate = $prefix . $sequence;
+            $attempts++;
+        }
+
+        if ($attempts >= $maxAttempts) {
+            throw new \RuntimeException("Unable to generate unique NIPD after {$maxAttempts} attempts for prefix {$prefix}");
+        }
+
+        return $candidate;
     }
 
     /**
@@ -80,17 +96,19 @@ class Mahasiswa extends Model
 
     protected static function booted()
     {
-        static::creating(function ($model) {
-            if (empty($model->nipd)) {
-                // attempt to set nipd using generateNipd
-                $model->nipd = self::generateNipd($model->jurusan ?? null);
-            }
-        });
+        // NIPD is no longer auto-generated here
+        // It will be generated manually by marketing when they approve registration payment
+        // static::creating(function ($model) {
+        //     if (empty($model->nipd)) {
+        //         $model->nipd = self::generateNipd($model->jurusan ?? null);
+        //     }
+        // });
     }
 
     /**
-     * Create a Mahasiswa with automatic NIPD generation and retry on NIPD collisions.
-     * This helps avoid race conditions where two concurrent requests generate the same NIPD.
+     * DEPRECATED: This method is no longer used.
+     * NIPD generation is now done manually when marketing approves registration payment.
+     * Keeping method for backwards compatibility.
      *
      * @param array $attrs
      * @param int $maxAttempts
@@ -99,37 +117,8 @@ class Mahasiswa extends Model
      */
     public static function createWithUniqueNipd(array $attrs, int $maxAttempts = 5): self
     {
-        $attempt = 0;
-        do {
-            $attempt++;
-            // Ensure NIPD is present for this attempt. Leave it empty to let booted() hook generate it if desired.
-            if (empty($attrs['nipd'])) {
-                $attrs['nipd'] = self::generateNipd($attrs['jurusan'] ?? null);
-            }
-
-            try {
-                return self::create($attrs);
-            } catch (\Illuminate\Database\QueryException $e) {
-                $msg = strtolower($e->getMessage());
-                // Detect NIPD-specific unique constraint failure (SQLite message, MySQL, PostgreSQL variants)
-                if (str_contains($msg, 'nipd') || str_contains($msg, 'mahasiswas_nipd') || str_contains($msg, 'mahasiswas.nipd')) {
-                    \Illuminate\Support\Facades\Log::warning('NIPD collision detected, retrying create', ['attempt' => $attempt, 'error' => $e->getMessage()]);
-                    // Remove nipd so next loop generates a fresh one
-                    unset($attrs['nipd']);
-                    if ($attempt >= $maxAttempts) {
-                        // give up and rethrow the DB exception
-                        throw $e;
-                    }
-                    // small backoff to reduce thundering herd in very tight loops
-                    usleep(100000); // 100ms
-                    continue;
-                }
-                // Not a NIPD collision — rethrow
-                throw $e;
-            }
-        } while ($attempt <= $maxAttempts);
-
-        throw new \RuntimeException("Failed to create Mahasiswa after {$maxAttempts} attempts due to NIPD collisions.");
+        // Just use regular create() - NIPD is now assigned manually by marketing
+        return self::create($attrs);
     }
 }
 

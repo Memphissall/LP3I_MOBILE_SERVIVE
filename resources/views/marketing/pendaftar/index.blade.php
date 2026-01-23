@@ -267,10 +267,11 @@
         const badge = badgeText(statusKey);
 
         const safe = v => (v ? v : '-');
+        const nipdDisplay = item.registration_payment_status === 'paid' && item.nipd ? item.nipd : '-';
         tr.innerHTML = `
           <td><div class="cell" title="${safe(item.nama_mhs)}">${safe(item.nama_mhs)}</div></td>
           <td><div class="cell cell-email" title="${safe(item.email)}">${safe(item.email)}</div></td>
-          <td><div class="cell" title="${safe(item.nipd)}">${safe(item.nipd)}</div></td>
+          <td><div class="cell" title="${nipdDisplay}">${nipdDisplay}</div></td>
           <td><div class="cell cell-no" title="${safe(item.no_hp)}">${safe(item.no_hp)}</div></td>
           <td><div class="cell cell-jurusan" title="${safe(item.jurusan)}">${jurusanShort || '-'}</div></td>
           <td><div class="cell" title="${date || '-'}">${date || '-'}</div></td>
@@ -408,22 +409,92 @@
       if (!status) return;
       const labels = { paid: 'Pembayaran Registrasi - Sudah Bayar', unpaid: 'Pembayaran Registrasi - Belum Bayar' };
       const label = labels[status] || status;
-      if (!confirm('Ubah status ke "' + label + '"?')) { document.querySelector(`select[onchange*="${id}"]`).value = ''; return; }
+      if (!confirm('Ubah status ke "' + label + '"?')) { 
+        // Reset dropdown if user cancels
+        document.querySelectorAll('select').forEach(s => {
+          if (s.getAttribute('onchange') && s.getAttribute('onchange').includes('updateRegistrationPayment(' + id)) {
+            s.value = '';
+          }
+        });
+        return; 
+      }
       const fd = new FormData(); fd.append('id', id); fd.append('status', status);
-      const res = await fetch('{{ route('marketing.pendaftar.registration-payment') }}', { method: 'POST', body: fd, headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
-      const js = await res.json();
-      if (js.success) { alert('Status pembayaran registrasi berhasil diperbarui'); fetchPendaftar(); } else { alert('Error: ' + (js.error || 'server error')); }
+      try {
+        const res = await fetch('{{ route('marketing.pendaftar.registration-payment') }}', { method: 'POST', body: fd, headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
+        const js = await res.json();
+        if (js.success) { 
+          alert('Status pembayaran registrasi berhasil diperbarui'); 
+          // Reset dropdown after success
+          document.querySelectorAll('select').forEach(s => {
+            if (s.getAttribute('onchange') && s.getAttribute('onchange').includes('updateRegistrationPayment(' + id)) {
+              s.value = '';
+            }
+          });
+          fetchPendaftar(); 
+        } else { 
+          alert('Error: ' + (js.error || 'server error')); 
+          // Reset dropdown on error
+          document.querySelectorAll('select').forEach(s => {
+            if (s.getAttribute('onchange') && s.getAttribute('onchange').includes('updateRegistrationPayment(' + id)) {
+              s.value = '';
+            }
+          });
+        }
+      } catch (err) {
+        alert('Gagal mengirim permintaan: ' + err.message);
+        // Reset dropdown on error
+        document.querySelectorAll('select').forEach(s => {
+          if (s.getAttribute('onchange') && s.getAttribute('onchange').includes('updateRegistrationPayment(' + id)) {
+            s.value = '';
+          }
+        });
+      }
     }
 
     async function updateRegistrationVerification(id, status) {
       if (!status) return;
       const labels = { verified: 'Verifikasi Registrasi - Verified', rejected: 'Verifikasi Registrasi - Rejected', pending: 'Verifikasi Registrasi - Menunggu' };
       const label = labels[status] || status;
-      if (!confirm('Ubah status ke "' + label + '"?')) { document.querySelector(`select[onchange*="${id}"]`).value = ''; return; }
+      if (!confirm('Ubah status ke "' + label + '"?')) { 
+        // Reset dropdown if user cancels
+        document.querySelectorAll('select').forEach(s => {
+          if (s.getAttribute('onchange') && s.getAttribute('onchange').includes('updateRegistrationVerification(' + id)) {
+            s.value = '';
+          }
+        });
+        return; 
+      }
       const fd = new FormData(); fd.append('id', id); fd.append('status', status);
-      const res = await fetch('{{ route('marketing.pendaftar.registration-verification') }}', { method: 'POST', body: fd, headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
-      const js = await res.json();
-      if (js.success) { alert('Status verifikasi registrasi berhasil diperbarui'); fetchPendaftar(); } else { alert('Error: ' + (js.error || 'server error')); }
+      try {
+        const res = await fetch('{{ route('marketing.pendaftar.registration-verification') }}', { method: 'POST', body: fd, headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
+        const js = await res.json();
+        if (js.success) { 
+          alert('Status verifikasi registrasi berhasil diperbarui'); 
+          // Reset dropdown after success
+          document.querySelectorAll('select').forEach(s => {
+            if (s.getAttribute('onchange') && s.getAttribute('onchange').includes('updateRegistrationVerification(' + id)) {
+              s.value = '';
+            }
+          });
+          fetchPendaftar(); 
+        } else { 
+          alert('Error: ' + (js.error || 'server error')); 
+          // Reset dropdown on error
+          document.querySelectorAll('select').forEach(s => {
+            if (s.getAttribute('onchange') && s.getAttribute('onchange').includes('updateRegistrationVerification(' + id)) {
+              s.value = '';
+            }
+          });
+        }
+      } catch (err) {
+        alert('Gagal mengirim permintaan: ' + err.message);
+        // Reset dropdown on error
+        document.querySelectorAll('select').forEach(s => {
+          if (s.getAttribute('onchange') && s.getAttribute('onchange').includes('updateRegistrationVerification(' + id)) {
+            s.value = '';
+          }
+        });
+      }
     }
 
     // Search & controls

@@ -14,7 +14,7 @@ class Mahasiswa extends Model
     protected $fillable = [
         'user_id', 'nipd', 'nama_mhs', 'email', 'no_hp', 'jurusan', 'tahun_lulus', 'alamat', 'kecamatan',
         'tempat_lahir', 'tgl_lahir', 'jenis_kelamin', 'jenis_sekolah', 'kategori_sekolah', 'jenis_kelas',
-        'status_verifikasi', 'payment_status', 'payment_amount', 'payment_method', 'payment_proof_path', 'payment_bank_origin', 'payment_account_name', 'payment_sender_name', 'payment_transfer_date', 'payment_expires_at', 'asal_sekolah', 'file_path', 'desa', 'kode_pos', 'marketing_notes', 'agama', 'status'
+        'status_verifikasi', 'payment_status', 'payment_amount', 'payment_method', 'payment_proof_path', 'payment_bank_origin', 'payment_account_name', 'payment_sender_name', 'payment_transfer_date', 'payment_expires_at', 'asal_sekolah', 'file_path', 'desa', 'kode_pos', 'marketing_notes', 'agama', 'status', 'registration_payment_status', 'registration_verification_status'
     ];
 
     public function user()

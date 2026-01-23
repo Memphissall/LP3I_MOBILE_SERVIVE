@@ -171,15 +171,15 @@
           <svg class="w-8 h-8 accent-color" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M12 11c2.761 0 5-2.239 5-5S14.761 1 12 1 7 3.239 7 6s2.239 5 5 5zM3 21a9 9 0 0118 0"/></svg>
           <div>
             <div class="text-sm text-slate-400">Halo</div>
-            <div class="font-semibold">{{ Auth::user()->name ?? 'Pendaftar' }}</div>
+            <div class="font-semibold"><?php echo e(Auth::user()->name ?? 'Pendaftar'); ?></div>
           </div>
         </div>
 
         <nav class="space-y-2 text-sm">
-          <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-50" href="{{ route('pendaftar.dashboard') }}">
+          <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-50" href="<?php echo e(route('pendaftar.dashboard')); ?>">
             <span class="text-slate-600">Dashboard</span>
           </a>
-          <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-50" href="{{ route('pendaftar.biodata.show') }}">
+          <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-50" href="<?php echo e(route('pendaftar.biodata.show')); ?>">
             <span class="text-slate-600">Biodata</span>
           </a>
           <div class="relative">
@@ -189,29 +189,26 @@
               <svg id="akunCaret" class="w-3 h-3 ml-auto text-slate-400 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/></svg>
             </button>
             <div id="akunMenu" class="mt-2 bg-white border rounded shadow-sm" style="display:none;">
-              <a class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50" href="{{ route('pendaftar.akun.email') }}">✉️ Ubah Email</a>
-              <a class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50" href="{{ route('pendaftar.akun.password') }}">🔒 Ubah Password</a>
-              <a class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50" href="{{ route('pendaftar.akun.phone') }}">📱 Ubah Nomor Telepon</a>
-              <a class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50" href="{{ route('pendaftar.akun.whatsapp') }}">💬 Ubah WhatsApp</a>
+              <a class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50" href="<?php echo e(route('pendaftar.akun.email')); ?>">✉️ Ubah Email</a>
+              <a class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50" href="<?php echo e(route('pendaftar.akun.password')); ?>">🔒 Ubah Password</a>
+              <a class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50" href="<?php echo e(route('pendaftar.akun.phone')); ?>">📱 Ubah Nomor Telepon</a>
+              <a class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50" href="<?php echo e(route('pendaftar.akun.whatsapp')); ?>">💬 Ubah WhatsApp</a>
             </div>
           </div>
         </nav>
 
-        {{-- <div class="mt-4 pt-4 border-t text-xs text-slate-500">
-          Butuh bantuan? <br>
-          <a class="text-[#004269] hover:underline" href="mailto:admissions@lp3i.ac.id">admissions@lp3i.ac.id</a>
-        </div> --}}
+        
       </aside>
 
       <!-- Main -->
       <main class="space-y-6">
-        {{-- Status header removed per request --}}
+        
 
-        {{-- PROGRESS TRACKER --}}
+        
         <div class="bg-white rounded-xl border p-5 shadow-sm">
           <div class="mb-4 text-sm text-slate-600">Progres pendaftaran</div>
           <div class="progress-container">
-            @php
+            <?php
               // Flow: Pendaftaran -> Pembayaran -> Menunggu Verifikasi -> Pembayaran Registrasi -> Selesai
               $steps = [
                 ['label'=>'Pendaftaran','status'=> $step1 ?? 'completed'],
@@ -220,35 +217,35 @@
                 ['label'=>'Pembayaran Registrasi','status'=> $step4 ?? 'inactive'],
                 ['label'=>'Selesai','status'=> $step5 ?? 'inactive'],
               ];
-            @endphp
+            ?>
 
-            @foreach($steps as $i => $s)
+            <?php $__currentLoopData = $steps; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
               <div class="progress-item">
                 <div style="display: flex; flex-direction: column; align-items: center;">
-                  @php
+                  <?php
                     $status = $s['status'];
                     $isCompleted = $status === 'completed';
                     $isActive = $status === 'active';
                     $isRejected = $status === 'rejected';
                     $dotBg = $isCompleted ? 'bg-green-500' : ($isActive ? 'bg-amber-400' : ($isRejected ? 'bg-red-500' : 'bg-slate-200'));
                     $dotTxt = $isCompleted ? 'text-white' : ($isActive ? 'text-white' : 'text-slate-600');
-                  @endphp
+                  ?>
 
-                  <div class="progress-dot {{ $dotBg }} {{ $dotTxt }}">
-                    @if($isCompleted)
+                  <div class="progress-dot <?php echo e($dotBg); ?> <?php echo e($dotTxt); ?>">
+                    <?php if($isCompleted): ?>
                       <svg class="progress-svg text-white" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    @else
-                      <span>{{ $i + 1 }}</span>
-                    @endif
+                    <?php else: ?>
+                      <span><?php echo e($i + 1); ?></span>
+                    <?php endif; ?>
                   </div>
-                  <div class="progress-label">{{ $s['label'] }}</div>
+                  <div class="progress-label"><?php echo e($s['label']); ?></div>
                 </div>
               </div>
 
-              @if(!$loop->last)
-                <div class="progress-connector" style="@if($isCompleted && ($steps[$i+1]['status'] === 'completed' || $steps[$i+1]['status'] === 'active')) background: #4ade80; @endif"></div>
-              @endif
-            @endforeach
+              <?php if(!$loop->last): ?>
+                <div class="progress-connector" style="<?php if($isCompleted && ($steps[$i+1]['status'] === 'completed' || $steps[$i+1]['status'] === 'active')): ?> background: #4ade80; <?php endif; ?>"></div>
+              <?php endif; ?>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
           </div>
 
           <div class="mt-4 text-sm text-slate-500">
@@ -256,27 +253,27 @@
           </div>
         </div>
 
-        {{-- DETAILS + ACTIONS --}}
+        
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div class="lg:col-span-2 bg-white rounded-xl border p-5 shadow-sm">
             <h3 class="text-sm font-semibold mb-3">Detail Pendaftar</h3>
             <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-slate-700">
-              <div class="p-3 bg-slate-50 rounded"><dt class="text-xs text-slate-400">Nomor NIPD</dt><dd class="font-medium mt-1">{{ ($step4 === 'completed' && $calon->nipd) ? $calon->nipd : '-' }}</dd></div>
-              <div class="p-3 bg-slate-50 rounded"><dt class="text-xs text-slate-400">Nama</dt><dd class="font-medium mt-1">{{ $calon->nama_mhs ?? '-' }}</dd></div>
-              <div class="p-3 bg-slate-50 rounded"><dt class="text-xs text-slate-400">Bidang Keahlian</dt><dd class="font-medium mt-1">{{ \App\Helpers\JurusanHelper::getFormat($calon->jurusan ?? null) }}</dd></div>
-              {{-- Payment method and created date removed per request --}}
+              <div class="p-3 bg-slate-50 rounded"><dt class="text-xs text-slate-400">Nomor NIPD</dt><dd class="font-medium mt-1"><?php echo e(($step4 === 'completed' && $calon->nipd) ? $calon->nipd : '-'); ?></dd></div>
+              <div class="p-3 bg-slate-50 rounded"><dt class="text-xs text-slate-400">Nama</dt><dd class="font-medium mt-1"><?php echo e($calon->nama_mhs ?? '-'); ?></dd></div>
+              <div class="p-3 bg-slate-50 rounded"><dt class="text-xs text-slate-400">Bidang Keahlian</dt><dd class="font-medium mt-1"><?php echo e(\App\Helpers\JurusanHelper::getFormat($calon->jurusan ?? null)); ?></dd></div>
+              
             </dl>
           </div>
 
           <aside class="bg-white rounded-xl border p-5 shadow-sm">
             <h3 class="text-sm font-semibold mb-3">Aksi</h3>
             <div class="space-y-3">
-              @if(($payment ?? 'unpaid') === 'unpaid')
-                <a href="{{ route('pendaftar.payment.show') }}" class="block text-center w-full btn-basic text-white px-4 py-2 rounded-md font-semibold">Bayar Sekarang</a>
-              @else
-                <a href="{{ route('pendaftar.receipt') }}" class="block text-center w-full btn-basic text-white px-4 py-2 rounded-md font-semibold" target="_blank">Download Kuitansi</a>
-              @endif
-              <a href="{{ url('/') }}" class="block text-center w-full bg-slate-400 hover:bg-slate-500 text-white px-4 py-2 rounded-md font-semibold transition" style="display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+              <?php if(($payment ?? 'unpaid') === 'unpaid'): ?>
+                <a href="<?php echo e(route('pendaftar.payment.show')); ?>" class="block text-center w-full btn-basic text-white px-4 py-2 rounded-md font-semibold">Bayar Sekarang</a>
+              <?php else: ?>
+                <a href="<?php echo e(route('pendaftar.receipt')); ?>" class="block text-center w-full btn-basic text-white px-4 py-2 rounded-md font-semibold" target="_blank">Download Kuitansi</a>
+              <?php endif; ?>
+              <a href="<?php echo e(url('/')); ?>" class="block text-center w-full bg-slate-400 hover:bg-slate-500 text-white px-4 py-2 rounded-md font-semibold transition" style="display:flex; align-items:center; justify-content:center; gap:0.5rem;">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h12a1 1 0 001-1v-10"/><path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M9 21v-6a1 1 0 011-1h4a1 1 0 011 1v6"/></svg>
                 Kembali ke Home
               </a>
@@ -300,4 +297,4 @@
     }
   });
 </script>
-</html>
+</html><?php /**PATH D:\LP3IKARAWANG\LP3I_MOBILE_SERVIVE\resources\views/pendaftar/dashboard.blade.php ENDPATH**/ ?>

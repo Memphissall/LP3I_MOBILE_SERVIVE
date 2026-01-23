@@ -17,8 +17,3 @@ $status = $app->handleCommand(new ArgvInput);
 
 exit($status);
 
-//buat akun
-// php create_users.php
-// User Marketing berhasil dibuat:
-// Email: marketing@gmail.com
-// Password: 123456

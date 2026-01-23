@@ -46,3 +46,9 @@ echo.
 echo Admin Panel: http://127.0.0.1:8000/admin
 echo.
 pause
+
+buat akun
+php create_users.php
+User Marketing berhasil dibuat:
+Email: marketing@gmail.com
+Password: 123456

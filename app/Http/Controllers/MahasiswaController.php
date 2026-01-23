@@ -145,9 +145,9 @@ class MahasiswaController extends Controller
         }
 
         // Generate NIPD if not set using the model helper (ensures consistent format)
-        if (empty($validated['nipd'])) {
-            $validated['nipd'] = \App\Models\Mahasiswa::generateNipd($validated['jurusan'] ?? null);
-        }
+        // NOTE: NIPD will be generated later when registration is completed (after all steps)
+        // For now, set it to NULL so it's not generated during initial registration
+        $validated['nipd'] = null;
 
         // create the mahasiswa record inside a try/catch to handle unique-constraint races
         try {

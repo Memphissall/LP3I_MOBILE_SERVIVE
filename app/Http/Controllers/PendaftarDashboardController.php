@@ -28,56 +28,64 @@ class PendaftarDashboardController extends Controller
             $verif = $verif === 'accepted' ? 'verified' : 'pending';
         }
 
-        // If user was just redirected after uploading proof, show pending_verification on the UI immediately
-        if ($request->query('uploaded')) {
-            $payment = 'pending_verification';
-        } else {
-            $payment = $calon->payment_status ?? 'unpaid';
-        }
+        // Get payment status from database (no need to check query string anymore)
+        $payment = $calon->payment_status ?? 'unpaid';
         $amount = $calon->payment_amount ?? 350000;
 
-        // Compute step classes (sequence: Pendaftaran -> Pembayaran -> Verifikasi -> Selesai)
+        // Compute step classes with proper sequential progression
+        // Flow: Pendaftaran -> Pembayaran -> Menunggu Verifikasi -> Pembayaran Registrasi -> Selesai
+        // Step 1: Pendaftaran (Registration) - always completed
         $step1 = 'completed';
+
+        // Get registration statuses
+        $regPaymentStatus = $calon->registration_payment_status ?? 'unpaid';
 
         // Default values
         $step2 = 'inactive'; // Pembayaran
-        $step3 = 'inactive'; // Verifikasi
+        $step3 = 'inactive'; // Menunggu Verifikasi
+        $step4 = 'inactive'; // Pembayaran Registrasi
+        $step5 = 'inactive'; // Selesai
 
-        // Determine pembayaran (step2) and verifikasi (step3) based on payment_status and verification status
-        if ($payment === 'paid') {
-            // Payment done
+        // Step 2: Pembayaran (Payment)
+        if ($payment === 'paid' || $payment === 'pending_verification') {
             $step2 = 'completed';
-            // Verification depends on verif state
+        } else {
+            $step2 = 'active';
+        }
+
+        // Step 3: Menunggu Verifikasi (Initial Verification) - only if step 2 is completed
+        if ($step2 === 'completed') {
             if ($verif === 'verified') {
                 $step3 = 'completed';
-            } elseif ($verif === 'pending') {
+            } elseif ($verif === 'pending' || $verif === 'pending_verification') {
                 $step3 = 'active';
             } elseif ($verif === 'rejected') {
                 $step3 = 'rejected';
             } else {
                 $step3 = 'inactive';
             }
-        } elseif ($payment === 'pending_verification') {
-            // Proof uploaded: pembayaran marked as completed, verification active
-            $step2 = 'completed';
-            $step3 = 'active';
-        } else {
-            // unpaid or unknown: pembayaran is the active step
-            $step2 = 'active';
-            $step3 = 'inactive';
         }
 
-        // If verification has been completed by admin, mark pembayaran and verifikasi as completed
-        // and advance Selesai to active (or completed if payment is paid).
-        if ($verif === 'verified') {
-            $step2 = 'completed';
-            $step3 = 'completed';
-            $step4 = $payment === 'paid' ? 'completed' : 'active';
-        } else {
-            $step4 = ($verif === 'verified' && $payment === 'paid') ? 'completed' : 'inactive';
+        // Step 4: Pembayaran Registrasi (Registration Payment) - only if step 3 is completed
+        // NIPD is issued by marketing when they approve this payment
+        if ($step3 === 'completed') {
+            if ($regPaymentStatus === 'paid') {
+                $step4 = 'completed';
+            } elseif ($regPaymentStatus === 'unpaid' || $regPaymentStatus === 'pending') {
+                $step4 = 'active';
+            } elseif ($regPaymentStatus === 'rejected') {
+                $step4 = 'rejected';
+            } else {
+                $step4 = 'inactive';
+            }
         }
 
-        return view('pendaftar.dashboard', compact('calon','verif','payment','amount','step1','step2','step3','step4'));
+        // Step 5: Selesai (Complete) - only when step 4 is completed
+        if ($step4 === 'completed') {
+            $step5 = 'completed';
+        }
+
+        return view('pendaftar.dashboard', compact('calon','verif','payment','amount','step1','step2','step3','step4','step5'));
     }
 
     public function markPaid(Request $request)

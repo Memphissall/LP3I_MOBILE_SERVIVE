@@ -206,6 +206,8 @@ Route::prefix('marketing')->name('marketing.')->group(function () {
         Route::get('/pendaftar', [MarketingPendaftarController::class, 'index'])->name('pendaftar.index');
         Route::post('/pendaftar/list', [MarketingPendaftarController::class, 'list'])->name('pendaftar.list');
         Route::post('/pendaftar/update', [MarketingPendaftarController::class, 'updateStatus'])->name('pendaftar.update');
+        Route::post('/pendaftar/registration-payment', [MarketingPendaftarController::class, 'updateRegistrationPayment'])->name('pendaftar.registration-payment');
+        Route::post('/pendaftar/registration-verification', [MarketingPendaftarController::class, 'updateRegistrationVerification'])->name('pendaftar.registration-verification');
 
         // New marketing pendaftar features
         Route::get('/pendaftar/create', [MarketingPendaftarController::class, 'create'])->name('pendaftar.create');

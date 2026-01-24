@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -6,30 +7,28 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-public function up()
-{
-     Schema::create('absensi_lkm', function (Blueprint $table) {
-            // Primary Key
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('absensi_LKM', function (Blueprint $table) {
             $table->id('id_absensi');
-
-            // Relasi / Identitas
-            $table->string('id_pendidik');                     // id_pendidik pendidik
-            $table->string('kode_mk');                  // Kode matakuliah
-            $table->unsignedBigInteger('id_kelas');     // Kelas
-            $table->string('nipd')->nullable();         // NIM / Nipd mahasiswa
-            $table->string('nama_mhs')->nullable();     // Nama mahasiswa (opsional, bisa ambil dari mahasiswa)
-
-            // Informasi absensi
-            $table->date('tanggal');                    // Tanggal pertemuan
-            $table->integer('id_pertemuan');           // Pertemuan ke-
-            $table->enum('status', ['Hadir', 'Izin', 'Alpha', 'Sakit'])->nullable(); 
-
-            // Informasi LKM
-            $table->text('materi')->nullable();        // Materi yang diajarkan
-            $table->text('catatan')->nullable();       // Catatan tambahan
-            $table->string('metode_mengajar')->default('Teori'); // Metode mengajar
-
-            // Timestamp
+            $table->foreignId('id_pendidik');
+            $table->foreignId('id_mk');
+            $table->foreignId('id_kelas');
+            $table->foreignId('id_mahasiswa');
+            $table->string('nama_mhs');
+            $table->date('tanggal');
+            $table->integer('pertemuan');
+            $table->enum('status', ['Hadir', 'Izin', 'Alfa', 'Sakit'])->nullable();
+            $table->string('materi')->nullable();
+            $table->text('catatan')->nullable();
+            $table->string('metode_mengaajar')->default('Teori')->nullable();
+            $table->foreign('id_pendidik')->references('id_pendidik')->on('pendidik')->onDelete('cascade');
+            $table->foreign('id_mk')->references('id_mk')->on('matakuliah')->onDelete('cascade');
+            $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');
+            $table->foreign('id_mahasiswa')->references('id_mahasiswa')->on('mahasiswa')->onDelete('cascade');
             $table->timestamps();
         });
     }

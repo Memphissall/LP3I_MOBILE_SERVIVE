@@ -11,7 +11,7 @@ class RuanganSeeder extends Seeder
     {
         DB::table('ruangan')->insert([
             [
-                'id_ruangan' => 'R101',
+                'id_ruangan' => 101,
                 'nama_ruangan' => 'Lab Komputer 1',
                 'kapasitas' => 30,
                 'status' => 'Tersedia',
@@ -19,7 +19,7 @@ class RuanganSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'id_ruangan' => 'R102',
+                'id_ruangan' => 102,
                 'nama_ruangan' => 'Lab Komputer 2',
                 'kapasitas' => 35,
                 'status' => 'Tersedia',
@@ -27,7 +27,7 @@ class RuanganSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'id_ruangan' => 'R103',
+                'id_ruangan' => 103,
                 'nama_ruangan' => 'Kelas Teori 1',
                 'kapasitas' => 40,
                 'status' => 'Digunakan',

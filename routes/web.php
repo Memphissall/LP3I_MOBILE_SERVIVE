@@ -285,8 +285,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/admin/mahasiswa', MahasiswaController::class)->names('admin.mahasiswa');
 
     // Tambah user manual
-    Route::get('/user/create', [UserController::class, 'create'])->name('admin.user.create');
-    Route::post('/user/store', [UserController::class, 'store'])->name('admin.user.store');
+    // Route::get('/user/create', [UserController::class, 'create'])->name('admin.user.create');
+    // Route::post('/user/store', [UserController::class, 'store'])->name('admin.user.store');
 
     //  Bobot Nilai
     Route::get('/bobot-nilai', [BobotNilaiController::class, 'index'])->name('admin.bobot.index');

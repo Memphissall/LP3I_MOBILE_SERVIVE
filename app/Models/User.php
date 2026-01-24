@@ -10,6 +10,10 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $primaryKey = 'id_user';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
         'name',
         'email',
@@ -30,11 +34,8 @@ class User extends Authenticatable
         ];
     }
 
-   public function pendidik()
-{
-    return $this->hasOne(\App\Models\Pendidik::class, 'user_id');
-}
-
-
-
+    public function pendidik()
+    {
+        return $this->hasOne(\App\Models\Pendidik::class, 'id_user');
+    }
 }

@@ -4,21 +4,31 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-    public function up()
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::create('matakuliah', function (Blueprint $table) {
-    $table->string('kode_mk')->primary();
-    $table->string('nama_mk');
-    $table->integer('sks');
-    $table->integer('semester');
-    $table->boolean('tipe_matakuliah')->default(false);
-    $table->timestamps();
-});
-
+            $table->id('id_mk');
+            $table->string('kode_mk');
+            $table->string('nama_mk');
+            $table->text('deskripsi');
+            $table->boolean('tipe_matakuliah')->default(0);
+            $table->foreignId('id_program_studi')->nullable();
+            $table->foreign('id_program_studi')->references('id_program_studi')->on('program_studi')->onDelete('cascade');
+            $table->integer('semester');
+            $table->integer('sks');
+            $table->timestamps();
+        });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('matakuliah');
     }

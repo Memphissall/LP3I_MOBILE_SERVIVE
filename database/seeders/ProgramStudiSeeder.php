@@ -5,29 +5,29 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class KelasSeeder extends Seeder
+class ProgramStudiSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('kelas')->insert([
+        DB::table('program_studi')->insert([
             [
-                'nama_kelas' => 'AIS',
-                'nama_pa' => 'MR YUGA',
                 'id_program_studi' => 1,
+                'nama_program_studi' => 'Accounting Information System',
+                'kode_program_studi' => 'AIS',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama_kelas' => 'ASE-10',
-                'nama_pa' => 'MR EKO',
                 'id_program_studi' => 2,
+                'nama_program_studi' => 'Application Software Engineering',
+                'kode_program_studi' => 'ASE',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'nama_kelas' => 'OAA13-A',
-                'nama_pa' => 'MISS NISA',
                 'id_program_studi' => 3,
+                'nama_program_studi' => 'Office Administration Automation',
+                'kode_program_studi' => 'OAA',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

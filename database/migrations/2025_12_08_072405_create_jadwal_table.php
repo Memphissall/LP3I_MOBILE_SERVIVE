@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -11,22 +12,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('jadwal', function (Blueprint $table) {
-    $table->id('id_jadwal');
-    $table->string('id_ruangan'); 
-    $table->string('id_pendidik');
-    $table->unsignedBigInteger('id_kelas');
-    $table->string('kode_mk');
-    $table->string('hari');
-    $table->time('jam_mulai')->nullable();
-    $table->time('jam_selesai')->nullable();
-    $table->timestamps();
-    $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan'); 
-    $table->foreign('id_pendidik')->references('id_pendidik')->on('pendidik'); 
-    $table->foreign('id_kelas')->references('id_kelas')->on('kelas'); 
-    $table->foreign('kode_mk')->references('kode_mk')->on('matakuliah');
-});
-
+        Schema::create('jadwal', function (Blueprint $table) {
+            $table->id('id_jadwal');
+            $table->string('hari');
+            $table->string('jam_mulai');
+            $table->string('jam_selesai');
+            $table->integer('semester');
+            $table->foreignId('id_mk');
+            $table->foreignId('id_pendidik');
+            $table->foreignId('id_kelas');
+            $table->foreignId('id_ruangan')->nullable();
+            $table->foreign( 'id_mk')->references('id_mk')->on('matakuliah')->onDelete('cascade');
+            $table->foreign('id_pendidik')->references('id_pendidik')->on('pendidik')->onDelete('cascade');
+            $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');
+            $table->foreign('id_ruangan')->references('id_ruangan')->on('ruangan')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**

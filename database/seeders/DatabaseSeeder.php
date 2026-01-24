@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
             SuperAdminSeeder::class,  // ⬅️ ADMIN
 
             // ===== MASTER DATA =====
+            ProgramStudiSeeder::class,
+            
             RuanganSeeder::class,
             KelasSeeder::class,
             MataKuliahSeeder::class,

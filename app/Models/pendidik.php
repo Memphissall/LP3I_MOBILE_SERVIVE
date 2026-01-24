@@ -16,18 +16,18 @@ class Pendidik extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'user_id',
+        'id_user',
         'id_pendidik',
         'nama_pendidik',
         'pendidikan',
         'bidang',
-        'tempat',
-        'tanggal_lahir',
+        'tempat_lahir',
+        'tgl_lahir',
         'jenis_kelamin',
         'agama',
         'email',
-        'no_telp',
-        'honor_per_sks',
+        'no_tlp',
+        'rate_gaji',
         'status',
         'foto'
     ];
@@ -38,7 +38,7 @@ class Pendidik extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
 
     public function materi()

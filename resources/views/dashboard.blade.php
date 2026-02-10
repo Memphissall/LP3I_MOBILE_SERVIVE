@@ -178,7 +178,7 @@
                 <div>Absensi</div>
             </a>
 
-            <a href="{{ route('pendidik.gaji') }}" class="icon-card">
+            <a href="{{ route('pendidik.gaji.index') }}" class="icon-card">
                 <i class="fa-solid fa-money-bill-wave"></i>
                 <div>Gaji</div>
             </a>

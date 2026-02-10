@@ -88,9 +88,10 @@
             <div>{{ Auth::user()->name }}</div>
         </header>
 
-        <main class="p-6">
-            {{ $slot }}
-        </main>
+       <main class="p-6">
+    @yield('content')
+</main>
+
     </div>
 
 </body>

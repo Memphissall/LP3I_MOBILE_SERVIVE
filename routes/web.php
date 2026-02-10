@@ -331,6 +331,8 @@ Route::prefix('admin/akademik')
 
         Route::post('/tambahan-honor', [HonorTambahanController::class, 'store'])
             ->name('tambahan-honor.store');
+
+        
     });
 
          Route::get('/admin/rekap-gaji-pendidik',[HonorRekapController::class, 'index']

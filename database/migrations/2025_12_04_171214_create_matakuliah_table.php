@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreign('id_program_studi')->references('id_program_studi')->on('program_studi')->onDelete('cascade');
             $table->integer('semester');
             $table->integer('sks');
+            $table->integer('sap');
             $table->timestamps();
         });
     }

@@ -69,7 +69,7 @@
                                 </td>
 
                                 <td class="px-4 py-3 text-sm text-gray-700">
-                                    {{ $item->kelas->bidang_keahlian ?? '-' }}
+                                   {{ $item->kelas->programStudi->nama_program_studi ?? '-' }}
                                 </td>
                                 <td class="px-4 py-3 text-sm text-gray-700">
                                     {{ $item->kelas->nama_kelas ?? '-' }}

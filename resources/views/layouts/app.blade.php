@@ -199,9 +199,11 @@
                     <i class="fa-solid fa-money-bill-wave"></i> Lihat Gaji
                 </a>
 
-                <a href="#">
-                    <i class="fa-solid fa-file-arrow-down"></i> Unduh SAP
-                </a>
+                        <a href="{{ route('pendidik.sap.pilih') }}" 
+            class="{{ request()->routeIs('pendidik.sap.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-file-arrow-down"></i> Unduh SAP
+            </a>
+
             @endif
         </nav>
     </div>

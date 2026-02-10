@@ -6,20 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class Submission extends Model
 {
-    protected $table = 'submissions'; 
-    protected $primaryKey = 'id_submission'; 
-    public $timestamps = false; 
+    protected $table = 'submission'; 
+    protected $primaryKey = 'id_submission';
 
     protected $fillable = [
-        'tugas_id',
-        'nim',
-        'file',
-        'nilai',
-        'keterangan'
+        'file_tugas',
+        'id_tugas',
+        'id_mahasiswa',
+        'status',
+        'submitted_at',
     ];
 
-    public function mahasiswa()
-    {
-        return $this->belongsTo(Mahasiswa::class, 'nim', 'nim');
-    }
+    public function tugas()
+{
+    return $this->belongsTo(Tugas::class, 'id_tugas', 'id_tugas');
+}
+
+public function mahasiswa()
+{
+    return $this->belongsTo(Mahasiswa::class, 'id_mahasiswa', 'id_mahasiswa');
+}
+
 }

@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -16,6 +15,7 @@ return new class extends Migration
             $table->id('id_nilai');
             $table->foreignId('id_pendidik');
             $table->foreignId('id_mahasiswa');
+            $table->foreignId('id_kelas');
             $table->foreignId('id_mk');
             $table->integer('semester');
             $table->enum('periode', ['Ganjil', 'Genap']);
@@ -32,6 +32,7 @@ return new class extends Migration
             $table->foreign('id_pendidik')->references('id_pendidik')->on('pendidik')->onDelete('cascade');
             $table->foreign('id_mahasiswa')->references('id_mahasiswa')->on('mahasiswa')->onDelete('cascade');
             $table->foreign('id_mk')->references('id_mk')->on('matakuliah')->onDelete('cascade');
+            $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');
             $table->timestamps();
         });
     }

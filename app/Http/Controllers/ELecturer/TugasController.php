@@ -24,92 +24,82 @@ class TugasController extends Controller
     // AJAX: MATKUL (SAMA DENGAN NILAI CONTROLLER)
     // ==========================
     public function getMatkulBySemester(Request $request)
-    {
-        $request->validate([
-            'semester' => 'required',
-            'id_kelas' => 'required'
-        ]);
+{
+    $kelas = Kelas::findOrFail($request->id_kelas);
 
-        $matkul = Matakuliah::where('semester', $request->semester)
-            ->where(function ($q) use ($request) {
+    $matkul = Matakuliah::where('id_program_studi', $kelas->id_program_studi)
+                ->where('semester', $request->semester)
+                ->orderBy('nama_mk')
+                ->get();
 
-                // matkul khusus kelas
-                $q->whereHas('kelas', function ($sub) use ($request) {
-                    $sub->where('kelas_matakuliah.id_kelas', $request->id_kelas);
-                })
+    return response()->json($matkul);
+}
 
-                // matkul umum
-                ->orWhere('tipe_matakuliah', 1);
-
-            })
-            ->orderBy('nama_mk')
-            ->get(['kode_mk', 'nama_mk']);
-
-        return response()->json($matkul);
-    }
-
+    
     // ==========================
     // LIST TUGAS
     // ==========================
-    public function index($id_kelas, $kode_mk)
-    {
-        $kelas  = Kelas::where('id_kelas', $id_kelas)->firstOrFail();
-        $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
+    public function index($id_kelas, $id_mk)
+{
+    $kelas = Kelas::findOrFail($id_kelas);
+    $matkul = Matakuliah::findOrFail($id_mk);
 
-        $tugas = Tugas::where('id_kelas', $id_kelas)
-            ->where('kode_mk', $kode_mk)
-            ->orderBy('created_at', 'desc')
-            ->get();
+    $tugas = Tugas::where('id_kelas', $id_kelas)
+                ->where('id_mk', $id_mk)
+                ->orderBy('deadline')
+                ->get();
 
-        return view('admin.pendidik.tugas.index', compact(
-            'kelas',
-            'matkul',
-            'tugas',
-            'id_kelas',
-            'kode_mk'
-        ));
-    }
+    return view('admin.pendidik.tugas.index', compact(
+        'kelas',
+        'matkul',
+        'tugas',
+        'id_kelas',
+        'id_mk'
+    ));
+}
+
 
     // ==========================
     // FORM TAMBAH
     // ==========================
-    public function create($id_kelas, $kode_mk)
+    public function create($id_kelas, $id_mk)
     {
         $kelas  = Kelas::where('id_kelas', $id_kelas)->firstOrFail();
-        $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
+        $matkul = Matakuliah::where('id_mk', $id_mk)->firstOrFail();
 
         return view('admin.pendidik.tugas.tambah', compact(
             'kelas',
             'matkul',
             'id_kelas',
-            'kode_mk'
+            'id_mk'
         ));
     }
 
     // ==========================
     // SIMPAN
     // ==========================
-    public function store(Request $request, $id_kelas, $kode_mk)
-    {
-        $request->validate([
-            'judul'    => 'required',
-            'deadline' => 'required|date'
-        ]);
+   public function store(Request $request, $id_kelas, $id_mk)
+{
+    $request->validate([
+        'judul_tugas'    => 'required',
+        'deadline' => 'required|date'
+    ]);
 
-        Tugas::create([
-            'id_kelas'       => $id_kelas,
-            'kode_mk'        => $kode_mk,
-            'judul'          => $request->judul,
-            'deskripsi'      => $request->deskripsi,
-            'deadline'       => $request->deadline,
-            'tanggal_upload' => Carbon::now(),
-            'id_pendidik'           => auth()->user()->pendidik->id_pendidik
-        ]);
+    Tugas::create([
+        'judul_tugas'    => $request->judul_tugas,   // ✅ sesuai migrasi
+        'deskripsi'      => $request->deskripsi,
+        'deadline'       => $request->deadline,
+        'tanggal_upload' => now(),
+        'status'         => 'Aktif',
+        'id_kelas'       => $id_kelas,
+        'id_mk'          => $id_mk,
+    ]);
 
-        return redirect()
-            ->route('tugas.index', [$id_kelas, $kode_mk])
-            ->with('success', 'Tugas berhasil ditambahkan');
-    }
+    return redirect()
+        ->route('tugas.index', [$id_kelas, $id_mk])
+        ->with('success', 'Tugas berhasil ditambahkan');
+}
+
 
     // ==========================
     // EDIT
@@ -124,26 +114,26 @@ class TugasController extends Controller
     // UPDATE
     // ==========================
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'judul'    => 'required',
-            'deadline' => 'required|date',
-            'status'   => 'required'
-        ]);
+{
+    $request->validate([
+        'judul_tugas'    => 'required',
+        'deadline' => 'required|date',
+        'status'   => 'required'
+    ]);
 
-        $tugas = Tugas::findOrFail($id);
+    $tugas = Tugas::findOrFail($id);
 
-        $tugas->update([
-            'judul'     => $request->judul,
-            'deskripsi' => $request->deskripsi,
-            'deadline'  => $request->deadline,
-            'status'    => $request->status,
-        ]);
+    $tugas->update([
+        'judul_tugas' => $request->judul_tugas,   
+        'deskripsi'   => $request->deskripsi,
+        'deadline'    => $request->deadline,
+        'status'      => $request->status,
+    ]);
 
-        return redirect()
-            ->route('tugas.index', [$tugas->id_kelas, $tugas->kode_mk])
-            ->with('success', 'Tugas berhasil diperbarui');
-    }
+    return redirect()
+        ->route('tugas.index', [$tugas->id_kelas, $tugas->id_mk])
+        ->with('success', 'Tugas berhasil diperbarui');
+}
 
     // ==========================
     // DELETE
@@ -157,13 +147,13 @@ class TugasController extends Controller
     // ==========================
     // VIEW TUGAS (MAHASISWA)
     // ==========================
-    public function viewTugas($id_kelas, $kode_mk)
+    public function viewTugas($id_kelas, $id_mk)
     {
         $kelas  = Kelas::findOrFail($id_kelas);
-        $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
+        $matkul = Matakuliah::where('id_mk', $id_mk)->firstOrFail();
 
         $tugas = Tugas::where('id_kelas', $id_kelas)
-            ->where('kode_mk', $kode_mk)
+            ->where('id_mk', $id_mk)
             ->orderBy('deadline')
             ->get();
 
@@ -174,11 +164,11 @@ class TugasController extends Controller
         ));
     }
 
-    public function lihatSubmissi($id_kelas, $kode_mk, $tugas_id)
+    public function lihatSubmissi($id_kelas, $id_mk, $id_tugas)
 {
-    $tugas = \App\Models\Tugas::findOrFail($tugas_id);
+    $tugas = \App\Models\Tugas::findOrFail($id_tugas);
 
-    $submissions = \App\Models\Submission::where('tugas_id', $tugas_id)
+    $submissions = \App\Models\Submission::where('id_tugas', $id_tugas)
         ->with('mahasiswa') // nanti relasi
         ->get();
 
@@ -186,7 +176,7 @@ class TugasController extends Controller
         'tugas',
         'submissions',
         'id_kelas',
-        'kode_mk'
+        'id_mk'
     ));
 }
 

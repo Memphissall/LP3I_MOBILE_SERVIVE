@@ -5,11 +5,11 @@
     <div class="bg-white rounded-lg shadow border p-6">
         <h2 class="text-xl font-bold mb-4">Isi Materi LKM (Laporan Kegiatan Mengajar)</h2>
 
-        <form action="{{ route('pendidik.lkm.store', [$id_kelas, $kode_mk]) }}" method="POST">
+        <form action="{{ route('pendidik.lkm.store', [$id_kelas, $id_mk]) }}" method="POST">
             @csrf
             {{-- Tambahkan semester agar tidak hilang saat redirect --}}
             <input type="hidden" name="semester" value="{{ $semester }}">
-            <input type="hidden" name="id_pertemuan" value="{{ $pertemuanSkrg }}">
+            <input type="hidden" name="pertemuan" value="{{ $pertemuanSkrg }}">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 {{-- FITUR DROPDOWN PERTEMUAN DI LKM --}}

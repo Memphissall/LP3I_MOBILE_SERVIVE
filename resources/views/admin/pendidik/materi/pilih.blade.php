@@ -91,20 +91,21 @@ $(function () {
 
         if (!semester || !id_kelas) return;
 
-        $.get("{{ route('materi.getBySemester') }}", {
+       $.get("{{ route('materi.getMatkulBySemester') }}", {
             semester: semester,
             id_kelas: id_kelas
         }, function (res) {
 
             $('#materi').prop('disabled', false);
 
-            res.forEach(m => {
-                $('#materi').append(`
-                    <option value="${m.id_materi}">
-                        ${m.judul_materi}
-                    </option>
-                `);
-            });
+           res.forEach(m => {
+    $('#materi').append(`
+        <option value="${m.id_mk}">
+            ${m.nama_mk}
+        </option>
+    `);
+});
+
         });
     }
 

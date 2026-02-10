@@ -13,7 +13,7 @@ class Pendidik extends Model
 
     protected $primaryKey = 'id_pendidik';
     public $incrementing = false;
-    protected $keyType = 'string';
+    protected $keyType = 'int';
 
     protected $fillable = [
         'id_user',

@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto">
+<div class="max-w-7xl mx-auto mt-10">
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+    <div class="bg-white rounded-xl shadow border border-gray-200 p-8">
 
         {{-- HEADER --}}
         <div class="border-b border-gray-200 pb-6 mb-8">
@@ -11,7 +11,7 @@
                 Rekapitulasi Gaji Pendidik
             </h2>
             <p class="text-sm text-gray-500 mt-1">
-                Total gaji bersih yang diterima
+                Detail honor mengajar per pertemuan
             </p>
         </div>
 
@@ -27,60 +27,74 @@
 
         {{-- TABLE --}}
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-gray-700">
-                <thead>
-                    <tr class="border-b border-gray-300 text-gray-600">
-                        <th class="py-3 text-left font-medium">Tanggal</th>
-                        <th class="py-3 text-left font-medium">Keterangan</th>
-                        <th class="py-3 text-right font-semibold text-[#004269]">
-                            Gaji Bersih
-                        </th>
+            <table class="w-full text-sm text-gray-700 border border-gray-200 rounded-lg">
+                <thead class="bg-gray-50">
+                    <tr class="text-left text-gray-600 uppercase text-xs tracking-wider">
+                        <th class="px-4 py-3">No</th>
+                        <th class="px-4 py-3">Mata Kuliah</th>
+                        <th class="px-4 py-3">Kelas</th>
+                        <th class="px-4 py-3">Semester</th>
+                        <th class="px-4 py-3">SKS</th>
+                        <th class="px-4 py-3">Sesi</th>
+                        <th class="px-4 py-3">Tanggal</th>
+                        <th class="px-4 py-3 text-right">Gaji Bersih</th>
                     </tr>
                 </thead>
 
                 <tbody class="divide-y divide-gray-200">
-                    @forelse($honor as $h)
+                    @forelse($honor as $i => $h)
                     <tr class="hover:bg-gray-50 transition">
 
+                        {{-- NO --}}
+                        <td class="px-4 py-3">
+                            {{ $i + 1 }}
+                        </td>
+
+                        {{-- MATA KULIAH --}}
+                        <td class="px-4 py-3 font-medium text-gray-800">
+                            {{ $h->matkul->nama_mk ?? '-' }}
+                        </td>
+
+                        {{-- KELAS --}}
+                        <td class="px-4 py-3">
+                           {{ $h->kelas->nama_kelas ?? '-' }}
+                        </td>
+
+                        {{-- SEMESTER --}}
+                        <td class="px-4 py-3">
+                            {{ $h->semester }}
+                        </td>
+
+                        {{-- SKS --}}
+                        <td class="px-4 py-3">
+                            {{ $h->sks }}
+                        </td>
+
+        
+
+                        {{-- SESI --}}
+                        <td class="px-4 py-3">
+                            @php
+                                $sesi = ceil($h->sks / 2);
+                            @endphp
+                            {{ $sesi }} sesi
+                        </td>
+
                         {{-- TANGGAL --}}
-                        <td class="py-4">
+                        <td class="px-4 py-3">
                             {{ \Carbon\Carbon::parse($h->tanggal)->format('d M Y') }}
                         </td>
 
-                        {{-- KETERANGAN --}}
-                        <td class="py-4 text-gray-700">
-                            @if($h->honor_mengajar > 0)
-                                Honor Mengajar
-                                <span class="text-xs text-gray-500 block">
-                                    {{ $h->kode_mk }} • Pertemuan {{ $h->id_pertemuan }}
-                                </span>
-
-                            @elseif($h->jenis_honor === 'pembuatan_soal')
-                                Honor Pembuatan Soal
-                                <span class="text-xs text-gray-500 block">
-                                    Bulan {{ \Carbon\Carbon::create()->month($h->bulan)->translatedFormat('F') }}
-                                </span>
-
-                            @elseif($h->jenis_honor === 'koreksi')
-                                Honor Koreksi Jawaban
-                                <span class="text-xs text-gray-500 block">
-                                    Bulan {{ \Carbon\Carbon::create()->month($h->bulan)->translatedFormat('F') }}
-                                </span>
-
-                            @else
-                                Honor Pendidik
-                            @endif
-                        </td>
-
                         {{-- GAJI --}}
-                        <td class="py-4 text-right font-semibold text-[#009DA5]">
+                        <td class="px-4 py-3 text-right font-semibold text-[#009DA5]">
                             Rp {{ number_format($h->gaji_bersih,0,',','.') }}
                         </td>
+
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="3" class="py-8 text-center text-gray-500">
-                            Belum terdapat data gaji
+                        <td colspan="9" class="px-4 py-10 text-center text-gray-500">
+                            Belum ada data honor mengajar
                         </td>
                     </tr>
                     @endforelse
@@ -89,5 +103,6 @@
         </div>
 
     </div>
+
 </div>
 @endsection

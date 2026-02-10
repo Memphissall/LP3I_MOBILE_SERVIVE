@@ -11,21 +11,26 @@ class AbsensiLkm extends Model
 
     protected $fillable = [
         'id_pendidik',
-        'nipd',
+        'id_mahasiswa',
         'id_kelas', 
         'nama_mhs',
-        'kode_mk',
+        'id_mk',
         'tanggal',
-        'id_pertemuan',
+        'pertemuan',
         'status',
         'materi',
         'catatan',
         'metode_mengajar'
     ];
 
-    public function mahasiswa()
+ public function mahasiswa()
 {
-    return $this->belongsTo(Mahasiswa::class, 'nipd', 'nipd');
+    return $this->belongsTo(
+        \App\Models\Mahasiswa::class,
+        'id_mahasiswa',
+        'id_mahasiswa'
+    );
 }
+
 
 }

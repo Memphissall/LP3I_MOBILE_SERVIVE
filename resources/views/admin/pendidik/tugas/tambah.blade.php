@@ -8,7 +8,7 @@
     </h1>
 
     <div class="bg-white p-6 shadow rounded">
-        <form action="{{ route('tugas.store', [$id_kelas, $kode_mk]) }}"
+        <form action="{{ route('tugas.store', [$id_kelas, $id_mk]) }}"
               method="POST" enctype="multipart/form-data">
 
             @csrf
@@ -17,7 +17,7 @@
             <div class="mb-4">
                 <label class="font-semibold">Judul Tugas</label>
                 <input type="text"
-                       name="judul"
+                       name="judul_tugas"
                        class="w-full border p-2 rounded"
                        required>
             </div>
@@ -51,7 +51,7 @@
             <div class="flex justify-between items-center">
 
                 {{-- Kembali --}}
-                <a href="{{ route('tugas.index', [$id_kelas, $kode_mk]) }}"
+                <a href="{{ route('tugas.index', [$id_kelas, $id_mk]) }}"
                    class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
                     Kembali
                 </a>

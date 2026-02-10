@@ -25,7 +25,7 @@
                 @forelse ($tugas as $i => $t)
                 <tr>
                     <td class="border p-2 text-center">{{ $i + 1 }}</td>
-                    <td class="border p-2">{{ $t->judul }}</td>
+                    <td class="border p-2">{{ $t->judul_tugas }}</td>
                     <td class="border p-2">{{ $t->deskripsi ?? '-' }}</td>
                     <td class="border p-2 text-center">
                         {{ \Carbon\Carbon::parse($t->deadline)->format('d-m-Y') }}

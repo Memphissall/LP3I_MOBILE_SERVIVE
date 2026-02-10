@@ -7,7 +7,7 @@
             Materi {{ $matkul->nama_mk }} - {{ $kelas->nama_kelas }}
         </h2>
 
-        <a href="{{ route('materi.tambah', [$id_kelas, $kode_mk]) }}"
+        <a href="{{ route('materi.tambah', [$id_kelas, $id_mk]) }}"
            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
             <i class="fa-solid fa-plus"></i> Upload Materi
         </a>
@@ -62,13 +62,13 @@
                     <div class="flex justify-center gap-2">
 
                         {{-- EDIT --}}
-                        <a href="{{ route('materi.edit', $m->id) }}"
+                        <a href="{{ route('materi.edit', $m->id_materi) }}"
                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
                             <i class="fa-solid fa-pen"></i>
                         </a>
 
                         {{-- DELETE --}}
-                        <form action="{{ route('materi.destroy', $m->id) }}"
+                        <form action="{{ route('materi.destroy', $m->id_materi) }}"
                               method="POST"
                               onsubmit="return confirm('Yakin hapus materi ini?')">
                             @csrf

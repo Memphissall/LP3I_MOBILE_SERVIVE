@@ -10,7 +10,9 @@ class Materi extends Model
     use HasFactory;
 
     protected $table = 'materi';
-
+    protected $primaryKey = 'id_materi';
+    public $timestamps = true; 
+    
     protected $fillable = [
     'judul_materi',
     'deskripsi',
@@ -19,7 +21,7 @@ class Materi extends Model
     'tipe_materi',
     'pertemuan',
     'id_pendidik',
-    'kode_mk',
+    'id_mk',
     'id_kelas'
 ];
 
@@ -31,7 +33,7 @@ class Materi extends Model
 
     public function matakuliah()
     {
-        return $this->belongsTo(Matakuliah::class, 'kode_mk', 'kode_mk');
+        return $this->belongsTo(Matakuliah::class, 'id_mk', 'id_mk');
     }
 
     public function pendidik()

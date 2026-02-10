@@ -15,7 +15,7 @@
             
             {{-- --- AWAL FITUR DROPDOWN PERTEMUAN --- --}}
             <span class="font-bold text-indigo-600">Pertemuan Ke-</span>
-            <select name="id_pertemuan" form="absenForm" class="border-gray-300 rounded-md shadow-sm font-bold text-indigo-600 p-1 text-sm focus:ring-indigo-500">
+            <select name="pertemuan" form="absenForm" class="border-gray-300 rounded-md shadow-sm font-bold text-indigo-600 p-1 text-sm focus:ring-indigo-500">
                 @for ($i = 1; $i <= 14; $i++)
                     <option value="{{ $i }}" {{ $pertemuanSkrg == $i ? 'selected' : '' }}>{{ $i }}</option>
                 @endfor
@@ -26,9 +26,9 @@
         </div>
 
         {{-- Menambahkan id="absenForm" agar dropdown di atas bisa ikut terkirim --}}
-        <form id="absenForm" action="{{ route('admin.pendidik.absen.store', [$id_kelas, $kode_mk]) }}" method="POST">
+        <form id="absenForm" action="{{ route('admin.pendidik.absen.store', [$id_kelas, $id_mk]) }}" method="POST">
             @csrf
-            {{-- Input hidden id_pertemuan dihapus karena sudah ada select di atas --}}
+            {{-- Input hidden pertemuan dihapus karena sudah ada select di atas --}}
             <input type="hidden" name="semester" value="{{ $semester }}"> 
             
             <table class="min-w-full table-auto border-collapse border border-gray-300">

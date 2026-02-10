@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('absensi_LKM', function (Blueprint $table) {
+        Schema::create('absensi_lkm', function (Blueprint $table) {
             $table->id('id_absensi');
             $table->foreignId('id_pendidik');
             $table->foreignId('id_mk');
@@ -21,10 +21,10 @@ return new class extends Migration
             $table->string('nama_mhs');
             $table->date('tanggal');
             $table->integer('pertemuan');
-            $table->enum('status', ['Hadir', 'Izin', 'Alfa', 'Sakit'])->nullable();
+            $table->enum('status', ['Hadir', 'Izin', 'Alpha', 'Sakit'])->nullable();
             $table->string('materi')->nullable();
             $table->text('catatan')->nullable();
-            $table->string('metode_mengaajar')->default('Teori')->nullable();
+            $table->string('metode_mengajar')->default('Teori')->nullable();
             $table->foreign('id_pendidik')->references('id_pendidik')->on('pendidik')->onDelete('cascade');
             $table->foreign('id_mk')->references('id_mk')->on('matakuliah')->onDelete('cascade');
             $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');

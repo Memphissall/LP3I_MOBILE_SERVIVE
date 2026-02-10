@@ -18,7 +18,7 @@
     <th class="border p-2">UAS</th>
 </tr>
 <tr>
-    <td class="border p-2">{{ $nilai->nama_mhs }}</td>
+    <td class="border p-2">{{ $nilai->mahasiswa->nama_mhs ?? '-' }}</td>
     <td class="border p-2">
         <input type="number" name="nilai_kehadiran"
                value="{{ $nilai->nilai_kehadiran }}"
@@ -30,8 +30,8 @@
                class="w-full border p-1">
     </td>
     <td class="border p-2">
-        <input type="number" name="nilai_formatif"
-               value="{{ $nilai->nilai_formatif }}"
+        <input type="number" name="nilai_formative"
+               value="{{ $nilai->nilai_formative}}"
                class="w-full border p-1">
     </td>
     <td class="border p-2">
@@ -59,11 +59,11 @@
     </button>
 
    <a href="{{ route('nilai.view', [
-        'id_kelas' => $nilai->id_kelas,
-        'kode_mk'  => $nilai->kode_mk,
-        'semester' => $nilai->semester
-    ]) }}"
-   class="bg-gray-600 text-white px-4 py-2 rounded">
+    'id_program_studi' => $nilai->mahasiswa->kelas->id_program_studi,
+    'id_mk' => $nilai->id_mk,
+    'semester' => $nilai->semester
+]) }}"
+class="bg-gray-600 text-white px-4 py-2 rounded">
     Kembali
 </a>
 

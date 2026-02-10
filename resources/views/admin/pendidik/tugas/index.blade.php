@@ -14,7 +14,7 @@
                     ← KEMBALI
                 </a>
 
-                <a href="{{ route('tugas.tambah', [$id_kelas, $kode_mk]) }}"
+                <a href="{{ route('tugas.tambah', [$id_kelas, $id_mk]) }}"
                    class="bg-white text-[#009DA5] px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-100 transition shadow-sm">
                     + TAMBAH TUGAS
                 </a>
@@ -54,7 +54,7 @@
                         </td>
 
                         <td class="px-6 py-4 font-bold text-[#004269]">
-                            {{ $t->judul }}
+                            {{ $t->judul_tugas}}
                         </td>
 
                         <td class="px-6 py-4 text-gray-600">
@@ -89,7 +89,7 @@
                                 </a>
 
                                 {{-- JAWABAN --}}
-                                <a href="{{ route('submissi.index', [$t->id_kelas, $t->kode_mk, $t->id_tugas]) }}"
+                                <a href="{{ route('submissi.index', [$t->id_kelas, $t->id_mk, $t->id_tugas]) }}"
                                    class="bg-[#004269] hover:bg-[#00304B] text-white px-3 py-1.5 rounded text-[10px] font-bold transition shadow-sm">
                                     JAWABAN
                                 </a>

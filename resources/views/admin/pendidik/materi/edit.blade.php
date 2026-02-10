@@ -18,7 +18,7 @@
         </div>
     @endif
 
-    <form action="{{ route('materi.update', $materi->id) }}"
+    <form action="{{ route('materi.update', $materi->id_materi) }}"
           method="POST"
           enctype="multipart/form-data">
         @csrf
@@ -115,7 +115,7 @@
 
         {{-- BUTTON --}}
         <div class="flex justify-between">
-            <a href="{{ route('materi.index', [$materi->id_kelas, $materi->kode_mk]) }}"
+            <a href="{{ route('materi.index', [$materi->id_kelas, $materi->id_mk]) }}"
                class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
                 Kembali
             </a>

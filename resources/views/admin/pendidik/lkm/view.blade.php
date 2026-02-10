@@ -14,7 +14,7 @@
                     ← KEMBALI
                 </a>
 
-                <a href="{{ url('/pendidik/absensi/create/'.$id_kelas.'/'.$kode_mk.'/1') }}"
+                <a href="{{ url('/pendidik/absensi/create/'.$id_kelas.'/'.$id_mk.'/1') }}"
                    class="bg-white text-[#009DA5] px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-100 transition shadow-sm">
                     + INPUT BARU
                 </a>
@@ -65,7 +65,7 @@
 
                         {{-- PERTEMUAN --}}
                         <td class="px-6 py-4 font-bold text-[#004269] whitespace-nowrap">
-                            Pertemuan Ke-{{ $lkm->id_pertemuan }}
+                            Pertemuan Ke-{{ $lkm->pertemuan }}
                         </td>
 
                         <td class="px-6 py-4 whitespace-normal break-words leading-relaxed">
@@ -107,17 +107,17 @@
                         <td class="px-6 py-4">
                             <div class="flex justify-center gap-1 flex-nowrap">
 
-                                <a href="{{ url('/pendidik/lkm/edit/'.$id_kelas.'/'.$kode_mk.'/'.$lkm->id_pertemuan) }}"
+                                <a href="{{ url('/pendidik/lkm/edit/'.$id_kelas.'/'.$id_mk.'/'.$lkm->pertemuan) }}"
                                    class="bg-[#009DA5] hover:bg-[#007C82] text-white px-3 py-1.5 rounded text-[10px] font-bold transition shadow-sm whitespace-nowrap">
                                     EDIT
                                 </a>
 
-                                <a href="{{ route('pendidik.lkm.detail', [$id_kelas, $kode_mk, $lkm->id_pertemuan]) }}"
+                                <a href="{{ route('pendidik.lkm.detail', [$id_kelas, $id_mk, $lkm->pertemuan]) }}"
                                    class="bg-[#004269] hover:bg-[#00304B] text-white px-3 py-1.5 rounded text-[10px] font-bold transition shadow-sm whitespace-nowrap">
                                     DETAIL
                                 </a>
 
-                                <form action="{{ url('/pendidik/lkm/delete/'.$id_kelas.'/'.$kode_mk.'/'.$lkm->id_pertemuan) }}"
+                                <form action="{{ url('/pendidik/lkm/delete/'.$id_kelas.'/'.$id_mk.'/'.$lkm->pertemuan) }}"
                                       method="POST"
                                       onsubmit="return confirm('Yakin ingin menghapus LKM ini?')">
                                     @csrf

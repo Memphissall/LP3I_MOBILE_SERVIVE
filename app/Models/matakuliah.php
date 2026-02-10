@@ -7,44 +7,33 @@ use Illuminate\Database\Eloquent\Model;
 class Matakuliah extends Model
 {
     protected $table = 'matakuliah';
-    protected $primaryKey = 'kode_mk';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected $primaryKey = 'id_mk';
+    public $incrementing = true;
 
     protected $fillable = [
-        'kode_mk',
+        'id_mk',
         'nama_mk',
-        'sks',
+        'deskripsi',
         'semester',
+        'sks',
+        'sap',
+        'id_program_studi',
         'tipe_matakuliah'
     ];
 
-    // =====================
-    // RELASI
-    // =====================
-
-    public function kelas()
+    public function programStudi()
     {
-        return $this->belongsToMany(
-            Kelas::class,
-            'kelas_matakuliah',
-            'kode_mk',
-            'id_kelas'
+        return $this->belongsTo(
+            ProgramStudi::class,
+            'id_program_studi',
+            'id_program_studi'
         );
     }
 
-    public function tugas()
-    {
-        return $this->hasMany(Tugas::class, 'kode_mk', 'kode_mk');
-    }
-
-    public function nilai()
-    {
-        return $this->hasMany(Nilai::class, 'kode_mk', 'kode_mk');
-    }
-
-    public function materi()
-    {
-        return $this->hasMany(Materi::class, 'kode_mk', 'kode_mk');
-    }
+    public function kelas()
+{
+    return $this->belongsTo(Kelas::class, 'id_kelas', 'id_kelas');
 }
+
+}
+

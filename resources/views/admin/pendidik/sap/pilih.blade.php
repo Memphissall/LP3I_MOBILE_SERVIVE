@@ -4,9 +4,9 @@
 <div class="max-w-5xl mx-auto mt-10">
 
     {{-- HEADER --}}
-    <div class="bg-[#003B5C] text-white px-8 py-5 rounded-t-xl flex justify-between items-center">
+    <div class="bg-[#003B5C] text-white px-8 py-5 rounded-t-xl">
         <h2 class="text-xl font-bold">
-            Pilih Mata Kuliah (Tugas)
+            Pilih SAP Mata Kuliah
         </h2>
     </div>
 
@@ -15,14 +15,16 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            {{-- PERIODE --}}
+            {{-- SEMESTER --}}
             <div>
                 <label class="block text-sm font-semibold mb-2">
                     Periode Akademik
                 </label>
-                <select id="semester" class="w-full border rounded-md px-3 py-2">
-                    <option value="">-- Pilih Periode --</option>
-                    @for($s=1; $s<=8; $s++)
+                <select id="semester"
+                        class="w-full border rounded-md px-3 py-2">
+                    <option value="">-- Pilih Periode Akademik --</option>
+
+                    @for($s = 1; $s <= 8; $s++)
                         @php
                             $periode = $s % 2 == 1 ? 'Ganjil' : 'Genap';
                             $tahun = now()->year;
@@ -30,6 +32,7 @@
                                 ? "$tahun/".($tahun+1)
                                 : ($tahun-1)."/$tahun";
                         @endphp
+
                         <option value="{{ $s }}">
                             Semester {{ $s }} – {{ $periode }} {{ $ta }}
                         </option>
@@ -42,9 +45,11 @@
                 <label class="block text-sm font-semibold mb-2">
                     Kelas
                 </label>
-                <select id="kelas" class="w-full border rounded-md px-3 py-2">
+                <select id="kelas"
+                        class="w-full border rounded-md px-3 py-2">
                     <option value="">-- Pilih Kelas --</option>
-                    @foreach ($kelas as $k)
+
+                    @foreach($kelas as $k)
                         <option value="{{ $k->id_kelas }}">
                             {{ $k->nama_kelas }}
                         </option>
@@ -55,64 +60,71 @@
             {{-- MATA KULIAH --}}
             <div>
                 <label class="block text-sm font-semibold mb-2">
-                    Materi Ajar
+                    Mata Kuliah
                 </label>
-                <select id="matkul" disabled
-                    class="w-full border rounded-md px-3 py-2 bg-gray-100">
-                    <option value="">-- Pilih Materi Ajar --</option>
+                <select id="matkul"
+                        disabled
+                        class="w-full border rounded-md px-3 py-2 bg-gray-100">
+                    <option value="">-- Pilih Mata Kuliah --</option>
                 </select>
             </div>
 
         </div>
 
         {{-- ACTION --}}
-        <div class="mt-8 flex gap-4">
-            <button id="btnKelola" disabled
-                class="px-5 py-2 rounded-md text-white font-semibold
+        <div class="mt-8">
+            <button id="btnKelola"
+                disabled
+                class="px-6 py-2 rounded-md font-semibold text-white
                        bg-[#003B5C] opacity-50 cursor-not-allowed">
-                Kelola Tugas
-            </button>
-
-            <button id="btnLihat" disabled
-                class="px-5 py-2 rounded-md text-white font-semibold
-                       bg-[#00A8B5] opacity-50 cursor-not-allowed">
-                Lihat Daftar Tugas
+                Lihat SAP
             </button>
         </div>
 
     </div>
 </div>
 
-{{-- SCRIPT TETAP --}}
+{{-- SCRIPT --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
 $(function () {
 
-    function loadMatkul() {
-        let semester = $('#semester').val();
-        let id_kelas = $('#kelas').val();
-
+    function resetMatkul() {
         $('#matkul')
             .prop('disabled', true)
             .addClass('bg-gray-100')
-            .html('<option value="">-- Pilih Materi Ajar --</option>');
+            .html('<option value="">-- Pilih Mata Kuliah --</option>');
 
-        $('#btnKelola, #btnLihat')
+        $('#btnKelola')
             .prop('disabled', true)
             .addClass('opacity-50 cursor-not-allowed');
+    }
+
+    function loadMatkul() {
+
+        let semester = $('#semester').val();
+        let id_kelas = $('#kelas').val();
+
+        resetMatkul();
 
         if (!semester || !id_kelas) return;
 
-        $.get("{{ route('tugas.getMatkulBySemester') }}", {
-            semester, id_kelas
+        $.get("{{ route('sap.getMatkulBySemester') }}", {
+            semester: semester,
+            id_kelas: id_kelas
         }, function (res) {
+
+            if (res.length === 0) {
+                $('#matkul').html('<option value="">SAP tidak tersedia</option>');
+                return;
+            }
 
             $('#matkul')
                 .prop('disabled', false)
                 .removeClass('bg-gray-100');
 
-            res.forEach(mk => {
+            res.forEach(function (mk) {
                 $('#matkul').append(`
                     <option value="${mk.id_mk}">
                         ${mk.kode_mk} - ${mk.nama_mk}
@@ -126,18 +138,23 @@ $(function () {
 
     $('#matkul').change(function () {
         let aktif = $(this).val() !== '';
-        $('#btnKelola, #btnLihat')
+
+        $('#btnKelola')
             .prop('disabled', !aktif)
             .toggleClass('opacity-50 cursor-not-allowed', !aktif);
     });
 
-    $('#btnKelola').click(() => {
-        location.href = "{{ url('tugas') }}/" + $('#kelas').val() + "/" + $('#matkul').val();
+    $('#btnKelola').click(function () {
+
+        let id_kelas = $('#kelas').val();
+        let id_mk = $('#matkul').val();
+
+        window.location.href =
+            "{{ url('pendidik/sap') }}/" +
+            id_kelas + "/" + id_mk;
     });
 
-    $('#btnLihat').click(() => {
-        location.href = "{{ url('tugas-view') }}/" + $('#kelas').val() + "/" + $('#matkul').val();
-    });
 });
 </script>
+
 @endsection

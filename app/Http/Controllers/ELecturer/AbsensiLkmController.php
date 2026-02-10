@@ -23,35 +23,34 @@ class AbsensiLkmController extends Controller
 
     // Ambil matkul berdasarkan semester dan kelas
     public function getMatkulBySemester(Request $request)
-    {
-        $request->validate([
-            'semester' => 'required',
-            'id_kelas' => 'required',
-        ]);
+{
+    $request->validate([
+        'id_kelas' => 'required',
+        'semester' => 'required'
+    ]);
 
-        $matkul = Matakuliah::where('semester', $request->semester)
-            ->where(function ($q) use ($request) {
-                $q->whereHas('kelas', function ($sub) use ($request) {
-                    $sub->where('kelas_matakuliah.id_kelas', $request->id_kelas);
-                })
-                ->orWhere('tipe_matakuliah', 1);
-            })
-            ->orderBy('nama_mk')
-            ->get(['kode_mk', 'nama_mk']);
+    $kelas = Kelas::findOrFail($request->id_kelas);
 
-        return response()->json($matkul);
-    }
+    $matkul = Matakuliah::where('id_program_studi', $kelas->id_program_studi)
+        ->where('semester', $request->semester)
+        ->orderBy('nama_mk')
+        ->get(['id_mk', 'nama_mk']);
+
+    return response()->json($matkul);
+}
+
 
     // Form input absensi per kelas
-    public function create($id_kelas, $kode_mk, $semester)
+    public function create($id_kelas, $id_mk, $semester)
     {
         $kelas = Kelas::where('id_kelas', $id_kelas)->firstOrFail();
-        $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
+        $matkul = Matakuliah::where('id_mk', $id_mk)->firstOrFail();
         $mahasiswa = Mahasiswa::where('id_kelas', $id_kelas)->get();
 
-        $pertemuanTerakhir = AbsensiLkm::where('kode_mk', $kode_mk)
-            ->where('id_kelas', $id_kelas)
-            ->max('id_pertemuan') ?? 0;
+       $pertemuanTerakhir = AbsensiLkm::where('id_mk', $id_mk)
+        ->where('id_kelas', $id_kelas)
+        ->max('pertemuan') ?? 0;
+
 
         if ($pertemuanTerakhir >= 14) {
             return redirect()->back()
@@ -68,7 +67,7 @@ class AbsensiLkmController extends Controller
             'kelas',
             'matkul',
             'id_kelas',
-            'kode_mk',
+            'id_mk',
             'pertemuanSkrg',
             'semester',
             'sks',
@@ -78,15 +77,16 @@ class AbsensiLkmController extends Controller
     }
 
     // Simpan absensi per kelas
-    public function storeAbsen(Request $request, $id_kelas, $kode_mk)
+    public function storeAbsen(Request $request, $id_kelas, $id_mk)
 {
     if (!$request->absensi) {
         return back()->with('error', 'Pilih absensi mahasiswa.');
     }
 
-    $pendidik = Pendidik::where('user_id', Auth::id())->firstOrFail();
+    $pendidik = Pendidik::where('id_user', Auth::id())->firstOrFail();
     $id_pendidik = $pendidik->id_pendidik;
-    $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
+    $matkul = Matakuliah::where('id_mk', $id_mk)->firstOrFail();
+    $sks = $matkul->sks;
     $tanggal = now()->toDateString();
 
 
@@ -94,80 +94,91 @@ class AbsensiLkmController extends Controller
     // SIMPAN ABSENSI
     // ======================
     foreach ($request->absensi as $nipd => $status) {
-        $mhs = Mahasiswa::where('nipd', $nipd)->first();
 
-        AbsensiLkm::create([
-            'id_pendidik'         => $id_pendidik,
-            'id_kelas'     => $mhs->id_kelas,
-            'kode_mk'      => $kode_mk,
-            'tanggal'      => $tanggal,
-            'id_pertemuan' => $request->id_pertemuan,
-            'nipd'         => $nipd,
-            'nama_mhs'     => $mhs->nama_mhs,
-            'status'       => $status
-        ]);
-    }
+    $mhs = Mahasiswa::where('nipd', $nipd)->firstOrFail();
 
-    // ======================
-    // HITUNG HONOR PENDIDIK
-    // ======================
-   $honorMengajar = $matkul->sks * $pendidik->honor_per_sks;
+    AbsensiLkm::create([
+        'id_pendidik'  => $id_pendidik,
+        'id_kelas'     => $mhs->id_kelas,
+        'id_mk'        => $id_mk,
+        'id_kelas'    => $id_kelas,
+        'id_mahasiswa' => $mhs->id_mahasiswa, 
+        'tanggal'      => $tanggal,
+        'pertemuan'    => $request->pertemuan,
+        'nama_mhs'     => $mhs->nama_mhs,
+        'status'       => $status
+    ]);
+}
+// =====================
+    // HITUNG HONOR (FIX)
+    // =====================
+    $honorPerSesi = (float) $pendidik->rate_gaji; // DARI MIGRASI
+   $jumlahSesi = $matkul->sks / 2;
 
-$uangSoal = $request->uang_pembuatan_soal ?? 0;
-$uangKoreksi = $request->uang_koreksi_jawaban ?? 0;
+    $honorMengajar = $jumlahSesi * $honorPerSesi;
 
-$totalBruto = $honorMengajar + $uangSoal + $uangKoreksi;
+    $biayaSoal   = $request->uang_pembuatan_soal ?? 0;
+    $biayaKoreksi = $request->uang_koreksi_jawaban ?? 0;
 
-$ppn = intval($totalBruto * 0.05);
-$gajiBersih = $totalBruto - $ppn;
+    $totalKotor = $honorMengajar + $biayaSoal + $biayaKoreksi;
+    $ppn = intval($totalKotor * 0.05);
+    $gajiBersih = $totalKotor - $ppn;
 
-Honor::create([
-    'id_pendidik' => $id_pendidik,
-    'kode_mk' => $kode_mk,
-    'semester' => $request->semester,
-    'tahun' => date('Y'),
-    'id_pertemuan' => $request->id_pertemuan,
-    'tanggal' => now()->toDateString(),
+    // =====================
+    // SIMPAN KE TABEL HONOR
+    // =====================
+    Honor::create([
+        'id_pendidik' => $pendidik->id_pendidik,
+        'id_kelas'    => $id_kelas,
+        'id_mk'       => $id_mk,
+        'pertemuan'   => $request->pertemuan,
+        'tanggal'     => $tanggal,
+        'semester'    => $request->semester,
+        'tahun'       => date('Y'),
 
-    'sks' => $matkul->sks,
-    'honor_per_sks' => $pendidik->honor_per_sks,
+        'sks' => $sks,
+        'honor_per_sesi' => $honorPerSesi,
+        'honor_mengajar' => $honorMengajar,
 
-    'honor_mengajar' => $honorMengajar,
-    'uang_pembuatan_soal' => $uangSoal,
-    'uang_koreksi_jawaban' => $uangKoreksi,
+        'biaya_pembuatan_soal' => $biayaSoal,
+        'biaya_koreksi_jawaban' => $biayaKoreksi,
 
-    'total_bruto' => $totalBruto,
-    'ppn' => $ppn,
-    'gaji_bersih' => $gajiBersih,
-]);
-
-
-   
-
-    // ======================
-    // UPDATE TOTAL GAJI PENDIDIK
-    // ======================
-    $total = Honor::where('id_pendidik', $id_pendidik)->sum('gaji_bersih');
-
-    $pendidik->update([
-        'total_gaji_diterima' => $total
+        'total_kotor' => $totalKotor,
+        'ppn' => $ppn,
+        'gaji_bersih' => $gajiBersih,
     ]);
 
+    // =====================
+    // UPDATE TOTAL GAJI
+    // =====================
+    $totalGaji = Honor::where('id_pendidik', $pendidik->id_pendidik)
+        ->sum('gaji_bersih');
+
+    $pendidik->update([
+        'total_gaji_diterima' => $totalGaji
+    ]);
 
     return redirect()->route(
         'admin.pendidik.lkm.form',
-        [$id_kelas, $kode_mk, $request->semester]
+        [$id_kelas, $id_mk, $request->semester]
     )->with('success', 'Absensi & honor berhasil disimpan.');
 }
 
+    
 
 
 
-    public function totalGaji()
+
+  public function totalGaji()
 {
-    $pendidik = Pendidik::where('user_id', Auth::id())->firstOrFail();
+    $pendidik = Pendidik::where('id_user', Auth::id())->firstOrFail();
 
-    $honor = Honor::where('id_pendidik', $pendidik->id_pendidik)->get();
+    $honor = Honor::with([
+            'matkul.kelas'
+        ])
+        ->where('id_pendidik', $pendidik->id_pendidik)
+        ->orderBy('tanggal', 'desc')
+        ->get();
 
     $total = $honor->sum('gaji_bersih');
 
@@ -177,12 +188,12 @@ Honor::create([
 
 
     // Form buat LKM
-    public function createLkm($id_kelas, $kode_mk, $semester)
+    public function createLkm($id_kelas, $id_mk, $semester)
     {
-        $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
-        $pertemuanSkrg = AbsensiLkm::where('kode_mk', $kode_mk)
+        $matkul = Matakuliah::where('id_mk', $id_mk)->firstOrFail();
+        $pertemuanSkrg = AbsensiLkm::where('id_mk', $id_mk)
             ->where('id_kelas', $id_kelas)
-            ->max('id_pertemuan');
+            ->max('pertemuan');
 
         $sks = $matkul->sks;
         $durasiJam = $sks;
@@ -190,7 +201,7 @@ Honor::create([
 
         return view('admin.pendidik.lkm.form', compact(
             'id_kelas',
-            'kode_mk',
+            'id_mk',
             'semester',
             'pertemuanSkrg',
             'sks',
@@ -200,35 +211,35 @@ Honor::create([
     }
 
     // Edit LKM
-    public function editLkm($id_kelas, $kode_mk, $id_pertemuan)
+    public function editLkm($id_kelas, $id_mk, $pertemuan)
     {
-        $pendidik = Pendidik::where('user_id', Auth::id())->firstOrFail();
+        $pendidik = Pendidik::where('id_user', Auth::id())->firstOrFail();
         $id_pendidik = $pendidik->id_pendidik;
 
         $lkm = AbsensiLkm::where('id_pendidik', $id_pendidik)
-            ->where('kode_mk', $kode_mk)
+            ->where('id_mk', $id_mk)
             ->where('id_kelas', $id_kelas)
-            ->where('id_pertemuan', $id_pertemuan)
+            ->where('pertemuan', $pertemuan)
             ->firstOrFail();
 
         return view('admin.pendidik.lkm.edit', compact(
             'lkm',
             'id_kelas',
-            'kode_mk',
-            'id_pertemuan'
+            'id_mk',
+            'pertemuan'
         ));
     }
 
     // Simpan LKM
-    public function storeLkm(Request $request, $id_kelas, $kode_mk)
+    public function storeLkm(Request $request, $id_kelas, $id_mk)
     {
-        $pendidik = Pendidik::where('user_id', Auth::id())->firstOrFail();
+        $pendidik = Pendidik::where('id_user', Auth::id())->firstOrFail();
         $id_pendidik = $pendidik->id_pendidik;
 
         AbsensiLkm::where('id_pendidik', $id_pendidik)
-            ->where('kode_mk', $kode_mk)
+            ->where('id_mk', $id_mk)
             ->where('id_kelas', $id_kelas)
-            ->where('id_pertemuan', $request->id_pertemuan)
+            ->where('pertemuan', $request->pertemuan)
             ->update([
                 'materi'          => $request->materi,
                 'catatan'         => $request->catatan,
@@ -236,24 +247,24 @@ Honor::create([
             ]);
 
         return redirect()
-            ->route('pendidik.lkm.list', [$id_kelas, $kode_mk])
+            ->route('pendidik.lkm.list', [$id_kelas, $id_mk])
             ->with('success', 'Data LKM berhasil diperbarui.');
     }
 
     // List LKM per kelas
-    public function listLkm($id_kelas, $kode_mk)
+    public function listLkm($id_kelas, $id_mk)
     {
         $kelas  = Kelas::where('id_kelas', $id_kelas)->firstOrFail();
-        $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
-        $pendidik = Pendidik::where('user_id', Auth::id())->firstOrFail();
+        $matkul = Matakuliah::where('id_mk', $id_mk)->firstOrFail();
+        $pendidik = Pendidik::where('id_user', Auth::id())->firstOrFail();
         $id_pendidik = $pendidik->id_pendidik;
 
         $riwayatLkm = AbsensiLkm::where('id_pendidik', $id_pendidik)
-            ->where('kode_mk', $kode_mk)
+            ->where('id_mk', $id_mk)
             ->where('id_kelas', $id_kelas)
-            ->select('id_pertemuan','tanggal','materi','metode_mengajar')
-            ->groupBy('id_pertemuan','tanggal','materi','metode_mengajar')
-            ->orderBy('id_pertemuan')
+            ->select('pertemuan','tanggal','materi','metode_mengajar')
+            ->groupBy('pertemuan','tanggal','materi','metode_mengajar')
+            ->orderBy('pertemuan')
             ->get();
 
         return view('admin.pendidik.lkm.view', compact(
@@ -261,32 +272,32 @@ Honor::create([
             'kelas',
             'matkul',
             'id_kelas',
-            'kode_mk'
+            'id_mk'
         ));
     }
 
     // Hapus LKM
-    public function destroy($id_kelas, $kode_mk, $id_pertemuan)
+    public function destroy($id_kelas, $id_mk, $pertemuan)
     {
-        AbsensiLkm::where('kode_mk', $kode_mk)
+        AbsensiLkm::where('id_mk', $id_mk)
             ->where('id_kelas', $id_kelas)
-            ->where('id_pertemuan', $id_pertemuan)
+            ->where('pertemuan', $pertemuan)
             ->delete();
 
         return redirect()->back()->with('success', 'LKM berhasil dihapus.');
     }
 
     // Detail absensi per kelas
-    public function detailAbsensi($id_kelas, $kode_mk, $id_pertemuan)
+    public function detailAbsensi($id_kelas, $id_mk, $pertemuan)
     {
         $kelas = Kelas::where('id_kelas', $id_kelas)->firstOrFail();
-        $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
+        $matkul = Matakuliah::where('id_mk', $id_mk)->firstOrFail();
 
-        $absensi = AbsensiLkm::join('mahasiswa', 'mahasiswa.nipd', '=', 'absensi_lkm.nipd')
-            ->where('absensi_lkm.kode_mk', $kode_mk)
+        $absensi = AbsensiLkm::join('mahasiswa', 'mahasiswa.id_mahasiswa', '=', 'absensi_lkm.id_mahasiswa')
+            ->where('absensi_lkm.id_mk', $id_mk)
             ->where('absensi_lkm.id_kelas', $id_kelas)
-            ->where('absensi_lkm.id_pertemuan', $id_pertemuan)
-            ->select('mahasiswa.nipd','mahasiswa.nama_mhs','absensi_lkm.status')
+            ->where('absensi_lkm.pertemuan', $pertemuan)
+            ->select('mahasiswa.id_mahasiswa','mahasiswa.nama_mhs','absensi_lkm.status')
             ->orderBy('mahasiswa.nama_mhs')
             ->get();
 
@@ -302,7 +313,7 @@ Honor::create([
             'matkul',
             'absensi',
             'rekap',        
-            'id_pertemuan'
+            'pertemuan'
         ));
     }
 }

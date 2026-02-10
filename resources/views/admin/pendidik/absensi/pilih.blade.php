@@ -1,21 +1,29 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-3xl mx-auto mt-12">
-    <div class="bg-white rounded-2xl shadow-md p-8">
+<div class="max-w-5xl mx-auto mt-10">
 
-        <h2 class="text-xl font-semibold mb-8">
+    {{-- HEADER --}}
+    <div class="bg-[#003B5C] text-white px-8 py-5 rounded-t-xl">
+        <h2 class="text-xl font-bold">
             Filter Data Absensi & LKM
         </h2>
+    </div>
 
-        <div class="space-y-5">
+    {{-- CARD --}}
+    <div class="bg-white shadow-md rounded-b-xl p-8">
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
             {{-- SEMESTER --}}
-            <div class="flex items-center gap-6">
-                <label class="w-32 font-medium">Periode Akademik</label>
-                <select id="semester" class="w-80 border rounded-lg px-4 py-2">
+            <div>
+                <label class="block text-sm font-semibold mb-2">
+                    Periode Akademik
+                </label>
+                <select id="semester"
+                        class="w-full border rounded-md px-3 py-2">
                     <option value="">-- Pilih Periode Akademik --</option>
-                    @for($s=1; $s<=8; $s++)
+                    @for($s = 1; $s <= 8; $s++)
                         @php
                             $periode = $s % 2 == 1 ? 'Ganjil' : 'Genap';
                             $tahun = now()->year;
@@ -31,9 +39,12 @@
             </div>
 
             {{-- KELAS --}}
-            <div class="flex items-center gap-6">
-                <label class="w-32 font-medium">Kelas</label>
-                <select id="kelas" class="w-80 border rounded-lg px-4 py-2">
+            <div>
+                <label class="block text-sm font-semibold mb-2">
+                    Kelas
+                </label>
+                <select id="kelas"
+                        class="w-full border rounded-md px-3 py-2">
                     <option value="">-- Pilih Kelas --</option>
                     @foreach ($kelas as $k)
                         <option value="{{ $k->id_kelas }}">
@@ -43,36 +54,31 @@
                 </select>
             </div>
 
-            {{-- MATA KULIAH --}}
-            <div class="flex items-center gap-6">
-                <label class="w-32 font-medium">Materi Ajar</label>
-                <select id="matkul" disabled class="w-80 border rounded-lg px-4 py-2">
+            {{-- MATERI AJAR --}}
+            <div>
+                <label class="block text-sm font-semibold mb-2">
+                    Materi Ajar
+                </label>
+                <select id="matkul" disabled
+                        class="w-full border rounded-md px-3 py-2 bg-gray-100">
                     <option value="">-- Pilih Materi Ajar --</option>
                 </select>
             </div>
+
         </div>
 
-        {{-- BUTTON --}}
-        <div class="mt-10 flex justify-center gap-5">
-
-            {{-- INPUT ABSENSI --}}
-            <button
-                type="button"
-                id="btnInput"
-                disabled
-                class="px-7 py-2 rounded-lg font-semibold text-white
-                       bg-blue-500 opacity-50 cursor-not-allowed">
+        {{-- ACTION --}}
+        <div class="mt-8 flex gap-4">
+            <button id="btnInput" disabled
+                class="px-6 py-2 rounded-md font-semibold text-white
+                       bg-[#003B5C] opacity-50 cursor-not-allowed">
                 Input Absensi
             </button>
 
-            {{-- VIEW LKM --}}
-            <button
-                type="button"
-                id="btnLihat"
-                disabled
-                class="px-7 py-2 rounded-lg font-semibold text-white
-                       bg-green-500 opacity-50 cursor-not-allowed">
-                Lihat Riwayat LKM
+            <button id="btnLihat" disabled
+                class="px-6 py-2 rounded-md font-semibold text-white
+                       bg-[#00A8B5] opacity-50 cursor-not-allowed">
+                Riwayat LKM
             </button>
         </div>
 
@@ -83,7 +89,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$(document).ready(function () {
+$(function () {
 
     function loadMatkul() {
         let semester = $('#semester').val();
@@ -91,7 +97,8 @@ $(document).ready(function () {
 
         $('#matkul')
             .prop('disabled', true)
-            .html('<option value="">-- Pilih Mata Kuliah --</option>');
+            .addClass('bg-gray-100')
+            .html('<option value="">-- Pilih Materi Ajar --</option>');
 
         $('#btnInput, #btnLihat')
             .prop('disabled', true)
@@ -99,24 +106,28 @@ $(document).ready(function () {
 
         if (!semester || !id_kelas) return;
 
-        $.get("{{ route('absensi.getMatkul') }}",
-            { semester: semester, id_kelas: id_kelas },
-            function (res) {
-                $('#matkul').prop('disabled', false);
-                res.forEach(mk => {
-                    $('#matkul').append(`
-                        <option value="${mk.kode_mk}">
-                            ${mk.kode_mk} - ${mk.nama_mk}
-                        </option>
-                    `);
-                });
-            }
-        );
+        $.get("{{ route('absensi.getMatkul') }}", {
+            semester: semester,
+            id_kelas: id_kelas
+        }, function (res) {
+
+            $('#matkul')
+                .prop('disabled', false)
+                .removeClass('bg-gray-100');
+
+            res.forEach(mk => {
+                $('#matkul').append(`
+                    <option value="${mk.id_mk}">
+                        ${mk.nama_mk}
+                    </option>
+                `);
+            });
+        });
     }
 
-    $('#semester, #kelas').on('change', loadMatkul);
+    $('#semester, #kelas').change(loadMatkul);
 
-    $('#matkul').on('change', function () {
+    $('#matkul').change(function () {
         let aktif = $(this).val() !== '';
         $('#btnInput, #btnLihat')
             .prop('disabled', !aktif)
@@ -124,15 +135,20 @@ $(document).ready(function () {
     });
 
     // INPUT ABSENSI
-    $('#btnInput').on('click', function () {
-        window.location.href =
-            `/pendidik/absensi/create/${$('#kelas').val()}/${$('#matkul').val()}/${$('#semester').val()}`;
+    $('#btnInput').click(function () {
+        location.href =
+            `/pendidik/absensi/create/` +
+            $('#kelas').val() + `/` +
+            $('#matkul').val() + `/` +
+            $('#semester').val();
     });
 
-    // VIEW LIST LKM (SESUI TUJUAN KAMU)
-    $('#btnLihat').on('click', function () {
-        window.location.href =
-            `/pendidik/absensi/list/${$('#kelas').val()}/${$('#matkul').val()}`;
+    // RIWAYAT LKM
+    $('#btnLihat').click(function () {
+        location.href =
+            `/pendidik/absensi/list/` +
+            $('#kelas').val() + `/` +
+            $('#matkul').val();
     });
 
 });

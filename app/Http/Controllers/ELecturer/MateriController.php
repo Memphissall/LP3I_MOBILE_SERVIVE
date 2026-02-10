@@ -16,18 +16,19 @@ class MateriController extends Controller
     // ==========================
     // PILIH KELAS & MATA KULIAH
     // ==========================
-
-    public function getBySemester(Request $request)
+  public function getMatkulBySemester(Request $request)
 {
-    return Matakuliah::whereHas('kelas', function ($q) use ($request) {
-            $q->where('kelas_matakuliah.id_kelas', $request->id_kelas);
-        })
-        ->orderBy('nama_mk')
-        ->get([
-            'kode_mk as id_materi',
-            'nama_mk as judul_materi'
-        ]);
+    $kelas = Kelas::findOrFail($request->id_kelas);
+
+    $matkul = Matakuliah::where('id_program_studi', $kelas->id_program_studi)
+                ->where('semester', $request->semester)
+                ->orderBy('nama_mk')
+                ->get();
+
+    return response()->json($matkul);
 }
+
+
 
     public function pilihKelasMK()
     {
@@ -51,7 +52,7 @@ class MateriController extends Controller
             ->orWhere('tipe_matakuliah', 1);
         })
         ->orderBy('nama_mk')
-        ->get(['kode_mk', 'nama_mk']);
+        ->get(['id_mk', 'nama_mk']);
 
         return response()->json($matkul);
     }
@@ -63,25 +64,25 @@ class MateriController extends Controller
     {
         $request->validate([
             'id_kelas' => 'required',
-            'kode_mk'  => 'required'
+            'id_mk'  => 'required'
         ]);
 
         return redirect()->route('materi.index', [
             $request->id_kelas,
-            $request->kode_mk
+            $request->id_mk
         ]);
     }
 
     // ==========================
     // LIST MATERI
     // ==========================
-    public function index($id_kelas, $kode_mk)
+    public function index($id_kelas, $id_mk)
     {
         $kelas  = Kelas::where('id_kelas', $id_kelas)->firstOrFail();
-        $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
+        $matkul = Matakuliah::where('id_mk', $id_mk)->firstOrFail();
 
         $materi = Materi::where('id_kelas', $id_kelas)
-            ->where('kode_mk', $kode_mk)
+            ->where('id_mk', $id_mk)
             ->orderBy('pertemuan')
             ->get();
 
@@ -90,23 +91,23 @@ class MateriController extends Controller
             'matkul',
             'materi',
             'id_kelas',
-            'kode_mk'
+            'id_mk'
         ));
     }
 
     // ==========================
     // FORM TAMBAH MATERI
     // ==========================
-    public function create($id_kelas, $kode_mk)
+    public function create($id_kelas, $id_mk)
 {
     $kelas  = Kelas::where('id_kelas', $id_kelas)->firstOrFail();
-    $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
+    $matkul = Matakuliah::where('id_mk', $id_mk)->firstOrFail();
 
     return view('admin.pendidik.materi.tambah', compact(
         'kelas',
         'matkul',
         'id_kelas',
-        'kode_mk'
+        'id_mk'
     ));
 }
 
@@ -116,7 +117,7 @@ class MateriController extends Controller
     // ==========================
     
 
-public function store(Request $request, $id_kelas, $kode_mk)
+public function store(Request $request, $id_kelas, $id_mk)
 {
     $request->validate([
         'judul_materi' => 'required|string|max:255',
@@ -128,7 +129,7 @@ public function store(Request $request, $id_kelas, $kode_mk)
 
     $data = [
         'id_kelas'     => $id_kelas,
-        'kode_mk'      => $kode_mk,
+        'id_mk'      => $id_mk,
         'judul_materi' => $request->judul_materi,
         'deskripsi'    => $request->deskripsi,
         'pertemuan'    => $request->pertemuan,
@@ -153,7 +154,7 @@ public function store(Request $request, $id_kelas, $kode_mk)
     Materi::create($data);
 
     return redirect()
-        ->route('materi.index', [$id_kelas, $kode_mk])
+        ->route('materi.index', [$id_kelas, $id_mk])
         ->with('success', 'Materi berhasil ditambahkan');
 }
 
@@ -222,7 +223,7 @@ public function store(Request $request, $id_kelas, $kode_mk)
     $materi->save();
 
     return redirect()
-    ->route('materi.index', [$materi->id_kelas, $materi->kode_mk])
+    ->route('materi.index', [$materi->id_kelas, $materi->id_mk])
     ->with('success', 'Materi berhasil diperbarui');
 
 }
@@ -242,13 +243,13 @@ public function store(Request $request, $id_kelas, $kode_mk)
     // ==========================
     // VIEW MATERI (READ ONLY)
     // ==========================
-    public function viewMateri($id_kelas, $kode_mk)
+    public function viewMateri($id_kelas, $id_mk)
     {
         $kelas  = Kelas::findOrFail($id_kelas);
-        $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
+        $matkul = Matakuliah::where('id_mk', $id_mk)->firstOrFail();
 
         $materi = Materi::where('id_kelas', $id_kelas)
-            ->where('kode_mk', $kode_mk)
+            ->where('id_mk', $id_mk)
             ->orderBy('pertemuan')
             ->get();
 

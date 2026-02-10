@@ -9,7 +9,7 @@
 @csrf
 
 <input type="hidden" name="id_kelas" value="{{ $id_kelas }}">
-<input type="hidden" name="kode_mk" value="{{ $kode_mk }}">
+<input type="hidden" name="id_mk" value="{{ $id_mk }}">
 <input type="hidden" name="semester" value="{{ $semester }}">
 
 <div class="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -46,8 +46,8 @@
                     {{-- NAMA --}}
                     <td class="text-left px-3 py-2 font-medium text-gray-700 whitespace-nowrap">
                         {{ $mhs->nama_mhs }}
-                        <input type="hidden" name="nipd[]" value="{{ $mhs->nipd }}">
-                        <input type="hidden" name="nama_mhs[]" value="{{ $mhs->nama_mhs }}">
+                        <input type="hidden" name="id_mahasiswa[]" value="{{ $mhs->id_mahasiswa }}">
+                       
 
                     </td>
 
@@ -55,14 +55,14 @@
                     <td>
                         <input type="number"
                         name="nilai_kehadiran[]"
-                        value="{{ $nilaiKehadiran[$mhs->nipd] }}"
+                        value="{{ $nilaiKehadiran[$mhs->id_mahasiswa] }}"
                         readonly
                         class="w-28 mx-auto text-center rounded-md border-gray-300 bg-gray-100 focus:ring-0">
 
                     </td>
 
                     {{-- INPUT NILAI --}}
-                   @foreach(['nilai_sikap','nilai_formatif','nilai_tugas','nilai_uts','nilai_uas'] as $field)
+                   @foreach(['nilai_sikap','nilai_formative','nilai_tugas','nilai_uts','nilai_uas'] as $field)
                     <td>
                         <input type="number"
                             name="{{ $field }}[]"

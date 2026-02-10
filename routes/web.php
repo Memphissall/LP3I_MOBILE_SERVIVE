@@ -16,9 +16,10 @@ use App\Http\Controllers\ELecturer\MateriController;
 use App\Http\Controllers\ELecturer\AbsensiLkmController;
 use App\Http\Controllers\ELecturer\DashboardController;
 use App\Http\Controllers\ELecturer\HonorController;
+use App\Http\Controllers\ELecturer\SapController;
 use App\Http\Controllers\Admin\HonorTambahanController;
 use App\Http\Controllers\Admin\HonorRekapController;
- use App\Http\Controllers\Admin\LkmRekapController;
+use App\Http\Controllers\Admin\LkmRekapController;
 
 
 // ==========================
@@ -40,6 +41,24 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])
 // AREA USER (HARUS LOGIN)
 // ==========================
 Route::middleware(['auth'])->group(function () {
+
+Route::prefix('pendidik/sap')->middleware('auth')->group(function () {
+
+    Route::get('/', [SapController::class, 'pilih'])
+        ->name('pendidik.sap.pilih');
+
+    Route::get('/get-matkul', [SapController::class, 'getMatkulBySemester'])
+        ->name('sap.getMatkulBySemester');
+
+    Route::get('/{id_kelas}/{id_mk}', [SapController::class, 'index'])
+        ->name('pendidik.sap.index');
+
+    Route::get('/download/{id}', [SapController::class, 'download'])
+        ->name('pendidik.sap.download');
+});
+
+
+
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('user.dashboard');
@@ -98,7 +117,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/tugas/get-matkul',  [TugasController::class, 'getMatkulBySemester'])->name('tugas.getMatkulBySemester');
     //view
-    Route::get('/tugas-view/{id_kelas}/{kode_mk}',[TugasController::class, 'viewTugas']) ->name('tugas.view');
+    Route::get('/tugas-view/{id_kelas}/{id_mk}',[TugasController::class, 'viewTugas']) ->name('tugas.view');
 
     // Halaman pilih kelas + matkul
     Route::get('/tugas/pilih', [TugasController::class, 'pilihKelasMK'])
@@ -111,6 +130,10 @@ Route::middleware(['auth'])->group(function () {
     // Routes yang pakai {id} harus ditempatkan dulu supaya tidak bentrok
     Route::prefix('tugas')->group(function () {
 
+
+        // Create
+        Route::get('/{id_kelas}/{id_mk}/tambah', [TugasController::class, 'create'])
+            ->name('tugas.tambah');
         // Edit
         Route::get('/{id}/edit', [TugasController::class, 'edit'])
             ->name('tugas.edit');
@@ -124,15 +147,13 @@ Route::middleware(['auth'])->group(function () {
             ->name('tugas.destroy');
 
         // List tugas berdasarkan kelas & mk
-        Route::get('/{id_kelas}/{kode_mk}', [TugasController::class, 'index'])
+        Route::get('/{id_kelas}/{id_mk}', [TugasController::class, 'index'])
             ->name('tugas.index');
             
-        // Create
-        Route::get('/{id_kelas}/{kode_mk}/tambah', [TugasController::class, 'create'])
-            ->name('tugas.tambah');
+        
 
         // Store
-        Route::post('/{id_kelas}/{kode_mk}', [TugasController::class, 'store'])
+        Route::post('/{id_kelas}/{id_mk}', [TugasController::class, 'store'])
             ->name('tugas.store');
         
         // Lihat submissi mahasiswa untuk tugas tertentu
@@ -160,14 +181,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/filter', [NilaiController::class, 'filter'])
         ->name('nilai.filter');
 
-   Route::get('/{id_kelas}/{kode_mk}/{semester}/input', [NilaiController::class, 'input'])
+   Route::get('/{id_program_studi}/{id_mk}/{semester}/input', [NilaiController::class, 'input'])
     ->name('nilai.input');
 
 
     Route::post('/store', [NilaiController::class, 'store'])
         ->name('nilai.store');                
 
-   Route::get('/{id_kelas}/{kode_mk}/{semester}/view', [NilaiController::class, 'view'])->name('nilai.view');
+   Route::get('/{id_program_studi}/{id_mk}/{semester}/view', [NilaiController::class, 'view'])->name('nilai.view');
 
 
     Route::get('/{id_nilai}/edit', [NilaiController::class, 'edit'])
@@ -213,8 +234,8 @@ Route::middleware(['auth'])->prefix('pendidik')->group(function () {
 // ==========================
 Route::prefix('materi')->group(function () {
 
-Route::get('/get-by-semester', [MateriController::class, 'getBySemester'])
-        ->name('materi.getBySemester');
+Route::get('/get-matkul-by-semester',[MateriController::class, 'getMatkulBySemester'])
+    ->name('materi.getMatkulBySemester');
 
     // Pilih kelas & matkul
     Route::get('/pilih', [MateriController::class, 'pilihKelasMK'])
@@ -237,19 +258,17 @@ Route::get('/get-by-semester', [MateriController::class, 'getBySemester'])
         ->name('materi.destroy');
 
     // LIST materi per kelas & mk
-    Route::get('/{id_kelas}/{kode_mk}', [MateriController::class, 'index'])
+    Route::get('/{id_kelas}/{id_mk}', [MateriController::class, 'index'])
         ->name('materi.index');
 
     // FORM TAMBAH
-    Route::get('/{id_kelas}/{kode_mk}/tambah', [MateriController::class, 'create'])
+    Route::get('/{id_kelas}/{id_mk}/tambah', [MateriController::class, 'create'])
         ->name('materi.tambah');
 
     // SIMPAN
-    Route::post('/{id_kelas}/{kode_mk}', [MateriController::class, 'store'])
+    Route::post('/{id_kelas}/{id_mk}', [MateriController::class, 'store'])
         ->name('materi.store');
 });
-
-
 
 
     // ==========================

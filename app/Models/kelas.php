@@ -25,7 +25,7 @@ class Kelas extends Model
             Matakuliah::class,
             'kelas_matakuliah',
             'id_kelas',
-            'kode_mk'
+            'id_mk'
         );
     }
 
@@ -33,5 +33,10 @@ class Kelas extends Model
 {
     return $this->hasMany(Materi::class, 'id_kelas', 'id_kelas');
 }
+
+public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudi::class, 'id_program_studi', 'id_program_studi');
+    }
 
 }

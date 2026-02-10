@@ -26,7 +26,7 @@
                     <td class="text-start">{{ $n->nama_mhs }}</td>
                     <td>{{ $n->nilai_kehadiran ?? '-' }}</td>
                     <td>{{ $n->nilai_atitude ?? '-' }}</td>
-                    <td>{{ $n->nilai_formatif ?? '-' }}</td>
+                    <td>{{ $n->nilai_formative ?? '-' }}</td>
                     <td>{{ $n->nilai_tugas ?? '-' }}</td>
                     <td>{{ $n->nilai_uts ?? '-' }}</td>
                     <td>{{ $n->nilai_uas ?? '-' }}</td>

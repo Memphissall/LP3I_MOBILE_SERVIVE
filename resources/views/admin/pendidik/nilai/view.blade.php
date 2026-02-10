@@ -52,7 +52,7 @@
                         {{ $i + 1 }}
                     </td>
                     <td class="px-4 py-2 border font-medium">
-                        {{ $n->nama_mhs }}
+                        {{ $n->mahasiswa->nama_mhs ?? '-' }}
                     </td>
                     <td class="px-4 py-2 border text-center">
                         {{ $n->nilai_kehadiran ?? '-' }}
@@ -61,7 +61,7 @@
                         {{ $n->nilai_sikap ?? '-' }}
                     </td>
                     <td class="px-4 py-2 border text-center">
-                        {{ $n->nilai_formatif ?? '-' }}
+                        {{ $n->nilai_formative ?? '-' }}
                     </td>
                     <td class="px-4 py-2 border text-center">
                         {{ $n->nilai_tugas ?? '-' }}
@@ -76,7 +76,7 @@
                         {{ $n->nilai_akhir ?? '-' }}
                     </td>
                     <td class="px-4 py-2 border text-center font-semibold">
-                        {{ $n->mutu ?? '-' }}
+                        {{ $n->grade ?? '-' }}
                     </td>
                     <td class="px-4 py-2 border text-center">
                         <a href="{{ route('nilai.edit', $n->id_nilai) }}"

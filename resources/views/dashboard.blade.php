@@ -4,8 +4,7 @@
 
 <style>
 :root {
-    --indigo: #004269;
-    --viridian: #009DA5;
+    --primary: #009DA5;
     --dark1: #033a57;
     --dark2: #022b40;
     --border: #e5e7eb;
@@ -26,50 +25,40 @@
 
 /* WELCOME */
 .welcome {
-    background: linear-gradient(135deg, #009DA5, #004269);
+    background: linear-gradient(135deg, var(--primary), #004269);
     color: white;
-    border-radius: 14px;
-    padding: 22px;
-}
-
-.welcome h2 {
-    margin: 0;
-}
-
-.welcome p {
-    margin-top: 4px;
-    opacity: .9;
+    border-radius: 16px;
+    padding: 24px;
 }
 
 #datetime {
-    font-size: 13px;
-    opacity: .85;
+    font-size: 14px;
+    margin-top: 6px;
+    opacity: .9;
 }
 
-/* WHITE CARD */
+/* CARD */
 .card {
     background: #fff;
     border-radius: 14px;
-    padding: 18px;
+    padding: 20px;
     border: 1px solid var(--border);
 }
 
 .grid-3 {
     display: grid;
     grid-template-columns: repeat(3,1fr);
-    gap: 18px;
-    margin-top: 20px;
+    gap: 20px;
+    margin-top: 22px;
 }
 
 .card i {
     font-size: 24px;
-    color: var(--viridian);
+    color: var(--primary);
 }
 
 .card h3 {
     margin: 12px 0 6px;
-    font-size: 16px;
-    color: var(--indigo);
 }
 
 .card p {
@@ -79,67 +68,70 @@
 
 .card a {
     font-size: 13px;
-    color: var(--viridian);
+    color: var(--primary);
     font-weight: 600;
     text-decoration: none;
 }
 
-/* SHORTCUT */
+/* ICON GRID (ABSENSI, GAJI DLL) */
 .icon-grid {
     display: grid;
     grid-template-columns: repeat(2,1fr);
-    gap: 16px;
-    margin-top: 22px;
+    gap: 18px;
+    margin-top: 24px;
 }
 
 .icon-card {
     background: white;
     border-radius: 14px;
-    padding: 20px;
+    padding: 26px 20px;
     border: 1px solid var(--border);
     text-align: center;
+    font-weight: 600;
+    color: #374151;
 }
 
 .icon-card i {
-    font-size: 24px;
-    color: var(--viridian);
+    font-size: 28px;
+    margin-bottom: 6px;
+    color: var(--primary);
 }
 
-/* RIGHT SIDEBAR */
+/* RIGHT BAR */
 .rightbar {
     background: linear-gradient(180deg, var(--dark1), var(--dark2));
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 18px;
+    padding: 22px;
     color: white;
 }
 
 /* CALENDAR */
 .calendar h4 {
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
+    grid-template-columns: repeat(7,1fr);
+    gap: 8px;
     text-align: center;
     font-size: 13px;
 }
 
 .calendar-grid .day {
+    color: #7dd3fc;
     font-weight: bold;
-    color: #a5f3fc;
 }
 
 .calendar-grid .date {
     padding: 8px 0;
-    border-radius: 6px;
+    border-radius: 8px;
     background: rgba(255,255,255,.08);
 }
 
 .calendar-grid .today {
-    background: var(--viridian);
+    background: var(--primary);
     font-weight: bold;
 }
 </style>
@@ -149,6 +141,7 @@
 
     <!-- LEFT -->
     <div>
+
         <div class="welcome">
             <h2>HII, {{ Auth::user()->name }}!</h2>
             <p>Dashboard Pendidik</p>
@@ -178,27 +171,30 @@
             </div>
         </div>
 
+        <!-- 🔴 BAGIAN INI TIDAK HILANG -->
         <div class="icon-grid">
             <a href="{{ route('pendidik.absen') }}" class="icon-card">
                 <i class="fa-solid fa-user-check"></i>
-                <p>Absensi</p>
+                <div>Absensi</div>
             </a>
 
             <a href="{{ route('pendidik.gaji') }}" class="icon-card">
                 <i class="fa-solid fa-money-bill-wave"></i>
-                <p>Gaji</p>
+                <div>Gaji</div>
             </a>
 
             <a href="#" class="icon-card">
                 <i class="fa-solid fa-file-arrow-down"></i>
-                <p>Download SAP</p>
+                <div>Download SAP</div>
             </a>
 
             <a href="{{ route('nilai.index') }}" class="icon-card">
                 <i class="fa-solid fa-star"></i>
-                <p>Nilai</p>
+                <div>Nilai</div>
             </a>
         </div>
+        <!-- 🔴 END -->
+
     </div>
 
     <!-- RIGHT -->
@@ -213,57 +209,55 @@
 </div>
 </div>
 
-<!-- REAL TIME DATE + CALENDAR SCRIPT -->
+<!-- ================= REAL TIME CLOCK + CALENDAR ================= -->
 <script>
-// ===== DATE REAL TIME =====
+// JAM REAL TIME
 function updateDateTime() {
     const now = new Date();
-
     const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
     const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 
-    const fullDate = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
 
-    document.getElementById('datetime').innerText = fullDate;
+    document.getElementById('datetime').innerText =
+        `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} • ${h}:${m}:${s} WIB`;
 }
-
 updateDateTime();
-setInterval(updateDateTime, 60000);
+setInterval(updateDateTime,1000);
 
-// ===== CALENDAR =====
-const now = new Date();
-const year = now.getFullYear();
-const month = now.getMonth();
-const today = now.getDate();
+// CALENDAR
+const today = new Date();
+const year = today.getFullYear();
+const month = today.getMonth();
+const dateToday = today.getDate();
 
 const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-
-document.getElementById("calendar-title").innerText = monthNames[month] + " " + year;
+document.getElementById('calendar-title').innerText = `${monthNames[month]} ${year}`;
 
 const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-const daysContainer = document.getElementById("calendar-days");
-const datesContainer = document.getElementById("calendar-dates");
+const daysEl = document.getElementById('calendar-days');
+const datesEl = document.getElementById('calendar-dates');
 
-days.forEach(d => {
-    const div = document.createElement("div");
-    div.className = "day";
-    div.innerText = d;
-    daysContainer.appendChild(div);
+days.forEach(d=>{
+    const div=document.createElement('div');
+    div.className='day';
+    div.innerText=d;
+    daysEl.appendChild(div);
 });
 
-const firstDay = new Date(year, month, 1).getDay();
-const totalDays = new Date(year, month + 1, 0).getDate();
+const firstDay = new Date(year,month,1).getDay();
+const totalDays = new Date(year,month+1,0).getDate();
 
-for (let i = 0; i < firstDay; i++) {
-    datesContainer.appendChild(document.createElement("div"));
-}
+for(let i=0;i<firstDay;i++) datesEl.appendChild(document.createElement('div'));
 
-for (let d = 1; d <= totalDays; d++) {
-    const div = document.createElement("div");
-    div.className = "date";
-    if (d === today) div.classList.add("today");
-    div.innerText = d;
-    datesContainer.appendChild(div);
+for(let d=1;d<=totalDays;d++){
+    const div=document.createElement('div');
+    div.className='date';
+    if(d===dateToday) div.classList.add('today');
+    div.innerText=d;
+    datesEl.appendChild(div);
 }
 </script>
 

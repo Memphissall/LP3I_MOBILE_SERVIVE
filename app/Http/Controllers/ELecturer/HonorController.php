@@ -11,39 +11,41 @@ use Illuminate\Support\Facades\Auth;
 
 class HonorController extends Controller
 {
-    public static function hitungHonor($kode_mk, $id_pertemuan)
-    {
-        $id_pendidik = Auth::id();
+   public static function hitungHonor($id_mk, $pertemuan)
+{
+    $pendidik = Pendidik::where('id_user', Auth::id())->firstOrFail();
 
-        // CEK SUDAH PERNAH DIHITUNG ATAU BELUM
-        $cek = Honor::where('id_pendidik', $id_pendidik)
-            ->where('kode_mk', $kode_mk)
-            ->where('id_pertemuan', $id_pertemuan)
-            ->first();
+    // CEK DUPLIKASI
+    $cek = Honor::where('id_pendidik', $pendidik->id_pendidik)
+        ->where('id_mk', $id_mk)
+        ->where('pertemuan', $pertemuan)
+        ->first();
 
-        if ($cek) {
-            return; // ⛔ sudah pernah dihitung
-        }
+    if ($cek) return;
 
-        // AMBIL MATKUL
-        $matkul = Matakuliah::where('kode_mk', $kode_mk)->firstOrFail();
+    $matkul = Matakuliah::findOrFail($id_mk);
 
-        // AMBIL PENDIDIK
-        $pendidik = Pendidik::where('id_pendidik', $id_pendidik)->firstOrFail();
+    $honorMengajar = $matkul->sks * $pendidik->honor_per_sks;
 
-        $sks = $matkul->sks;
-        $honorPerSks = $pendidik->honor_per_sks;
+    $totalKotor = $honorMengajar;
+    $ppn = intval($totalKotor * 0.05);
+    $gajiBersih = $totalKotor - $ppn;
 
-        $totalGaji = $sks * $honorPerSks;
+    Honor::create([
+        'id_pendidik'     => $pendidik->id_pendidik,
+        'id_kelas'    => $id_kelas,
+        'id_mk'           => $id_mk,
+        'pertemuan'       => $pertemuan,
+        'tanggal'         => now()->toDateString(),
+        'sks'             => $matkul->sks,
+        'honor_per_sesi'  => $pendidik->honor_per_sks,
+        'honor_mengajar'  => $honorMengajar,
+        'total_kotor'     => $totalKotor,
+        'ppn'             => $ppn,
+        'gaji_bersih'     => $gajiBersih,
+        'semester'        => $matkul->semester,
+        'tahun'           => date('Y'),
+    ]);
+}
 
-        Honor::create([
-            'id_pendidik'          => $id_pendidik,
-            'kode_mk'       => $kode_mk,
-            'id_pertemuan'  => $id_pertemuan,
-            'sks'           => $sks,
-            'honor_per_sks' => $honorPerSks,
-            'total_gaji'    => $totalGaji,
-            'tanggal'       => now()->toDateString()
-        ]);
-    }
 }

@@ -20,14 +20,14 @@ class DashboardController extends Controller
         $progressMengajar = $jadwal->map(function ($j) use ($id_pendidik) {
 
             $pertemuan = AbsensiLkm::where('id_pendidik', $id_pendidik)
-                ->where('kode_mk', $j->kode_mk)
-                ->distinct('id_pertemuan')
-                ->count('id_pertemuan');
+                ->where('id_mk', $j->id_mk)
+                ->distinct('pertemuan')
+                ->count('pertemuan');
 
             $totalPertemuan = 16;
 
             return [
-                'nama_mk' => $j->matakuliah->nama_mk ?? $j->kode_mk,
+                'nama_mk' => $j->matakuliah->nama_mk ?? $j->id_mk,
                 'berjalan' => $pertemuan,
                 'total' => $totalPertemuan,
                 'persen' => round(($pertemuan / $totalPertemuan) * 100)

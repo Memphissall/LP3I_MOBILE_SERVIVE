@@ -34,8 +34,10 @@ class User extends Authenticatable
         ];
     }
 
-    public function pendidik()
-    {
-        return $this->hasOne(\App\Models\Pendidik::class, 'id_user');
-    }
+   public function pendidik()
+{
+    return $this->hasOne(Pendidik::class, 'id_user', 'id_user');
+}
+
+
 }

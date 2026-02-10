@@ -10,7 +10,7 @@
         @method('PUT')
 
         <label class="block mb-2">Judul</label>
-        <input type="text" name="judul" value="{{ old('judul', $tugas->judul) }}" class="border p-2 w-full mb-4">
+        <input type="text" name="judul" value="{{ old('judul', $tugas->judul_tugas) }}" class="border p-2 w-full mb-4">
 
         <label class="block mb-2">Deskripsi</label>
         <textarea name="deskripsi" class="border p-2 w-full mb-4">{{ old('deskripsi', $tugas->deskripsi) }}</textarea>
@@ -30,7 +30,7 @@
         </select>
 
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
-        <a href="{{ route('tugas.index', [$tugas->id_kelas, $tugas->kode_mk]) }}"
+        <a href="{{ route('tugas.index', [$tugas->id_kelas, $tugas->id_mk]) }}"
            class="bg-gray-600 text-white px-4 py-2 rounded ml-2">Kembali</a>
     </form>
 </div>

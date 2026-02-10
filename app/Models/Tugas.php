@@ -14,14 +14,14 @@ class Tugas extends Model
     protected $guarded = [];
 
     protected $fillable = [
-        'kode_mk',
-        'id_kelas',
-        'judul',
-        'deskripsi',
-        'tanggal_upload',
-        'deadline',
+        'judul_tugas',
         'file_tugas',
-        'status'
+        'deskripsi',
+        'deadline',
+        'tanggal_upload',
+        'status',
+        'id_kelas',
+        'id_mk'
     ];
 
     protected $casts = [
@@ -48,7 +48,13 @@ class Tugas extends Model
 
     public function matakuliah()
     {
-        return $this->belongsTo(Matakuliah::class, 'kode_mk', 'kode_mk');
+        return $this->belongsTo(Matakuliah::class, 'id_mk', 'id_mk');
     }
+
+    public function submissions()
+{
+    return $this->hasMany(Submission::class, 'id_tugas', 'id_tugas');
+}
+
 }
 

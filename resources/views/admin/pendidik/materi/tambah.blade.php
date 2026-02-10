@@ -19,7 +19,7 @@
         </div>
     @endif
 
-    <form action="{{ route('materi.store', [$id_kelas, $kode_mk]) }}"
+    <form action="{{ route('materi.store', [$id_kelas, $id_mk]) }}"
           method="POST"
           enctype="multipart/form-data"
           class="bg-white p-6 rounded shadow">
@@ -90,7 +90,7 @@
                 Simpan
             </button>
 
-            <a href="{{ route('materi.index', [$id_kelas, $kode_mk]) }}"
+            <a href="{{ route('materi.index', [$id_kelas, $id_mk]) }}"
                class="bg-gray-400 text-white px-5 py-2 rounded">
                 Batal
             </a>

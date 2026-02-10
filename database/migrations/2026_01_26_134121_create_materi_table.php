@@ -19,9 +19,11 @@ return new class extends Migration
             $table->foreignId('id_pendidik');
             $table->string('judul_materi');
             $table->text('deskripsi');
+            $table->string('file_materi')->nullable();
+            $table->text('link_materi')->nullable();
             $table->enum('tipe_materi', ['file', 'link']);
             $table->integer('pertemuan');
-            $table->date('tgl_upload');
+            $table->timestamp('tgl_upload')->useCurrent();
             $table->foreign('id_mk')->references('id_mk')->on('matakuliah')->onDelete('cascade');
             $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');
             $table->foreign('id_pendidik')->references('id_pendidik')->on('pendidik')->onDelete('cascade');

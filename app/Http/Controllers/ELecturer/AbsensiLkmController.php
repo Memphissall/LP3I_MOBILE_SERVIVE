@@ -11,6 +11,8 @@ use App\Models\Honor;
 use App\Models\Matakuliah;
 use App\Models\Mahasiswa;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+
 
 class AbsensiLkmController extends Controller
 {
@@ -97,6 +99,12 @@ class AbsensiLkmController extends Controller
 
     $mhs = Mahasiswa::where('nipd', $nipd)->firstOrFail();
 
+    $biayaSoal = 0;
+    $biayaKoreksi = 0;
+
+    //sementara pajak 0
+    $ppn = 0;
+
     AbsensiLkm::create([
         'id_pendidik'  => $id_pendidik,
         'id_kelas'     => $mhs->id_kelas,
@@ -112,17 +120,33 @@ class AbsensiLkmController extends Controller
 // =====================
     // HITUNG HONOR (FIX)
     // =====================
-    $honorPerSesi = (float) $pendidik->rate_gaji; // DARI MIGRASI
-   $jumlahSesi = $matkul->sks / 2;
+//     $honorPerSesi = (float) $pendidik->rate_gaji; // DARI MIGRASI
+// //    $jumlahSesi = $matkul->sks / 2;
+//       $sesi = ceil($matkul->sks / 2);
 
-    $honorMengajar = $jumlahSesi * $honorPerSesi;
 
-    $biayaSoal   = $request->uang_pembuatan_soal ?? 0;
-    $biayaKoreksi = $request->uang_koreksi_jawaban ?? 0;
+//     $honorMengajar = $Sesi * $honorPerSesi;
 
-    $totalKotor = $honorMengajar + $biayaSoal + $biayaKoreksi;
-    $ppn = intval($totalKotor * 0.05);
-    $gajiBersih = $totalKotor - $ppn;
+//     $biayaSoal   = $request->uang_pembuatan_soal ?? 0;
+//     $biayaKoreksi = $request->uang_koreksi_jawaban ?? 0;
+
+//     $totalKotor = $honorMengajar + $biayaSoal + $biayaKoreksi;
+//     $ppn = intval($totalKotor * 0.05);
+//     $gajiBersih = $totalKotor - $ppn;
+
+
+// =====================
+// HITUNG HONOR (FIX + PERIODE)
+// =====================
+$honorPerSesi = (float) $pendidik->rate_gaji;
+$sesi = ceil($matkul->sks / 2);
+$honorMengajar = $sesi * $honorPerSesi;
+
+$totalKotor = $honorMengajar;
+$ppn = intval($totalKotor * 0.05);
+$gajiBersih = $totalKotor - $ppn;
+
+
 
     // =====================
     // SIMPAN KE TABEL HONOR
@@ -151,41 +175,12 @@ class AbsensiLkmController extends Controller
     // =====================
     // UPDATE TOTAL GAJI
     // =====================
-    $totalGaji = Honor::where('id_pendidik', $pendidik->id_pendidik)
-        ->sum('gaji_bersih');
-
-    $pendidik->update([
-        'total_gaji_diterima' => $totalGaji
-    ]);
 
     return redirect()->route(
         'admin.pendidik.lkm.form',
         [$id_kelas, $id_mk, $request->semester]
     )->with('success', 'Absensi & honor berhasil disimpan.');
 }
-
-    
-
-
-
-
-  public function totalGaji()
-{
-    $pendidik = Pendidik::where('id_user', Auth::id())->firstOrFail();
-
-    $honor = Honor::with([
-            'matkul.kelas'
-        ])
-        ->where('id_pendidik', $pendidik->id_pendidik)
-        ->orderBy('tanggal', 'desc')
-        ->get();
-
-    $total = $honor->sum('gaji_bersih');
-
-    return view('admin.pendidik.gaji', compact('honor', 'total'));
-}
-
-
 
     // Form buat LKM
     public function createLkm($id_kelas, $id_mk, $semester)

@@ -220,10 +220,15 @@ Route::middleware(['auth'])->prefix('pendidik')->group(function () {
     )->name('pendidik.honor.rekap');
 
 
-    Route::get('/pendidik/gaji', [AbsensiLkmController::class, 'totalGaji'])
-     ->name('pendidik.gaji');
+   Route::get('/pendidik/gaji', [HonorController::class, 'index'])
+    ->name('pendidik.gaji.index');
 
 
+ Route::get('/pendidik/gaji', [HonorController::class, 'index'])
+            ->name('pendidik.gaji.index');
+
+        Route::get('/pendidik/gaji/{id}', [HonorController::class, 'detail'])
+            ->name('pendidik.gaji.detail');
      
 });
 
@@ -330,6 +335,9 @@ Route::prefix('admin/akademik')
 
          Route::get('/admin/rekap-gaji-pendidik',[HonorRekapController::class, 'index']
             )->name('admin.rekap.gaji-pendidik');
+
+
+       
 
            
 

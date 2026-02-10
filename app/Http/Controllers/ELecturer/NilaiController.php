@@ -203,11 +203,14 @@ public function getMatkulBySemester(Request $request)
 
 
 
-    public function view($id_kelas, $id_mk, $semester)
+   public function view($id_kelas, $id_mk, $semester)
 {
-    $nilai = Nilai::with('mahasiswa') 
-        ->where('id_mk', $id_mk)
-        ->where('semester', $semester)
+    $nilai = Nilai::join('mahasiswa', 'nilai.id_mahasiswa', '=', 'mahasiswa.id_mahasiswa')
+        ->where('nilai.id_mk', $id_mk)
+        ->where('nilai.semester', $semester)
+        ->orderBy('mahasiswa.nama_mhs', 'asc') 
+        ->select('nilai.*')
+        ->with('mahasiswa')
         ->get();
 
     $matakuliah = Matakuliah::where('id_mk', $id_mk)->first();
@@ -220,6 +223,7 @@ public function getMatkulBySemester(Request $request)
         'semester'
     ));
 }
+
 
 
 

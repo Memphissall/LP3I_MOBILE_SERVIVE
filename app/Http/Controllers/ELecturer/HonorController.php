@@ -8,44 +8,63 @@ use App\Models\Matakuliah;
 use App\Models\Pendidik;
 use App\Models\AbsensiLkm;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class HonorController extends Controller
 {
-   public static function hitungHonor($id_mk, $pertemuan)
+
+public function index()
 {
     $pendidik = Pendidik::where('id_user', Auth::id())->firstOrFail();
+    $now = Carbon::now();
 
-    // CEK DUPLIKASI
-    $cek = Honor::where('id_pendidik', $pendidik->id_pendidik)
-        ->where('id_mk', $id_mk)
-        ->where('pertemuan', $pertemuan)
-        ->first();
+    if ($now->day <= 25) {
+        $tgl_awal  = $now->copy()->subMonth()->day(26)->startOfDay();
+        $tgl_akhir = $now->copy()->day(25)->endOfDay();
+    } else {
+        $tgl_awal  = $now->copy()->day(26)->startOfDay();
+        $tgl_akhir = $now->copy()->addMonth()->day(25)->endOfDay();
+    }
 
-    if ($cek) return;
+    $honor = Honor::with(['matkul', 'kelas'])
+        ->where('id_pendidik', $pendidik->id_pendidik)
+        ->whereBetween('tanggal', [$tgl_awal, $tgl_akhir])
+        ->orderBy('tanggal', 'desc') 
+        ->orderByDesc('id_honor')
+        ->get();
 
-    $matkul = Matakuliah::findOrFail($id_mk);
+    // ================= TOTAL =================
+    $totalGajiBersih = $honor->sum('gaji_bersih');
+    $totalHonorMengajar = $honor->sum('honor_mengajar');
+    $totalPPN = $honor->sum('ppn');
 
-    $honorMengajar = $matkul->sks * $pendidik->honor_per_sks;
-
-    $totalKotor = $honorMengajar;
-    $ppn = intval($totalKotor * 0.05);
-    $gajiBersih = $totalKotor - $ppn;
-
-    Honor::create([
-        'id_pendidik'     => $pendidik->id_pendidik,
-        'id_kelas'    => $id_kelas,
-        'id_mk'           => $id_mk,
-        'pertemuan'       => $pertemuan,
-        'tanggal'         => now()->toDateString(),
-        'sks'             => $matkul->sks,
-        'honor_per_sesi'  => $pendidik->honor_per_sks,
-        'honor_mengajar'  => $honorMengajar,
-        'total_kotor'     => $totalKotor,
-        'ppn'             => $ppn,
-        'gaji_bersih'     => $gajiBersih,
-        'semester'        => $matkul->semester,
-        'tahun'           => date('Y'),
-    ]);
+    return view('admin.pendidik.gaji.index', compact(
+        'honor',
+        'tgl_awal',
+        'tgl_akhir',
+        'totalGajiBersih',
+        'totalHonorMengajar',
+        'totalPPN'
+    ));
 }
+
+public function rekapGaji(Request $request)
+{
+    $pendidikId = auth()->user()->pendidik->id_pendidik;
+
+    $rekap = DB::table('honor')
+        ->where('id_pendidik', $pendidikId)
+        ->whereBetween('tanggal', [$request->start, $request->end])
+        ->get();
+
+    // 🔥 TOTAL GAJI BERSIH (570.000)
+    $totalGajiBersih = $rekap->sum('gaji_bersih');
+
+    return view('pendidik.gaji.rekap', compact(
+        'rekap',
+        'totalGajiBersih'
+    ));
+}
+
 
 }

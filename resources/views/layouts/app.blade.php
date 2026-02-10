@@ -195,9 +195,11 @@
                     <i class="fa-solid fa-list-check"></i> Tugas
                 </a>
 
-                <a href="{{ route('pendidik.gaji') }}" class="{{ request()->routeIs('pendidik.gaji') ? 'active' : '' }}">
-                    <i class="fa-solid fa-money-bill-wave"></i> Lihat Gaji
-                </a>
+               <a href="{{ route('pendidik.gaji.index') }}"
+                    class="{{ request()->routeIs('pendidik.gaji.*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-money-bill-wave"></i> Lihat Gaji
+                    </a>
+
 
                         <a href="{{ route('pendidik.sap.pilih') }}" 
             class="{{ request()->routeIs('pendidik.sap.*') ? 'active' : '' }}">

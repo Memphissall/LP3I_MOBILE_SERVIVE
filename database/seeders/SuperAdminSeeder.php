@@ -15,7 +15,7 @@ class SuperAdminSeeder extends Seeder
             [
                 'name' => 'Admin Akademik LP3I',
                 'username' => 'admin',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('12345678'),
                 'role' => 'admin',
             ]
         );

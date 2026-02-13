@@ -48,7 +48,7 @@ class DashboardController extends Controller
         // Quick statistics for mini cards
         $stats = [
             'total_mahasiswa' => Mahasiswa::count(),
-            'total_dosen' => Dosen::count(),
+            'total_pendidik' => Dosen::count(),
             'total_matkul' => MataKuliah::count(),
             'mahasiswa_aktif' => Mahasiswa::where('status', 'Aktif')->count(),
         ];

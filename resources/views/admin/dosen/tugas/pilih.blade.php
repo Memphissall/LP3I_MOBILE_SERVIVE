@@ -4,7 +4,7 @@
 <div class="p-6 max-w-xl mx-auto">
 
     <div class="bg-white shadow rounded-lg p-6">
-        <h1 class="text-xl mb-4 font-bold text-gray-700">Pilih Kelas & Mata Kuliah</h1>
+        <h1 class="text-xl mb-4 font-bold text-gray-700">Pilih Kelas & Materi Ajar</h1>
 
         <form action="{{ route('tugas.filter') }}" method="POST">
             @csrf
@@ -19,11 +19,11 @@
                 @endforeach
             </select>
 
-            {{-- PILIH MATA KULIAH --}}
-            <label class="font-semibold text-gray-700">Pilih Mata Kuliah</label>
+            {{-- PILIH Materi Ajar --}}
+            <label class="font-semibold text-gray-700">Pilih Materi Ajar</label>
             <select name="kode_mk" id="matkulSelect" required 
                 class="w-full border p-2 mb-4 rounded">
-                <option value="">-- Pilih Mata Kuliah --</option>
+                <option value="">-- Pilih Materi Ajar --</option>
             </select>
 
             <div class="flex justify-between mt-4">
@@ -51,7 +51,7 @@
             .then(response => response.json())
             .then(data => {
                 let matkulSelect = document.getElementById('matkulSelect');
-                matkulSelect.innerHTML = '<option value="">-- Pilih Mata Kuliah --</option>';
+                matkulSelect.innerHTML = '<option value="">-- Pilih Materi Ajar --</option>';
 
                 data.forEach(function(mk) {
                     matkulSelect.innerHTML += 

@@ -196,7 +196,7 @@
                     <tr>
                         <td>{{ ($chunkIndex * $perPage) + $index + 1 }}</td>
                         <td><b>{{ $mhs->nipd }}</b></td>
-                        <td style="text-align: left;">{{ $mhs->nama }}</td>
+                        <td style="text-align: left;">{{ $mhs->nama_mhs }}</td>
                         <td>{{ $mhs->tempat_lahir }}</td>
                         <td>{{ $mhs->tgl_lahir }}</td>
                         <td>{{ $mhs->alamat }}</td>

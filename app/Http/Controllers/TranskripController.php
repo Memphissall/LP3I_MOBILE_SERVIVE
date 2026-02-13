@@ -20,14 +20,14 @@ class TranskripController extends Controller
         
         if ($id_kelas) {
             // Query mahasiswa with their nilai data
-            $mahasiswaList = Mahasiswa::with('data_kelas.bidangKeahlian')
+            $mahasiswaList = Mahasiswa::with('data_kelas.programStudi')
                 ->where('id_kelas', $id_kelas)
                 ->get();
 
             // Calculate IPK for each mahasiswa
             foreach ($mahasiswaList as $mhs) {
                 // Get all nilai across all semesters
-                $allNilai = Nilai::where('nipd', $mhs->nipd)
+                $allNilai = Nilai::where('id_mahasiswa', $mhs->id_mahasiswa)
                     ->with('mataKuliah')
                     ->get();
                 
@@ -66,7 +66,7 @@ class TranskripController extends Controller
         }
 
         // Get kelas list for filter (deduplicated)
-        $kelasList = Kelas::with('bidangKeahlian')
+        $kelasList = Kelas::with('programStudi')
             ->get()
             ->unique('nama_kelas')
             ->sortBy('nama_kelas');
@@ -93,15 +93,15 @@ class TranskripController extends Controller
 
     public function printStudent($nipd)
     {
-        $mahasiswa = Mahasiswa::with('data_kelas.bidangKeahlian')
+        $mahasiswa = Mahasiswa::with('data_kelas.programStudi')
             ->where('nipd', $nipd)
             ->firstOrFail();
 
         // Get all nilai grouped by semester
-        $nilaiList = Nilai::where('nipd', $nipd)
+        $nilaiList = Nilai::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
             ->with('mataKuliah')
             ->orderBy('semester')
-            ->orderBy('kode_mk')
+            ->orderBy('id_mk')
             ->get();
 
         $semesterData = $nilaiList->groupBy('semester');
@@ -145,17 +145,17 @@ class TranskripController extends Controller
     {
         $id_kelas = $request->input('id_kelas');
         
-        $mahasiswaList = Mahasiswa::with('data_kelas.bidangKeahlian')
+        $mahasiswaList = Mahasiswa::with('data_kelas.programStudi')
             ->where('id_kelas', $id_kelas)
             ->get();
 
         $batchData = [];
         
         foreach ($mahasiswaList as $mahasiswa) {
-            $nilaiList = Nilai::where('nipd', $mahasiswa->nipd)
+            $nilaiList = Nilai::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
                 ->with('mataKuliah')
                 ->orderBy('semester')
-                ->orderBy('kode_mk')
+                ->orderBy('id_mk')
                 ->get();
 
             $semesterData = $nilaiList->groupBy('semester');

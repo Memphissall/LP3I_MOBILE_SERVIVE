@@ -7,16 +7,16 @@ use App\Models\Kelas;
 use App\Models\Mahasiswa;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\BidangKeahlian;
+use App\Models\ProgramStudi;
 
 class KelasController extends Controller
 {
     public function getKelasList(Request $request)
     {
-        $query = Kelas::with('bidangKeahlian'); // Eager load relation
+        $query = Kelas::with('programStudi'); // Eager load relation
         if ($request->filled('jurusan') && $request->jurusan !== 'Semua Jurusan') {
-            // Support filter by id_bidang_keahlian or old behavior (if needed)
-            $query->where('id_bidang_keahlian', $request->jurusan); 
+            // Support filter by id_program_studi or old behavior (if needed)
+            $query->where('id_program_studi', $request->jurusan); 
         }
         $kelas = $query->get();
         return response()->json($kelas);
@@ -46,18 +46,18 @@ class KelasController extends Controller
 
         if ($request->mode_kelas === 'new') {
             // Handle jurusan input (bisa berupa ID atau nama)
-            $idBidangKeahlian = $request->jurusan;
+            $idProgramStudi = $request->jurusan;
             if (!is_numeric($request->jurusan)) {
-                $bidang = BidangKeahlian::where('nama', $request->jurusan)->orWhere('kode', $request->jurusan)->first();
-                $idBidangKeahlian = $bidang ? $bidang->id_bidang_keahlian : null;
+                $prodi = ProgramStudi::where('nama', $request->jurusan)->orWhere('kode', $request->jurusan)->first();
+                $idProgramStudi = $prodi ? $prodi->id_program_studi : null;
             }
 
             $newKelas = Kelas::create([
                 'kode_mk' => $request->kode_mk,
                 'nama_kelas' => $request->nama_kelas,
-                'id_bidang_keahlian' => $idBidangKeahlian,
+                'id_program_studi' => $idProgramStudi,
                 'tahun_ajaran' => $request->tahun_ajaran,
-                'nama_pa' => $request->nama_pa,
+                'id_pendidik' => $request->id_pendidik,
             ]);
             $kelasId = $newKelas->id_kelas;
         }
@@ -103,19 +103,19 @@ class KelasController extends Controller
         if ($request->mode_kelas === 'new') {
             // Handle jurusan input
             $jurusanInput = $request->jurusan_baru;
-            $idBidangKeahlian = $jurusanInput;
+            $idProgramStudi = $jurusanInput;
             
             if (!is_numeric($jurusanInput)) {
-                $bidang = BidangKeahlian::where('nama', $jurusanInput)->orWhere('kode', $jurusanInput)->first();
-                $idBidangKeahlian = $bidang ? $bidang->id_bidang_keahlian : null;
+                $prodi = ProgramStudi::where('nama', $jurusanInput)->orWhere('kode', $jurusanInput)->first();
+                $idProgramStudi = $prodi ? $prodi->id_program_studi : null;
             }
 
             // 2. Insert tanpa kolom kode_mk / kode_kelas
             $id_kelas = DB::table('kelas')->insertGetId([
                 'nama_kelas'   => $request->nama_kelas_baru,
-                'id_bidang_keahlian' => $idBidangKeahlian,
+                'id_program_studi' => $idProgramStudi,
                 'tahun_ajaran' => $request->tahun_ajaran,
-                'nama_pa'      => $request->nama_pa,
+                'id_pendidik'  => $request->id_pendidik,
                 'created_at'   => now(),
                 'updated_at'   => now(),
             ]);

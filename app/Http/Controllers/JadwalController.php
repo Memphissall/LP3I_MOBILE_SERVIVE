@@ -7,7 +7,7 @@ use App\Models\Jadwal;
 use App\Models\MataKuliah;
 use App\Models\Kelas;
 use App\Models\Ruangan;
-use App\Models\BidangKeahlian;
+use App\Models\ProgramStudi;
 use Illuminate\Support\Facades\Validator;
 
 class JadwalController extends Controller
@@ -17,16 +17,16 @@ class JadwalController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Jadwal::with(['mataKuliah.bidangKeahlian', 'kelas.bidangKeahlian', 'ruangan', 'dosen']);
+        $query = Jadwal::with(['mataKuliah.programStudi', 'kelas.programStudi', 'ruangan', 'pendidik']);
 
-        // Filter by bidang keahlian (through mata kuliah)
-        if ($request->filled('id_bidang_keahlian') && $request->id_bidang_keahlian !== 'all') {
+        // Filter by bidang keahlian (through Materi Ajar)
+        if ($request->filled('id_program_studi') && $request->id_program_studi !== 'all') {
             $query->whereHas('mataKuliah', function($q) use ($request) {
-                $q->where('id_bidang_keahlian', $request->id_bidang_keahlian);
+                $q->where('id_program_studi', $request->id_program_studi);
             });
         }
 
-        // Filter by semester (through mata kuliah)
+        // Filter by semester (through Materi Ajar)
         if ($request->filled('semester') && $request->semester !== 'all') {
             $query->whereHas('mataKuliah', function($q) use ($request) {
                 $q->where('semester', $request->semester);
@@ -48,28 +48,28 @@ class JadwalController extends Controller
             $query->where('id_ruangan', $request->id_ruangan);
         }
 
-        $jadwal = $query->orderBy('hari')->orderBy('waktu')->get();
+        $jadwal = $query->orderBy('hari')->orderBy('jam_mulai')->get();
         return response()->json($jadwal);
     }
 
     /**
-     * Get bidang keahlian list
+     * Get program studi list
      */
-    public function getBidangKeahlianList()
+    public function getProgramStudiList()
     {
-        $bidangKeahlian = BidangKeahlian::orderBy('nama')->get();
-        return response()->json($bidangKeahlian);
+        $programStudi = ProgramStudi::orderBy('nama_program_studi')->get();
+        return response()->json($programStudi);
     }
 
     /**
-     * Get mata kuliah filtered by bidang keahlian and semester
+     * Get Materi Ajar filtered by bidang keahlian and semester
      */
     public function getMataKuliahByFilter(Request $request)
     {
-        $query = MataKuliah::with('bidangKeahlian')->select('id_matkul', 'kode_mk', 'nama_mk', 'sks', 'semester', 'id_bidang_keahlian');
+        $query = MataKuliah::with('programStudi')->select('id_mk', 'kode_mk', 'nama_mk', 'sks', 'semester', 'id_program_studi');
 
-        if ($request->filled('id_bidang_keahlian') && $request->id_bidang_keahlian !== 'all') {
-            $query->where('id_bidang_keahlian', $request->id_bidang_keahlian);
+        if ($request->filled('id_program_studi') && $request->id_program_studi !== 'all') {
+            $query->where('id_program_studi', $request->id_program_studi);
         }
 
         if ($request->filled('semester') && $request->semester !== 'all') {
@@ -82,14 +82,14 @@ class JadwalController extends Controller
     }
 
     /**
-     * Get kelas filtered by bidang keahlian and semester
+     * Get kelas filtered by program studi
      */
-    public function getKelasByBidangKeahlian(Request $request)
+    public function getKelasByProgramStudi(Request $request)
     {
-        $query = Kelas::with('bidangKeahlian')->select('id_kelas', 'nama_kelas', 'id_bidang_keahlian', 'semester', 'tahun_ajaran');
+        $query = Kelas::with('programStudi')->select('id_kelas', 'nama_kelas', 'id_program_studi');
 
-        if ($request->filled('id_bidang_keahlian') && $request->id_bidang_keahlian !== 'all') {
-            $query->where('id_bidang_keahlian', $request->id_bidang_keahlian);
+        if ($request->filled('id_program_studi') && $request->id_program_studi !== 'all') {
+            $query->where('id_program_studi', $request->id_program_studi);
         }
 
         if ($request->filled('semester') && $request->semester !== 'all') {
@@ -102,22 +102,15 @@ class JadwalController extends Controller
     }
 
     /**
-     * Get dosen filtered by mata kuliah
+     * Get pendidik list
      */
-    public function getDosenByMataKuliah(Request $request)
+    public function getPendidikList(Request $request)
     {
-        // Modified to allow showing all lecturers if no specific assignment exists
-        // This solves the issue where dropdown is empty because lecturers are not strictly assigned to subjects in DB
-        $query = \App\Models\Dosen::select('id_dosen', 'nama_dosen', 'nidn');
+        $query = \App\Models\Pendidik::select('id_pendidik', 'nama_pendidik', 'nidn');
 
-        // Optional: Only filter if necessary, but for now we return all to fix the empty dropdown
-        if ($request->filled('id_matkul') && $request->id_matkul !== 'all') {
-           $query->where('id_matkul', $request->id_matkul);
-        }
-
-        // Deduplicate by nama_dosen
-         $dosen = $query->orderBy('nama_dosen')->get()->unique('nama_dosen')->values();
-        return response()->json($dosen);
+        // Deduplicate by nama_pendidik
+        $pendidik = $query->orderBy('nama_pendidik')->get()->unique('nama_pendidik')->values();
+        return response()->json($pendidik);
     }
 
     /**
@@ -126,7 +119,7 @@ class JadwalController extends Controller
     public function getDropdownData()
     {
         return response()->json([
-            'bidang_keahlian' => BidangKeahlian::select('id_bidang_keahlian', 'kode', 'nama')->orderBy('nama')->get(),
+            'program_studi' => ProgramStudi::select('id_program_studi', 'kode_program_studi', 'nama_program_studi')->orderBy('nama_program_studi')->get(),
             'ruangan' => Ruangan::select('id_ruangan', 'nama_ruangan')->orderBy('nama_ruangan')->get(),
             'hari' => ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
             'status' => ['Offline', 'Online', 'Libur', 'Kelas Tunjangan', 'Belum Ada Konfirmasi'],
@@ -158,13 +151,13 @@ class JadwalController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id_matkul' => 'required|exists:mata_kuliah,id_matkul',
-            'id_dosen' => 'required|exists:dosen,id_dosen',
+            'id_mk' => 'required|exists:matakuliah,id_mk',
+            'id_pendidik' => 'required|exists:pendidik,id_pendidik',
             'id_kelas' => 'required|exists:kelas,id_kelas',
             'id_ruangan' => 'required|exists:ruangan,id_ruangan',
             'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu',
-            'waktu' => 'required',
-            'status' => 'required|in:Offline,Online,Libur,Kelas Tunjangan,Belum Ada Konfirmasi'
+            'waktu' => 'required|string',
+            'semester' => 'required|integer|min:1|max:4'
         ]);
 
         if ($validator->fails()) {
@@ -172,8 +165,19 @@ class JadwalController extends Controller
         }
 
         try {
-            $jadwal = Jadwal::create($request->all());
-            $jadwal->load(['mataKuliah.bidangKeahlian', 'kelas.bidangKeahlian', 'ruangan', 'dosen']);
+            $data = $request->except(['waktu', 'program_studi_filter']);
+            
+            // Parse waktu "08:00 - 09:40" into jam_mulai and jam_selesai
+            if ($request->filled('waktu')) {
+                $waktuParts = explode(' - ', $request->waktu);
+                if (count($waktuParts) === 2) {
+                    $data['jam_mulai'] = trim($waktuParts[0]);
+                    $data['jam_selesai'] = trim($waktuParts[1]);
+                }
+            }
+            
+            $jadwal = Jadwal::create($data);
+            $jadwal->load(['mataKuliah.programStudi', 'kelas.programStudi', 'ruangan', 'pendidik']);
             
             return response()->json([
                 'message' => 'Jadwal berhasil ditambahkan',
@@ -189,7 +193,7 @@ class JadwalController extends Controller
      */
     public function edit($id)
     {
-        $jadwal = Jadwal::with(['mataKuliah.bidangKeahlian', 'kelas.bidangKeahlian', 'ruangan', 'dosen'])->findOrFail($id);
+        $jadwal = Jadwal::with(['mataKuliah.programStudi', 'kelas.programStudi', 'ruangan', 'pendidik'])->findOrFail($id);
         return response()->json($jadwal);
     }
 
@@ -199,13 +203,13 @@ class JadwalController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'id_matkul' => 'required|exists:mata_kuliah,id_matkul',
-            'id_dosen' => 'required|exists:dosen,id_dosen',
+            'id_mk' => 'required|exists:matakuliah,id_mk',
+            'id_pendidik' => 'required|exists:pendidik,id_pendidik',
             'id_kelas' => 'required|exists:kelas,id_kelas',
             'id_ruangan' => 'required|exists:ruangan,id_ruangan',
             'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu',
-            'waktu' => 'required',
-            'status' => 'required|in:Offline,Online,Libur,Kelas Tunjangan,Belum Ada Konfirmasi'
+            'waktu' => 'required|string',
+            'semester' => 'required|integer|min:1|max:4'
         ]);
 
         if ($validator->fails()) {
@@ -214,8 +218,19 @@ class JadwalController extends Controller
 
         try {
             $jadwal = Jadwal::findOrFail($id);
-            $jadwal->update($request->all());
-            $jadwal->load(['mataKuliah.bidangKeahlian', 'kelas.bidangKeahlian', 'ruangan', 'dosen']);
+            $data = $request->except(['waktu', 'program_studi_filter', '_token']);
+            
+            // Parse waktu "08:00 - 09:40" into jam_mulai and jam_selesai
+            if ($request->filled('waktu')) {
+                $waktuParts = explode(' - ', $request->waktu);
+                if (count($waktuParts) === 2) {
+                    $data['jam_mulai'] = trim($waktuParts[0]);
+                    $data['jam_selesai'] = trim($waktuParts[1]);
+                }
+            }
+            
+            $jadwal->update($data);
+            $jadwal->load(['mataKuliah.programStudi', 'kelas.programStudi', 'ruangan', 'pendidik']);
 
             return response()->json([
                 'message' => 'Jadwal berhasil diupdate',
@@ -248,17 +263,17 @@ class JadwalController extends Controller
      */
     public function printJadwal(Request $request)
     {
-        $id_bidang_keahlian = $request->input('id_bidang_keahlian');
+        $id_program_studi = $request->input('id_program_studi');
         $semester = $request->input('semester');
         $id_kelas = $request->input('id_kelas');
         $hari = $request->input('hari');
         $id_ruangan = $request->input('id_ruangan');
 
-        $query = Jadwal::with(['mataKuliah.bidangKeahlian', 'kelas.bidangKeahlian', 'ruangan', 'dosen']);
+        $query = Jadwal::with(['mataKuliah.programStudi', 'kelas.programStudi', 'ruangan', 'pendidik']);
 
-        if ($id_bidang_keahlian && $id_bidang_keahlian !== 'all') {
-            $query->whereHas('mataKuliah', function($q) use ($id_bidang_keahlian) {
-                $q->where('id_bidang_keahlian', $id_bidang_keahlian);
+        if ($id_program_studi && $id_program_studi !== 'all') {
+            $query->whereHas('mataKuliah', function($q) use ($id_program_studi) {
+                $q->where('id_program_studi', $id_program_studi);
             });
         }
 
@@ -280,7 +295,7 @@ class JadwalController extends Controller
             $query->where('id_ruangan', $id_ruangan);
         }
 
-        $jadwal = $query->orderBy('hari')->orderBy('waktu')->get();
+        $jadwal = $query->orderBy('hari')->orderBy('jam_mulai')->get();
 
         return view('akademik.print_jadwal', compact('jadwal'));
     }

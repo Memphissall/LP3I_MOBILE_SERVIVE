@@ -27,7 +27,7 @@ class MahasiswaFactory extends Factory
         $year = $this->faker->numberBetween(2022, 2024);
         
         // Try to get random IDs, or fallback to null if tables are empty
-        $bidangKeahlianId = BidangKeahlian::inRandomOrder()->first()?->id_bidang_keahlian;
+        $bidangKeahlianId = BidangKeahlian::inRandomOrder()->first()?->id_program_studi;
         $kelasId = Kelas::inRandomOrder()->first()?->id_kelas;
 
         return [
@@ -36,7 +36,7 @@ class MahasiswaFactory extends Factory
             'jenis_kelamin' => $gender,
             'tempat_lahir' => $this->faker->city(),
             'tgl_lahir' => $this->faker->date('Y-m-d', '2006-01-01'),
-            'id_bidang_keahlian' => $bidangKeahlianId,
+            'id_program_studi' => $bidangKeahlianId,
             'kelas' => $this->faker->regexify('[A-Z]{2}-[1-3][A-B]'), // Fallback string if needed
             'angkatan' => (string) $year,
             'periode' => $year . '/' . ($year + 1) . '/' . $this->faker->numberBetween(1, 8),

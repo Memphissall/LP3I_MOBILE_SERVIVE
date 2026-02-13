@@ -39,11 +39,11 @@
             </div>
         </div>
 
-        {{-- Card Mata Kuliah --}}
+        {{-- Card Materi Ajar --}}
         <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-[#F15B67]">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm font-medium">Mata Kuliah</p>
+                    <p class="text-gray-500 text-sm font-medium">Materi Ajar</p>
                     <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $stats['total_matkul'] }}</h3>
                     <p class="text-xs text-[#F15B67] mt-1">Terdaftar</p>
                 </div>

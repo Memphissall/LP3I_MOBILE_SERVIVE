@@ -20,25 +20,10 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
-                {{-- NIDN --}}
-                <div>
-                    <label for="edit-nidn" class="block text-sm font-medium text-gray-700">NIDN *</label>
-                    <input type="text" id="edit-nidn" name="nidn" required
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                {{-- ID Dosen Internal --}}
-                <div>
-                    <label for="edit-id-internal" class="block text-sm font-medium text-gray-700">ID Internal Kampus</label>
-                    <input type="text" id="edit-id-internal" name="id_dosen_internal"
-                        placeholder="Contoh: DSN-001"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                {{-- Nama Dosen --}}
+                {{-- Nama Pendidik --}}
                 <div>
                     <label for="edit-nama" class="block text-sm font-medium text-gray-700">Nama Lengkap *</label>
-                    <input type="text" id="edit-nama" name="nama_dosen" required
+                    <input type="text" id="edit-nama" name="nama_pendidik" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
@@ -54,7 +39,7 @@
                     
                     {{-- Hidden input for custom value --}}
                     <input type="text" id="edit-pendidikan-custom" name="pendidikan" 
-                        placeholder="Masukkan pendidikan custom, contoh: S2 - Pendidikan Bahasa"
+                        placeholder="Masukkan pendidikan custom"
                         class="mt-2 hidden block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     
                     {{-- Hidden input for selected value --}}
@@ -70,15 +55,15 @@
 
                 {{-- Tempat Lahir --}}
                 <div>
-                    <label for="edit-tempat" class="block text-sm font-medium text-gray-700">Tempat Lahir *</label>
-                    <input type="text" id="edit-tempat" name="tempat" required
+                    <label for="edit-tempat" class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
+                    <input type="text" id="edit-tempat" name="tempat_lahir"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 {{-- Tanggal Lahir --}}
                 <div>
-                    <label for="edit-tanggal-lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir *</label>
-                    <input type="date" id="edit-tanggal-lahir" name="tanggal_lahir" required
+                    <label for="edit-tanggal-lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
+                    <input type="date" id="edit-tanggal-lahir" name="tgl_lahir"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
@@ -88,15 +73,15 @@
                     <select id="edit-jenis-kelamin" name="jenis_kelamin" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Pilih --</option>
-                        <option value="Laki-laki">Laki-laki</option>
-                        <option value="Perempuan">Perempuan</option>
+                        <option value="L">Laki-laki</option>
+                        <option value="P">Perempuan</option>
                     </select>
                 </div>
 
                 {{-- Agama --}}
                 <div>
-                    <label for="edit-agama" class="block text-sm font-medium text-gray-700">Agama *</label>
-                    <select id="edit-agama" name="agama" required
+                    <label for="edit-agama" class="block text-sm font-medium text-gray-700">Agama</label>
+                    <select id="edit-agama" name="agama"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Pilih --</option>
                         <option value="Islam">Islam</option>
@@ -108,14 +93,6 @@
                     </select>
                 </div>
 
-                {{-- Alamat --}}
-                <div>
-                    <label for="edit-alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
-                    <textarea id="edit-alamat" name="alamat" rows="2"
-                        placeholder="Alamat lengkap dosen"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
-                </div>
-
                 {{-- Email --}}
                 <div>
                     <label for="edit-email" class="block text-sm font-medium text-gray-700">Email *</label>
@@ -125,15 +102,15 @@
 
                 {{-- No. Telepon --}}
                 <div>
-                    <label for="edit-no-telp" class="block text-sm font-medium text-gray-700">No. Telepon *</label>
-                    <input type="text" id="edit-no-telp" name="no_telp" required
+                    <label for="edit-no-telp" class="block text-sm font-medium text-gray-700">No. Telepon</label>
+                    <input type="text" id="edit-no-telp" name="no_tlp"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
-                {{-- Honor per SKS --}}
+                {{-- Rate Gaji --}}
                 <div>
-                    <label for="edit-honor" class="block text-sm font-medium text-gray-700">Honor per SKS (Rp) *</label>
-                    <input type="number" id="edit-honor" name="honor_per_sks" required min="0"
+                    <label for="edit-rate-gaji" class="block text-sm font-medium text-gray-700">Rate Gaji (Rp)</label>
+                    <input type="number" id="edit-rate-gaji" name="rate_gaji" min="0"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
@@ -143,11 +120,11 @@
                     <select id="edit-status" name="status" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Pilih Status --</option>
-                        <option value="aktif">Aktif</option>
-                        <option value="tidak aktif">Tidak Aktif</option>
-                        <option value="kontrak">Kontrak</option>
-                        <option value="tetap">Tetap</option>
-                        <option value="honorer">Honorer</option>
+                        <option value="Aktif">Aktif</option>
+                        <option value="Tidak Aktif">Tidak Aktif</option>
+                        <option value="Kontrak">Kontrak</option>
+                        <option value="Tetap">Tetap</option>
+                        <option value="Honorer">Honorer</option>
                     </select>
                 </div>
 

@@ -10,13 +10,13 @@ return new class extends Migration {
     {
         Schema::table('mata_kuliah', function (Blueprint $table) {
             // Check if column doesn't exist before adding
-            if (!Schema::hasColumn('mata_kuliah', 'id_bidang_keahlian')) {
+            if (!Schema::hasColumn('mata_kuliah', 'id_program_studi')) {
                 // Add foreign key column
-                $table->unsignedBigInteger('id_bidang_keahlian')->nullable()->after('semester');
+                $table->unsignedBigInteger('id_program_studi')->nullable()->after('semester');
 
                 // Add foreign key constraint
-                $table->foreign('id_bidang_keahlian')
-                    ->references('id_bidang_keahlian')
+                $table->foreign('id_program_studi')
+                    ->references('id_program_studi')
                     ->on('bidang_keahlian')
                     ->onDelete('set null');
             }
@@ -26,8 +26,8 @@ return new class extends Migration {
         // SQLite doesn't support UPDATE JOIN, so we use a subquery instead
         DB::statement("
             UPDATE mata_kuliah
-            SET id_bidang_keahlian = (
-                SELECT id_bidang_keahlian
+            SET id_program_studi = (
+                SELECT id_program_studi
                 FROM bidang_keahlian
                 WHERE bidang_keahlian.nama = mata_kuliah.bidang_keahlian
             )
@@ -54,14 +54,14 @@ return new class extends Migration {
             SET bidang_keahlian = (
                 SELECT nama
                 FROM bidang_keahlian
-                WHERE bidang_keahlian.id_bidang_keahlian = mata_kuliah.id_bidang_keahlian
+                WHERE bidang_keahlian.id_program_studi = mata_kuliah.id_program_studi
             )
-            WHERE id_bidang_keahlian IS NOT NULL
+            WHERE id_program_studi IS NOT NULL
         ");
 
         Schema::table('mata_kuliah', function (Blueprint $table) {
-            $table->dropForeign(['id_bidang_keahlian']);
-            $table->dropColumn('id_bidang_keahlian');
+            $table->dropForeign(['id_program_studi']);
+            $table->dropColumn('id_program_studi');
         });
     }
 };

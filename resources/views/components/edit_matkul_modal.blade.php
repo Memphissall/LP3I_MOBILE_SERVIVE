@@ -27,25 +27,17 @@
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
-                {{-- Nama Mata Kuliah --}}
+                {{-- Nama Materi Ajar --}}
                 <div>
-                    <label for="edit-nama-mk" class="block text-sm font-medium text-gray-700">Nama Mata Kuliah *</label>
+                    <label for="edit-nama-mk" class="block text-sm font-medium text-gray-700">Nama Materi Ajar *</label>
                     <input type="text" id="edit-nama-mk" name="nama_mk" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
-                {{-- SKS --}}
+                {{-- BK (SKS) --}}
                 <div>
-                    <label for="edit-sks" class="block text-sm font-medium text-gray-700">SKS *</label>
-                    <input type="number" id="edit-sks" name="sks" required min="1" max="6"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                {{-- Bobot Kompetensi --}}
-                <div>
-                    <label for="edit-bobot-kompetensi" class="block text-sm font-medium text-gray-700">Bobot Kompetensi *</label>
-                    <input type="number" id="edit-bobot-kompetensi" name="bobot_kompetensi" required min="0" max="100"
-                        placeholder="0-100"
+                    <label for="edit-sks" class="block text-sm font-medium text-gray-700">BK (SKS) *</label>
+                    <input type="number" id="edit-sks" name="sks" required min="0" max="6"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
@@ -55,31 +47,32 @@
                     <select id="edit-semester" name="semester" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Pilih Semester --</option>
-                        {{-- Will be populated by JavaScript from database --}}
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
                     </select>
                 </div>
 
-                {{-- Bidang Keahlian --}}
+                {{-- Program Studi --}}
                 <div>
-                    <label for="edit-bidang-keahlian" class="block text-sm font-medium text-gray-700">Bidang Keahlian *</label>
-                    <select id="edit-bidang-keahlian" name="id_bidang_keahlian" required
+                    <label for="edit-program-studi" class="block text-sm font-medium text-gray-700">Program Studi *</label>
+                    <select id="edit-program-studi" name="id_program_studi" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- Pilih Bidang Keahlian --</option>
+                        <option value="">-- Pilih Program Studi --</option>
                         {{-- Will be populated by JavaScript --}}
                     </select>
                 </div>
 
                 {{-- Current SAP File & Upload New --}}
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700">File SAP Saat Ini</label>
+                    <label class="block text-sm font-medium text-gray-700">File SAP</label>
                     <div id="current-sap-display" class="mt-1 mb-2 text-sm text-gray-600">
                         <span id="current-sap-name">Tidak ada file</span>
                     </div>
-                    
-                    <label for="edit-sap-file" class="block text-sm font-medium text-gray-700 mt-3">Upload SAP Baru (PDF/DOC/DOCX, Max 10MB)</label>
                     <input type="file" id="edit-sap-file" name="sap_file" accept=".pdf,.doc,.docx"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <p class="mt-1 text-xs text-gray-500">Optional: Upload file baru untuk mengganti yang lama</p>
+                    <p class="mt-1 text-xs text-gray-500">Optional: Upload file baru</p>
                 </div>
 
                 {{-- Deskripsi (Full Width) --}}

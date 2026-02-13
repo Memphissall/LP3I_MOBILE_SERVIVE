@@ -282,9 +282,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>BIDANG KEAHLIAN</td>
+                    <td>PROGRAM STUDI</td>
                     <td>:</td>
-                    <td>{{ $data['mahasiswa']->data_kelas->bidangKeahlian->nama ?? '-' }}</td>
+                    <td>{{ $data['mahasiswa']->data_kelas->programStudi->nama ?? '-' }}</td>
                 </tr>
             </table>
         </div>

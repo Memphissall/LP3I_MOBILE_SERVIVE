@@ -167,7 +167,7 @@
                                 class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200 w-24 whitespace-nowrap">
                                 Tgl Lahir</th>
                             <th
-                                class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200 w-24 whitespace-nowrap">
+                                class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200 whitespace-nowrap">
                                 Alamat</th>
                             <th
                                 class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider border-b-2 border-gray-200 w-24 whitespace-nowrap">
@@ -255,6 +255,23 @@
             loadFilterOptions();
 
             // =========================================================================
+            // HELPER FUNCTION FOR DATE FORMATTING
+            // =========================================================================
+            function formatDate(dateString) {
+                if (!dateString) return '-';
+                try {
+                    const date = new Date(dateString);
+                    if (isNaN(date.getTime())) return '-';
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = date.getFullYear();
+                    return `${day}-${month}-${year}`;
+                } catch (e) {
+                    return '-';
+                }
+            }
+
+            // =========================================================================
             // RENDER TABLE FUNCTION
             // =========================================================================
 
@@ -297,34 +314,34 @@
                                 const statusBadge = getStatusBadge(dosen.status);
 
                                 const row = `
-                                                                    <tr data-id="${dosen.id_dosen}" class="hover:bg-gray-50 transition-colors duration-200 group border-b border-gray-100 last:border-b-0">
+                                                                    <tr data-id="${dosen.id_pendidik}" class="hover:bg-gray-50 transition-colors duration-200 group border-b border-gray-100 last:border-b-0">
                                                                         <td class="px-3 py-3 text-center font-bold text-gray-500">
                                                                             ${index + 1}
                                                                         </td>
                                                                         <td class="px-3 py-3 whitespace-nowrap">
-                                                                            <span class="font-mono text-xs text-[#004269] font-bold bg-[#004269]/5 px-1.5 py-0.5 rounded border border-[#004269]/10">${dosen.nidn || '-'}</span>
+                                                                            <span class="font-mono text-xs text-[#004269] font-bold bg-[#004269]/5 px-1.5 py-0.5 rounded border border-[#004269]/10">${dosen.id_pendidik || '-'}</span>
                                                                         </td>
                                                                         <td class="px-3 py-3">
-                                                                            <div class="text-xs font-bold text-gray-800 group-hover:text-[#004269] transition-colors">${dosen.nama_dosen}</div>
+                                                                            <div class="text-xs font-bold text-gray-800 group-hover:text-[#004269] transition-colors">${dosen.nama_pendidik}</div>
                                                                             <div class="text-[10px] text-gray-400">${dosen.bidang || ''}</div>
                                                                         </td>
-                                                                        <td class="px-3 py-3 text-xs text-gray-600">${dosen.tempat || '-'}</td>
-                                                                        <td class="px-3 py-3 text-xs text-gray-600 text-center">${dosen.tanggal_lahir || '-'}</td>
-                                                                        <td class="px-3 py-3 text-xs text-gray-600 truncate max-w-xs" title="${dosen.alamat || '-'}">${dosen.alamat || '-'}</td>
+                                                                        <td class="px-3 py-3 text-xs text-gray-600">${dosen.tempat_lahir || '-'}</td>
+                                                                        <td class="px-3 py-3 text-xs text-gray-600 text-center">${formatDate(dosen.tgl_lahir)}</td>
+                                                                        <td class="px-3 py-3 text-xs text-gray-600">${dosen.alamat || '-'}</td>
                                                                         <td class="px-3 py-3 text-center">
                                                                             <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700 uppercase tracking-wide border border-gray-200">
                                                                                 ${dosen.pendidikan}
                                                                             </span>
                                                                         </td>
-                                                                        <td class="px-3 py-3 text-xs text-gray-600">${dosen.no_telp || '-'}</td>
+                                                                        <td class="px-3 py-3 text-xs text-gray-600">${dosen.no_tlp || '-'}</td>
                                                                         <td class="px-3 py-3 text-xs text-gray-600 truncate" title="${dosen.email || '-'}">${dosen.email || '-'}</td>
                                                                         <td class="px-3 py-3 text-center">${statusBadge}</td>
                                                                         <td class="px-3 py-3 text-center whitespace-nowrap text-xs font-medium">
                                                                             <div class="flex justify-center space-x-1">
-                                                                                <button data-id="${dosen.id_dosen}" title="Edit" class="btn-edit-dosen p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded transition-all duration-200">
+                                                                                <button data-id="${dosen.id_pendidik}" title="Edit" class="btn-edit-dosen p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded transition-all duration-200">
                                                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                                                                 </button>
-                                                                                <button data-id="${dosen.id_dosen}" title="Hapus" class="btn-delete-dosen p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition-all duration-200">
+                                                                                <button data-id="${dosen.id_pendidik}" title="Hapus" class="btn-delete-dosen p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition-all duration-200">
                                                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                                                                 </button>
                                                                             </div>
@@ -407,20 +424,17 @@
                                 console.log('Select dropdown populated with', filterData.pendidikan.length, 'options');
 
                                 // Populate form fields
-                                $('#edit-dosen-id').val(data.id_dosen);
-                                $('#edit-nidn').val(data.nidn);
-                                $('#edit-id-internal').val(data.id_dosen_internal);
-                                $('#edit-nama').val(data.nama_dosen);
+                                $('#edit-dosen-id').val(data.id_pendidik);
+                                $('#edit-nama').val(data.nama_pendidik);
                                 $('#edit-bidang').val(data.bidang);
-                                $('#edit-tempat').val(data.tempat);
-                                $('#edit-tanggal-lahir').val(data.tanggal_lahir);
+                                $('#edit-tempat').val(data.tempat_lahir);
+                                $('#edit-tanggal-lahir').val(data.tgl_lahir);
                                 $('#edit-jenis-kelamin').val(data.jenis_kelamin);
                                 $('#edit-agama').val(data.agama);
-                                $('#edit-alamat').val(data.alamat);
                                 $('#edit-email').val(data.email);
-                                $('#edit-no-telp').val(data.no_telp);
-                                $('#edit-honor').val(data.honor_per_sks);
-                                $('#edit-status').val(data.status ? data.status.toLowerCase() : '');
+                                $('#edit-no-telp').val(data.no_tlp);
+                                $('#edit-rate-gaji').val(data.rate_gaji);
+                                $('#edit-status').val(data.status);
 
                                 // Set pendidikan value
                                 const pendidikanValue = data.pendidikan;
@@ -445,10 +459,8 @@
                             error: function (xhr) {
                                 console.error('Failed to load pendidikan options:', xhr);
                                 // Still show modal even if datalist fails
-                                $('#edit-dosen-id').val(data.id_dosen);
-                                $('#edit-nidn').val(data.nidn);
-                                $('#edit-id-internal').val(data.id_dosen_internal);
-                                $('#edit-nama').val(data.nama_dosen);
+                                $('#edit-dosen-id').val(data.id_pendidik);
+                                $('#edit-nama').val(data.nama_pendidik);
 
                                 // Set pendidikan value (error handler)
                                 const pendidikanValue = data.pendidikan;

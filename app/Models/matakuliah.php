@@ -6,23 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class MataKuliah extends Model
 {
-    protected $table = 'mata_kuliah';
-    protected $primaryKey = 'id_matkul';
+    protected $table = 'matakuliah';
+    protected $primaryKey = 'id_mk';
     
     protected $fillable = [
         'kode_mk',
         'nama_mk',
-        'sks',
-        'bobot_kompetensi',
-        'semester',
-        'id_bidang_keahlian',
         'deskripsi',
-        'sap'
+        'tipe_matakuliah',
+        'id_program_studi',
+        'semester',
+        'sks',
+        'sap',
     ];
 
-    public function bidangKeahlian()
+    public function programStudi()
     {
-        return $this->belongsTo(BidangKeahlian::class, 'id_bidang_keahlian', 'id_bidang_keahlian');
+        return $this->belongsTo(ProgramStudi::class, 'id_program_studi', 'id_program_studi');
     }
 
     public function tugas()

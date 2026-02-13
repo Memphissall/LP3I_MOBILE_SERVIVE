@@ -41,7 +41,7 @@
                         </svg>
                         Judul Pengumuman <span class="text-red-500 ml-1">*</span>
                     </label>
-                    <input type="text" id="tambah-judul" name="judul" required placeholder="Contoh: Jadwal Libur Semester Ganjil 2025" 
+                    <input type="text" id="tambah-judul" name="judul_pengumuman" required placeholder="Contoh: Jadwal Libur Semester Ganjil 2025" 
                         class="w-full p-3.5 text-sm font-bold text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-[#009DA5] focus:ring-4 focus:ring-[#009DA5]/10 transition-all duration-200 placeholder-gray-400">
                 </div>
 

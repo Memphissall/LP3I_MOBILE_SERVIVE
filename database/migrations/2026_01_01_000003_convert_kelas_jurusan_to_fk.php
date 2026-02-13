@@ -10,13 +10,13 @@ return new class extends Migration {
     {
         Schema::table('kelas', function (Blueprint $table) {
             // Check if column doesn't exist before adding
-            if (!Schema::hasColumn('kelas', 'id_bidang_keahlian')) {
+            if (!Schema::hasColumn('kelas', 'id_program_studi')) {
                 // Add foreign key column
-                $table->unsignedBigInteger('id_bidang_keahlian')->nullable()->after('nama_kelas');
+                $table->unsignedBigInteger('id_program_studi')->nullable()->after('nama_kelas');
 
                 // Add foreign key constraint
-                $table->foreign('id_bidang_keahlian')
-                    ->references('id_bidang_keahlian')
+                $table->foreign('id_program_studi')
+                    ->references('id_program_studi')
                     ->on('bidang_keahlian')
                     ->onDelete('set null');
             }
@@ -40,8 +40,8 @@ return new class extends Migration {
         foreach ($mapping as $jurusanName => $kode) {
             DB::statement("
                 UPDATE kelas
-                SET id_bidang_keahlian = (
-                    SELECT id_bidang_keahlian
+                SET id_program_studi = (
+                    SELECT id_program_studi
                     FROM bidang_keahlian
                     WHERE bidang_keahlian.kode = ?
                 )
@@ -69,14 +69,14 @@ return new class extends Migration {
             SET jurusan = (
                 SELECT nama
                 FROM bidang_keahlian
-                WHERE bidang_keahlian.id_bidang_keahlian = kelas.id_bidang_keahlian
+                WHERE bidang_keahlian.id_program_studi = kelas.id_program_studi
             )
-            WHERE id_bidang_keahlian IS NOT NULL
+            WHERE id_program_studi IS NOT NULL
         ");
 
         Schema::table('kelas', function (Blueprint $table) {
-            $table->dropForeign(['id_bidang_keahlian']);
-            $table->dropColumn('id_bidang_keahlian');
+            $table->dropForeign(['id_program_studi']);
+            $table->dropColumn('id_program_studi');
         });
     }
 };

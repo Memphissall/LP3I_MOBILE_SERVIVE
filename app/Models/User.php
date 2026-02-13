@@ -10,12 +10,17 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    /**
+     * The primary key for the model.
+     */
+    protected $primaryKey = 'id_user';
+
     protected $fillable = [
         'name',
-        'username',
         'email',
         'password',
         'role',
+        'is_active',
     ];
 
     protected $hidden = [
@@ -28,12 +33,12 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 
     public function dosen()
-{
-    return $this->hasOne(Dosen::class);
-}
-
+    {
+        return $this->hasOne(Dosen::class);
+    }
 }

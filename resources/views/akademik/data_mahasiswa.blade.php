@@ -42,7 +42,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
-                            Bidang Keahlian
+                            Program Studi
                         </label>
                         <div class="relative">
                             <select id="filter-jurusan"
@@ -272,6 +272,21 @@
             let globalData = {};
             let isFetchingMain = false;
 
+            // Helper function to format date
+            function formatDate(dateString) {
+                if (!dateString) return '-';
+                try {
+                    const date = new Date(dateString);
+                    if (isNaN(date.getTime())) return '-';
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = date.getFullYear();
+                    return `${day}-${month}-${year}`;
+                } catch (e) {
+                    return '-';
+                }
+            }
+
             // --- 1. INISIALISASI DATA & FILTER ---
             function initFilters() {
                 $.get("/akademik/api/filter-data", function (res) {
@@ -289,8 +304,8 @@
                             console.warn('⚠️ DUPLICATE KELAS DETECTED IN API RESPONSE!');
                         }
 
-                        let jHtml = '<option value="">Semua Bidang Keahlian</option>';
-                        allBidangKeahlianData.forEach(j => { jHtml += `<option value="${j.id_bidang_keahlian}">${j.nama} (${j.kode})</option>`; });
+                        let jHtml = '<option value="">Semua Program Studi</option>';
+                        allBidangKeahlianData.forEach(j => { jHtml += `<option value="${j.id_program_studi}">${j.nama_program_studi} (${j.kode_program_studi})</option>`; });
                         $('#filter-jurusan, #modal-filter-jurusan, #class-filter-jurusan, #new-jurusan').html(jHtml);
 
                         let aHtml = '<option value="">Semua Tahun</option>';
@@ -308,10 +323,10 @@
                         allClassData.forEach(k => {
                             if (!seenKelasNames.has(k.nama_kelas)) {
                                 seenKelasNames.add(k.nama_kelas);
-                                // Find bidang keahlian name for this kelas
-                                const bidang = allBidangKeahlianData.find(b => b.id_bidang_keahlian == k.id_bidang_keahlian);
-                                const bidangInfo = bidang ? ` (${bidang.kode})` : '';
-                                kHtml += `<option value="${k.id_kelas}">${k.nama_kelas}${bidangInfo}</option>`;
+                                // Find program studi name for this kelas
+                                const prodi = allBidangKeahlianData.find(b => b.id_program_studi == k.id_program_studi);
+                                const prodiInfo = prodi ? ` (${prodi.kode_program_studi})` : '';
+                                kHtml += `<option value="${k.id_kelas}">${k.nama_kelas}${prodiInfo}</option>`;
                             }
                         });
 
@@ -331,8 +346,8 @@
                 let kelasHtml = '<option value="">-- Pilih Kelas --</option>';
                 const filterVal = (selectedJurusan === "Semua Bidang Keahlian" || selectedJurusan === "") ? "" : selectedJurusan;
 
-                // Fix column name: id_bidang_keahlian (not jurusan)
-                const filtered = filterVal === "" ? allClassData : allClassData.filter(k => String(k.id_bidang_keahlian) === String(filterVal));
+                // Fix column name: id_program_studi (not jurusan)
+                const filtered = filterVal === "" ? allClassData : allClassData.filter(k => String(k.id_program_studi) === String(filterVal));
 
                 if (filtered.length > 0) {
                     const seen = new Set();
@@ -365,30 +380,30 @@
                     allClassData.forEach(k => {
                         if (!seenKelasNames.has(k.nama_kelas)) {
                             seenKelasNames.add(k.nama_kelas);
-                            // Find bidang keahlian name
-                            const bidang = allBidangKeahlianData.find(b => b.id_bidang_keahlian == k.id_bidang_keahlian);
-                            const bidangInfo = bidang ? ` (${bidang.kode})` : '';
-                            kHtml += `<option value="${k.id_kelas}">${k.nama_kelas}${bidangInfo}</option>`;
+                            // Find program studi name
+                            const prodi = allBidangKeahlianData.find(b => b.id_program_studi == k.id_program_studi);
+                            const prodiInfo = prodi ? ` (${prodi.kode_program_studi})` : '';
+                            kHtml += `<option value="${k.id_kelas}">${k.nama_kelas}${prodiInfo}</option>`;
                             if (k.id_kelas == currentKelas) {
                                 isCurrentKelasValid = true;
                             }
                         }
                     });
                 } else {
-                    // Filter kelas by selected bidang keahlian
+                    // Filter kelas by selected program studi
                     const filteredKelas = allClassData.filter(k =>
-                        String(k.id_bidang_keahlian) === String(selectedBidangKeahlian)
+                        String(k.id_program_studi) === String(selectedBidangKeahlian)
                     );
 
-                    // Get selected bidang keahlian info
-                    const selectedBidang = allBidangKeahlianData.find(b => b.id_bidang_keahlian == selectedBidangKeahlian);
-                    const bidangInfo = selectedBidang ? ` (${selectedBidang.kode})` : '';
+                    // Get selected program studi info
+                    const selectedProdi = allBidangKeahlianData.find(b => b.id_program_studi == selectedBidangKeahlian);
+                    const prodiInfo = selectedProdi ? ` (${selectedProdi.kode_program_studi})` : '';
 
                     filteredKelas.forEach(k => {
                         if (!seenKelasNames.has(k.nama_kelas)) {
                             seenKelasNames.add(k.nama_kelas);
-                            // Since we're filtering by bidang, all kelas have same bidang
-                            kHtml += `<option value="${k.id_kelas}">${k.nama_kelas}${bidangInfo}</option>`;
+                            // Since we're filtering by prodi, all kelas have same prodi
+                            kHtml += `<option value="${k.id_kelas}">${k.nama_kelas}${prodiInfo}</option>`;
                             if (k.id_kelas == currentKelas) {
                                 isCurrentKelasValid = true;
                             }
@@ -473,11 +488,11 @@
                                 <span class="font-mono text-xs text-[#004269] font-bold bg-[#004269]/5 px-1.5 py-0.5 rounded border border-[#004269]/10">${s.nipd}</span>
                             </td>
                             <td class="px-3 py-3">
-                                <div class="text-xs font-bold text-gray-800 group-hover:text-[#004269] transition-colors">${s.nama}</div>
+                                <div class="text-xs font-bold text-gray-800 group-hover:text-[#004269] transition-colors">${s.nama_mhs}</div>
                             </td>
                             <td class="px-3 py-3 text-xs text-gray-600 font-medium">${s.data_kelas ? s.data_kelas.nama_kelas : '-'}</td>
                             <td class="px-3 py-3 text-xs text-gray-600 font-medium">${s.tempat_lahir || '-'}</td>
-                            <td class="px-3 py-3 text-center text-xs text-gray-600 font-medium">${s.tgl_lahir || '-'}</td>
+                            <td class="px-3 py-3 text-center text-xs text-gray-600 font-medium">${formatDate(s.tgl_lahir)}</td>
                             <td class="px-3 py-3 text-xs text-gray-600 font-medium">${s.alamat || '-'}</td>
                             <td class="px-3 py-3 text-center text-xs text-gray-600 font-medium">${s.no_tlp || '-'}</td>
                             <td class="px-3 py-3 text-xs text-gray-600 font-medium">${s.email || '-'}</td>
@@ -540,8 +555,8 @@
                             html += `<tr class="hover:bg-gray-50 border-b">
                             <td class="px-6 py-4"><input type="checkbox" class="student-checkbox rounded border-gray-300 text-[#004269]" value="${s.id_mahasiswa}"></td>
                             <td class="px-6 py-4 font-mono text-sm">${s.nipd}</td>
-                            <td class="px-6 py-4 font-semibold text-sm">${s.nama}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600">${s.bidang_keahlian.nama}</td>
+                            <td class="px-6 py-4 font-semibold text-sm">${s.nama_mhs}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">${s.program_studi ? s.program_studi.nama_program_studi : '-'}</td>
                             <td class="px-6 py-4 text-sm text-[#FF0000] italic">Kosong</td>
                         </tr>`;
                         });
@@ -652,11 +667,11 @@
                 const id = $(this).data('id');
                 $('#edit-form')[0].reset();
 
-                let bidangKeahlianHtml = '<option value="">-- Pilih Bidang Keahlian --</option>';
-                allBidangKeahlianData.forEach(bk => {
-                    bidangKeahlianHtml += `<option value="${bk.id_bidang_keahlian}">${bk.nama} (${bk.kode})</option>`;
+                let programStudiHtml = '<option value="">-- Pilih Program Studi --</option>';
+                allBidangKeahlianData.forEach(ps => {
+                    programStudiHtml += `<option value="${ps.id_program_studi}">${ps.nama_program_studi} (${ps.kode_program_studi})</option>`;
                 });
-                $('#edit-id-bidang-keahlian').html(bidangKeahlianHtml);
+                $('#edit-id-bidang-keahlian').html(programStudiHtml);
 
                 let periodeHtml = '<option value="">-- Periode --</option>';
                 $('#filter-periode option').each(function () { if ($(this).val() !== "") periodeHtml += `<option value="${$(this).val()}">${$(this).text()}</option>`; });
@@ -668,9 +683,9 @@
 
                 $.get(`/akademik/mahasiswa/${id}/edit`, function (s) {
                     $('#edit-id').val(s.id_mahasiswa);
-                    $('#edit-nama').val(s.nama);
+                    $('#edit-nama').val(s.nama_mhs);
                     $('#edit-nipd').val(s.nipd);
-                    $('#edit-id-bidang-keahlian').val(s.id_bidang_keahlian);
+                    $('#edit-id-bidang-keahlian').val(s.id_program_studi);
                     $('#edit-angkatan').val(s.angkatan);
                     $('#edit-periode').val(s.periode);
                     $('#edit-id-kelas').val(s.id_kelas);

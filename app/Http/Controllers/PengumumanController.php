@@ -30,7 +30,7 @@ class PengumumanController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->only(['judul', 'isi']);
+        $data = $request->only(['judul_pengumuman', 'isi']);
         
         // Handle file upload if present
         if ($request->hasFile('file')) {
@@ -84,7 +84,7 @@ class PengumumanController extends Controller
     public function update(Request $request, string $id)
     {
         $pengumuman = Pengumuman::findOrFail($id);
-        $data = $request->only(['judul', 'isi']);
+        $data = $request->only(['judul_pengumuman', 'isi']);
         
         // Handle file upload if present
         if ($request->hasFile('file')) {

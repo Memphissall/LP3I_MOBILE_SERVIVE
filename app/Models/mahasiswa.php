@@ -14,27 +14,61 @@ class Mahasiswa extends Model
 
     protected $fillable = [
         'nipd',
-        'nama',
-        'id_bidang_keahlian',
-        'jenis_kelamin',
+        'nama_mhs',
+        'alamat',
+        'domisili',
         'tempat_lahir',
         'tgl_lahir',
-        'kelas',
+        'angkatan',
+        'periode',
         'email',
-        'alamat',
         'agama',
         'no_tlp',
+        'tahun_lulus',
+        'kecamatan',
+        'desa',
+        'kode_pos',
+        'jenis_kelamin',
+        'jenis_kelas',
+        'status_verifikasi',
+        'payment_status',
+        'payment_method',
+        'payment_proof_path',
+        'payment_bank_origin',
+        'payment_account_name',
+        'payment_sender_name',
+        'payment_transfer_date',
+        'payment_expires_at',
+        'payment_amount',
+        'asal_sekolah',
+        'file_path',
+        'ktp_path',
+        'akte_kelahiran_path',
+        'ijazah_path',
+        'surat_sudah_bekerja_path',
+        'instagram_path',
+        'nama_wali',
+        'telp_wali',
+        'pekerjaan_wali',
+        'whatsapp_wali',
         'foto',
         'status',
+        'id_user',
+        'id_program_studi',
         'id_kelas',
-        'angkatan',
-        'periode'
     ];
 
-    // Relationship to Bidang Keahlian
-    public function bidangKeahlian()
+    protected $casts = [
+        'tgl_lahir' => 'date',
+        'payment_transfer_date' => 'date',
+        'payment_expires_at' => 'datetime',
+        'payment_amount' => 'decimal:2',
+    ];
+
+    // Relationship to Program Studi
+    public function programStudi()
     {
-        return $this->belongsTo(BidangKeahlian::class, 'id_bidang_keahlian', 'id_bidang_keahlian');
+        return $this->belongsTo(ProgramStudi::class, 'id_program_studi', 'id_program_studi');
     }
 
     // Relationship to Kelas
@@ -47,5 +81,11 @@ class Mahasiswa extends Model
     public function nilai()
     {
         return $this->hasMany(Nilai::class, 'nipd', 'nipd');
+    }
+
+    // Relationship to User
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
 }

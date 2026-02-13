@@ -11,7 +11,7 @@ return new class extends Migration
     {
         // Create bidang_keahlian table
         Schema::create('bidang_keahlian', function (Blueprint $table) {
-            $table->id('id_bidang_keahlian');
+            $table->id('id_program_studi');
             $table->string('kode', 10)->unique();
             $table->string('nama');
             $table->text('deskripsi')->nullable();

@@ -2,25 +2,6 @@
 
 <nav class="sidebar-menu-list flex flex-col gap-1 pb-20"> 
 
-    {{-- USER PROFILE WIDGET --}}
-    <div class="px-4 pb-6 pt-2 mb-2 border-b border-white/10">
-        <div class="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5 backdrop-blur-sm group hover:bg-white/10 transition-all cursor-pointer">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#009DA5] to-[#004269] flex items-center justify-center text-white font-bold shadow-lg border border-white/20 group-hover:scale-105 transition-transform">
-                {{ strtoupper(substr(session('user_name', 'A'), 0, 1)) }}
-            </div>
-            <div class="overflow-hidden">
-                <h3 class="text-sm font-bold text-white truncate">{{ session('user_name', 'Admin Staff') }}</h3>
-                <div class="flex items-center mt-0.5">
-                    <span class="relative flex h-2 w-2 mr-1.5">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                    </span>
-                    <p class="text-[10px] text-gray-300 uppercase tracking-wider">Online</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     {{-- LABEL: MAIN --}}
     <div class="px-6 mb-2 mt-4">
         <p class="text-[10px] font-extrabold text-gray-500 uppercase tracking-widest">Main Menu</p>
@@ -73,7 +54,7 @@
                Pendidik
             </a>
 
-            {{-- 2.3 Mata Kuliah --}}
+            {{-- 2.3 Materi Ajar --}}
             <a href="{{ route('admin.kelola_matkul') ?? '#' }}" 
                class="flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 group
                {{ request()->routeIs('admin.kelola_matkul') ? 'text-white bg-white/10 font-semibold' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">

@@ -1,4 +1,4 @@
-{{-- Tambah Jadwal Modal with Cascading Dropdowns --}}
+{{-- Tambah Jadwal Modal --}}
 <div id="tambah-jadwal-modal" class="fixed z-50 inset-0 overflow-y-auto hidden">
     <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
@@ -17,61 +17,69 @@
                 <form id="tambah-jadwal-form" class="space-y-4">
                     @csrf
 
-                    {{-- CASCADING SECTION 1: Bidang Keahlian --}}
+                    {{-- Program Studi --}}
                     <div>
-                        <label for="tambah-bidang-keahlian" class="block text-sm font-medium text-gray-700">Bidang Keahlian *</label>
-                        <select id="tambah-bidang-keahlian" name="bidang_keahlian_filter" required 
+                        <label for="tambah-program-studi" class="block text-sm font-medium text-gray-700">Program Studi *</label>
+                        <select id="tambah-program-studi" name="program_studi_filter" required 
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">-- Pilih Bidang Keahlian --</option>
+                            <option value="">-- Pilih Program Studi --</option>
                         </select>
                     </div>
 
-                    {{-- CASCADING SECTION 2: Semester --}}
+                    {{-- Semester --}}
                     <div>
                         <label for="tambah-semester" class="block text-sm font-medium text-gray-700">Semester *</label>
-                        <select id="tambah-semester" name="semester_filter" required 
+                        <select id="tambah-semester" name="semester" required 
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" disabled>
                             <option value="">-- Pilih Semester --</option>
-                            {{-- Will be populated by JavaScript from database --}}
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                            <option value="3">Semester 3</option>
+                            <option value="4">Semester 4</option>
                         </select>
                     </div>
 
-                    {{-- CASCADING SECTION 3: Mata Kuliah --}}
+                    {{-- Materi Ajar --}}
                     <div>
-                        <label for="tambah-id-matkul" class="block text-sm font-medium text-gray-700">Mata Kuliah *</label>
-                        <select id="tambah-id-matkul" name="id_matkul" required 
+                        <label for="tambah-id-mk" class="block text-sm font-medium text-gray-700">Materi Ajar *</label>
+                        <select id="tambah-id-mk" name="id_mk" required 
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" disabled>
                             <option value="">-- Pilih Semester Dulu --</option>
                         </select>
                         <p id="tambah-sks-info" class="text-xs text-gray-500 mt-1 hidden"></p>
                     </div>
 
-                    {{-- Dosen --}}
+                    {{-- Pendidik --}}
                     <div>
-                        <label for="tambah-id-dosen" class="block text-sm font-medium text-gray-700">Dosen Pengampu *</label>
-                        <select id="tambah-id-dosen" name="id_dosen" required 
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" disabled>
-                            <option value="">-- Pilih Mata Kuliah Dulu --</option>
+                        <label for="tambah-id-pendidik" class="block text-sm font-medium text-gray-700">Pendidik *</label>
+                        <select id="tambah-id-pendidik" name="id_pendidik" required 
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">-- Pilih Pendidik --</option>
                         </select>
                     </div>
 
-                    {{-- CASCADING SECTION 4: Kelas --}}
+                    {{-- Kelas --}}
                     <div>
                         <label for="tambah-id-kelas" class="block text-sm font-medium text-gray-700">Kelas *</label>
                         <select id="tambah-id-kelas" name="id_kelas" required 
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" disabled>
-                            <option value="">-- Pilih Bidang Keahlian Dulu --</option>
+                            <option value="">-- Pilih Program Studi Dulu --</option>
                         </select>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         {{-- Hari --}}
-                        <div class="col-span-1">
+                        <div>
                             <label for="tambah-hari" class="block text-sm font-medium text-gray-700">Hari *</label>
                             <select id="tambah-hari" name="hari" required 
                                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">-- Pilih Hari --</option>
-                                {{-- Will be populated by JavaScript from database --}}
+                                <option value="Senin">Senin</option>
+                                <option value="Selasa">Selasa</option>
+                                <option value="Rabu">Rabu</option>
+                                <option value="Kamis">Kamis</option>
+                                <option value="Jumat">Jumat</option>
+                                <option value="Sabtu">Sabtu</option>
                             </select>
                         </div>
 
@@ -80,7 +88,7 @@
                             <label for="tambah-waktu" class="block text-sm font-medium text-gray-700">Waktu *</label>
                             <select id="tambah-waktu" name="waktu" required 
                                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                <option value="">-- Pilih Mata Kuliah Dulu --</option>
+                                <option value="">-- Pilih Materi Ajar Dulu --</option>
                             </select>
                         </div>
                     </div>
@@ -91,15 +99,6 @@
                         <select id="tambah-id-ruangan" name="id_ruangan" required 
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                             <option value="">-- Pilih Ruangan --</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="tambah-status" class="block text-sm font-medium text-gray-700">Status *</label>
-                        <select id="tambah-status" name="status" required 
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">-- Pilih Status --</option>
-                            {{-- Will be populated by JavaScript --}}
                         </select>
                     </div>
 

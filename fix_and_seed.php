@@ -21,7 +21,7 @@ if (Kelas::count() == 0) {
     Kelas::create([
         'kode_mk' => 'TI-1A',
         'nama_kelas' => 'TI-1A',
-        'id_bidang_keahlian' => $bk->id_bidang_keahlian,
+        'id_program_studi' => $bk->id_program_studi,
         'semester' => 1,
         'tahun_ajaran' => '2024/2025', // Should be string
         'nama_pa' => 'Dosen PA Dummy'

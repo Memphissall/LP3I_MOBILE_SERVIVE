@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('kelas', function (Blueprint $table) {
-            $table->integer('semester')->default(1)->after('id_bidang_keahlian');
+            $table->integer('semester')->default(1)->after('id_program_studi');
         });
     }
 

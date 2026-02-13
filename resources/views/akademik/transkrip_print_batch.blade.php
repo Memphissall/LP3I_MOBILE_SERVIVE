@@ -273,7 +273,7 @@
                 <tr>
                     <td>BIDANG KEAHLIAN</td>
                     <td>:</td>
-                    <td>{{ $data['mahasiswa']->data_kelas->bidangKeahlian->nama ?? '-' }}</td>
+                    <td>{{ $data['mahasiswa']->data_kelas->programStudi->nama ?? '-' }}</td>
                 </tr>
             </table>
         </div>
@@ -284,7 +284,7 @@
                 <tr>
                     <th class="col-no">NO</th>
                     <th class="col-kode">KODE MK</th>
-                    <th class="col-matkul">MATA KULIAH</th>
+                    <th class="col-matkul">Materi Ajar</th>
                     <th class="col-sks">SKS</th>
                     <th class="col-nilai">NILAI</th>
                     <th class="col-mutu">MUTU</th>
@@ -307,7 +307,7 @@
                         </tr>
                     @endforeach
                     <tr class="semester-summary">
-                        <td colspan="3" style="text-align: right; padding-right: 10px;">Total SKS Semester {{ $semester }}</td>
+                        <td colspan="3" style="text-align: right; padding-right: 10px;">Total BK Semester {{ $semester }}</td>
                         <td class="col-sks">{{ $data['ipsPerSemester'][$semester]['sks'] }}</td>
                         <td colspan="2">IPS: {{ number_format($data['ipsPerSemester'][$semester]['value'], 2) }}</td>
                     </tr>
@@ -315,7 +315,7 @@
                 
                 <!-- Grand Total -->
                 <tr class="grand-total">
-                    <td colspan="3" style="text-align: right; padding-right: 10px;">TOTAL SKS KUMULATIF</td>
+                    <td colspan="3" style="text-align: right; padding-right: 10px;">Total BK KUMULATIF</td>
                     <td class="col-sks">{{ $data['totalSksKumulatif'] }}</td>
                     <td colspan="2">IPK: {{ number_format($data['ipk'], 2) }}</td>
                 </tr>

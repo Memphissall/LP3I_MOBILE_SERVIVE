@@ -28,22 +28,22 @@
                 </div>
                 <div>
                     <h2 class="text-lg font-bold text-gray-800">Filter Data</h2>
-                    <p class="text-xs text-gray-400 font-medium">Cari mata kuliah berdasarkan kriteria</p>
+                    <p class="text-xs text-gray-400 font-medium">Cari Materi Ajar berdasarkan kriteria</p>
                 </div>
             </div>
 
             {{-- Grid Input --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
-                {{-- Filter Bidang Keahlian --}}
+                {{-- Filter Program Studi --}}
                 <div class="group">
                     <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center">
                         <svg class="w-4 h-4 mr-1.5 text-[#009DA5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                        Bidang Keahlian
+                        Program Studi
                     </label>
                     <div class="relative">
-                        <select id="filter-bidang-keahlian" class="w-full p-3 pl-4 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-[#009DA5] focus:ring-4 focus:ring-[#009DA5]/10 transition-all duration-200 appearance-none cursor-pointer hover:border-gray-300">
-                            <option value="all">Semua Bidang Keahlian</option>
+                        <select id="filter-program-studi" class="w-full p-3 pl-4 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-[#009DA5] focus:ring-4 focus:ring-[#009DA5]/10 transition-all duration-200 appearance-none cursor-pointer hover:border-gray-300">
+                            <option value="all">Semua Program Studi</option>
                             {{-- Populated by JS --}}
                         </select>
                         <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-400 group-hover:text-[#004269] transition-colors">
@@ -115,7 +115,7 @@
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[250px] border-b-2 border-gray-200">Materi Ajar</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[80px] border-b-2 border-gray-200">BK</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Semester</th>
-                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[180px] border-b-2 border-gray-200">Bidang Keahlian</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[180px] border-b-2 border-gray-200">Program Studi</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">SAP</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Aksi</th>
                     </tr>
@@ -132,7 +132,7 @@
             </table>
         </div>
         <div class="bg-gray-50 px-6 py-3 border-t border-gray-100 flex justify-between items-center">
-            <span class="text-xs text-gray-500 font-medium">Menampilkan data mata kuliah aktif.</span>
+            <span class="text-xs text-gray-500 font-medium">Menampilkan data Materi Ajar aktif.</span>
         </div>
     </div>
 </div>
@@ -150,43 +150,43 @@ $(document).ready(function() {
     // Setup CSRF Token
     $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
 
-    let bidangKeahlianList = [];
+    let programStudiList = [];
 
-    // LOAD BIDANG KEAHLIAN OPTIONS
-    function loadBidangKeahlian() {
+    // LOAD PROGRAM STUDI OPTIONS
+    function loadProgramStudi() {
         $.ajax({
-            url: "{{ route('admin.api.bidang_keahlian.list') }}",
+            url: "{{ route('admin.api.program_studi.list') }}",
             method: 'GET',
             success: function(data) {
-                bidangKeahlianList = data;
+                programStudiList = data;
                 
                 // Populate filter dropdown
-                const $filterSelect = $('#filter-bidang-keahlian');
+                const $filterSelect = $('#filter-program-studi');
                 $filterSelect.find('option:not(:first)').remove();
-                data.forEach(bk => {
-                    $filterSelect.append(`<option value="${bk.id_bidang_keahlian}">${bk.nama} (${bk.kode})</option>`);
+                data.forEach(ps => {
+                    $filterSelect.append(`<option value="${ps.id_program_studi}">${ps.nama_program_studi} (${ps.kode_program_studi})</option>`);
                 });
                 
                 // Populate modal dropdowns
-                const $tambahSelect = $('#tambah-bidang-keahlian');
-                const $editSelect = $('#edit-bidang-keahlian');
+                const $tambahSelect = $('#tambah-program-studi');
+                const $editSelect = $('#edit-program-studi');
                 
                 $tambahSelect.find('option:not(:first)').remove();
                 $editSelect.find('option:not(:first)').remove();
                 
-                data.forEach(bk => {
-                    const option = `<option value="${bk.id_bidang_keahlian}">${bk.nama} (${bk.kode})</option>`;
+                data.forEach(ps => {
+                    const option = `<option value="${ps.id_program_studi}">${ps.nama_program_studi} (${ps.kode_program_studi})</option>`;
                     $tambahSelect.append(option);
                     $editSelect.append(option);
                 });
             },
             error: function(xhr) {
-                console.error('Failed to load bidang keahlian:', xhr);
+                console.error('Failed to load program studi:', xhr);
             }
         });
     }
 
-    loadBidangKeahlian();
+    loadProgramStudi();
     
     // LOAD SEMESTER OPTIONS DYNAMICALLY
     function loadSemesterOptions() {
@@ -213,37 +213,37 @@ $(document).ready(function() {
         });
     }
     
-    // Load Bidang Keahlian options for filter
-    function loadBidangKeahlianOptions() {
-        console.log('Loading Bidang Keahlian options...');
+    // Load Program Studi options for filter
+    function loadProgramStudiOptions() {
+        console.log('Loading Program Studi options...');
         $.ajax({
-            url: "{{ route('admin.api.bidang_keahlian.list') }}",
+            url: "{{ route('admin.api.program_studi.list') }}",
             method: 'GET',
             success: function(data) {
-                console.log('Bidang Keahlian data received:', data);
-                const $bidangSelect = $('#filter-bidang-keahlian');
-                const currentBidang = $bidangSelect.val();
-                $bidangSelect.empty();
-                $bidangSelect.append('<option value="all">Semua Bidang Keahlian</option>');
-                data.forEach(function(bidang) {
-                    $bidangSelect.append(`<option value="${bidang.id_bidang_keahlian}">${bidang.nama} (${bidang.kode})</option>`);
+                console.log('Program Studi data received:', data);
+                const $prodiSelect = $('#filter-program-studi');
+                const currentProdi = $prodiSelect.val();
+                $prodiSelect.empty();
+                $prodiSelect.append('<option value="all">Semua Program Studi</option>');
+                data.forEach(function(prodi) {
+                    $prodiSelect.append(`<option value="${prodi.id_program_studi}">${prodi.nama_program_studi} (${prodi.kode_program_studi})</option>`);
                 });
-                console.log('Bidang Keahlian dropdown populated with', data.length, 'options');
-                if (currentBidang && currentBidang !== 'all') $bidangSelect.val(currentBidang);
+                console.log('Program Studi dropdown populated with', data.length, 'options');
+                if (currentProdi && currentProdi !== 'all') $prodiSelect.val(currentProdi);
             },
             error: function(xhr) {
-                console.error('Failed to load bidang keahlian options:', xhr);
+                console.error('Failed to load program studi options:', xhr);
                 console.error('Status:', xhr.status, 'Response:', xhr.responseText);
             }
         });
     }
     
-    loadBidangKeahlianOptions();
+    loadProgramStudiOptions();
     loadSemesterOptions();
     
     // RENDER TABLE
     function renderTable() {
-        const id_bidang_keahlian = $('#filter-bidang-keahlian').val();
+        const id_program_studi = $('#filter-program-studi').val();
         const semester = $('#filter-semester').val();
 
         const $tbody = $('#matkul-table-body');
@@ -255,7 +255,7 @@ $(document).ready(function() {
         $.ajax({
             url: "{{ route('admin.api.matkul.list') }}",
             method: 'GET',
-            data: { id_bidang_keahlian, semester },
+            data: { id_program_studi, semester },
             success: function(data) {
                 $tbody.empty();
 
@@ -268,7 +268,7 @@ $(document).ready(function() {
                                 <div class="bg-gray-50 rounded-full p-6 mb-4">
                                     <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                                 </div>
-                                <h3 class="text-lg font-medium text-gray-900">Data Mata Kuliah Kosong</h3>
+                                <h3 class="text-lg font-medium text-gray-900">Data Materi Ajar Kosong</h3>
                                 <p class="text-gray-500 mt-1">Coba sesuaikan filter pencarian Anda.</p>
                             </div>
                         </td>
@@ -276,7 +276,7 @@ $(document).ready(function() {
                     $tbody.html(emptyHtml);
                 } else {
                     data.forEach((mk, index) => {
-                        const bidangKeahlianNama = mk.bidang_keahlian ? mk.bidang_keahlian.nama : '-';
+                        const programStudiNama = mk.program_studi ? mk.program_studi.nama_program_studi : '-';
                         
                         // SAP Badge
                         const sapCell = mk.sap 
@@ -312,14 +312,14 @@ $(document).ready(function() {
                                         SMT ${mk.semester}
                                     </span>
                                 </td>
-                                <td class="px-3 py-3 text-xs text-gray-600 font-medium">${bidangKeahlianNama}</td>
+                                <td class="px-3 py-3 text-xs text-gray-600 font-medium">${programStudiNama}</td>
                                 <td class="px-3 py-3 whitespace-nowrap text-center">${sapCell}</td>
                                 <td class="px-3 py-3 whitespace-nowrap text-center text-xs font-medium">
                                     <div class="flex justify-center space-x-1">
-                                        <button data-id="${mk.id_matkul}" title="Edit" class="btn-edit-matkul p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded transition-all duration-200">
+                                        <button data-id="${mk.id_mk}" title="Edit" class="btn-edit-matkul p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded transition-all duration-200">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
                                         </button>
-                                        <button data-id="${mk.id_matkul}" title="Hapus" class="btn-delete-matkul p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition-all duration-200">
+                                        <button data-id="${mk.id_mk}" title="Hapus" class="btn-delete-matkul p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition-all duration-200">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
                                         </button>
                                     </div>
@@ -336,7 +336,7 @@ $(document).ready(function() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal Memuat Data',
-                    text: 'Terjadi kesalahan saat mengambil data mata kuliah.',
+                    text: 'Terjadi kesalahan saat mengambil data Materi Ajar.',
                     confirmButtonColor: '#004269'
                 });
                 console.error(xhr);
@@ -428,7 +428,7 @@ $(document).ready(function() {
             url: editUrl,
             method: 'GET',
             success: function(data) {
-                $('#edit-matkul-id').val(data.id_matkul);
+                $('#edit-matkul-id').val(data.id_mk);
                 $('#edit-kode-mk').val(data.kode_mk);
                 $('#edit-nama-mk').val(data.nama_mk);
                 $('#edit-sks').val(data.sks);
@@ -439,7 +439,7 @@ $(document).ready(function() {
                     $('#edit-semester').val(data.semester);
                 }, 200);
                 
-                $('#edit-bidang-keahlian').val(data.id_bidang_keahlian);
+                $('#edit-program-studi').val(data.id_program_studi);
                 $('#edit-deskripsi').val(data.deskripsi);
 
                 // Display current SAP file
@@ -456,7 +456,7 @@ $(document).ready(function() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Gagal mengambil data mata kuliah',
+                    text: 'Gagal mengambil data Materi Ajar',
                     confirmButtonColor: '#004269'
                 });
                 console.error(xhr);
@@ -520,7 +520,7 @@ $(document).ready(function() {
 
         Swal.fire({
             title: 'Apakah Anda yakin?',
-            text: `Hapus mata kuliah "${matkulName}"? Data tidak dapat dikembalikan!`,
+            text: `Hapus Materi Ajar "${matkulName}"? Data tidak dapat dikembalikan!`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',

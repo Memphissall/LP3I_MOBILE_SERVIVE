@@ -9,26 +9,38 @@ class Dosen extends Model
 {
     use HasFactory;
 
-    protected $table = 'dosen';
-    protected $primaryKey = 'id_dosen';
+    // Point ke tabel pendidik
+    protected $table = 'pendidik';
+    protected $primaryKey = 'id_pendidik';
 
     protected $fillable = [
-        'id_matkul',
-        'user_id',
-        'nidn',
-        'id_dosen_internal',
-        'nama_dosen',
+        'id_user',
+        'nama_pendidik',
         'pendidikan',
         'bidang',
-        'tempat',
-        'tanggal_lahir',
+        'tempat_lahir',
+        'tgl_lahir',
         'jenis_kelamin',
         'agama',
-        'alamat',
         'email',
-        'no_telp',
-        'honor_per_sks',
+        'no_tlp',
+        'rate_gaji',
         'status',
-        'foto'
+        'foto',
+        'total_gaji_diterima',
     ];
+
+    protected $casts = [
+        'tgl_lahir' => 'date',
+        'rate_gaji' => 'decimal:2',
+        'total_gaji_diterima' => 'decimal:2',
+    ];
+
+    /**
+     * Relationship to User model
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 }

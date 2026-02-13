@@ -190,10 +190,10 @@ class DosenSeeder extends Seeder
         }
         
         // Update related courses dengan dosen yang sama
-        // DISABLED: assignRemainingCourses() already handles all mata kuliah assignment
+        // DISABLED: assignRemainingCourses() already handles all Materi Ajar assignment
         // $this->assignRelatedCourses();
         
-        // Assign ALL remaining mata kuliah to dosen
+        // Assign ALL remaining Materi Ajar to dosen
         $this->assignRemainingCourses();
     }
     
@@ -286,29 +286,29 @@ class DosenSeeder extends Seeder
             }
         }
         
-        // Assign ALL remaining mata kuliah to dosen
+        // Assign ALL remaining Materi Ajar to dosen
         $this->assignRemainingCourses();
     }
     
     private function assignRemainingCourses()
     {
-        // Get all mata kuliah
+        // Get all Materi Ajar
         $allMatkul = DB::table('mata_kuliah')->orderBy('id_matkul')->get(); // Order to ensure deterministic seed
         
         // Get ALL existing dosen with their assigned matkul (including clones)
         $assignedMatkulIds = DB::table('dosen')->pluck('id_matkul')->toArray();
         
-        // Find unassigned mata kuliah
+        // Find unassigned Materi Ajar
         $unassignedMatkul = $allMatkul->filter(function($mk) use ($assignedMatkulIds) {
             return !in_array($mk->id_matkul, $assignedMatkulIds);
         });
         
         if ($unassignedMatkul->isEmpty()) {
-            echo "All mata kuliah already have assigned dosen.\n";
-            return; // All mata kuliah already assigned
+            echo "All Materi Ajar already have assigned dosen.\n";
+            return; // All Materi Ajar already assigned
         }
         
-        echo "Found " . $unassignedMatkul->count() . " unassigned mata kuliah. Assigning dosen with smart matching...\n";
+        echo "Found " . $unassignedMatkul->count() . " unassigned Materi Ajar. Assigning dosen with smart matching...\n";
         
         // Get base dosen templates (the original 12 dosen)
         $baseDosen = DB::table('dosen')
@@ -335,7 +335,7 @@ class DosenSeeder extends Seeder
             'Hukum Bisnis' => ['Law', 'Hukum', 'Legal'],
         ];
         
-        // Assign unassigned mata kuliah to dosen
+        // Assign unassigned Materi Ajar to dosen
         $dosenIndex = 0;
         foreach ($unassignedMatkul as $matkul) {
             
@@ -379,6 +379,6 @@ class DosenSeeder extends Seeder
             );
         }
         
-        echo "Successfully assigned " . $unassignedMatkul->count() . " mata kuliah to dosen.\n";
+        echo "Successfully assigned " . $unassignedMatkul->count() . " Materi Ajar to dosen.\n";
     }
 }

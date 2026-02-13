@@ -9,7 +9,7 @@
     <div class="flex justify-between items-center mb-8">
         <div>
             <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Jadwal Perkuliahan</h1>
-            <p class="text-sm text-gray-500 mt-1">Atur jadwal, plot dosen, dan alokasi ruangan kelas.</p>
+            <p class="text-sm text-gray-500 mt-1">Atur jadwal, plot pendidik, dan alokasi ruangan kelas.</p>
         </div>
     </div>
 
@@ -34,11 +34,11 @@
 
             {{-- Grid Input Filter --}}
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {{-- Bidang Keahlian --}}
+                {{-- Program Studi --}}
                 <div class="group col-span-1 md:col-span-2">
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Bidang Keahlian</label>
-                    <select id="filter-bidang-keahlian" class="w-full p-2.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:bg-white focus:border-[#009DA5] focus:ring-2 focus:ring-[#009DA5]/20 transition-all">
-                        <option value="all">Semua Bidang Keahlian</option>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Program Studi</label>
+                    <select id="filter-program-studi" class="w-full p-2.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:bg-white focus:border-[#009DA5] focus:ring-2 focus:ring-[#009DA5]/20 transition-all">
+                        <option value="all">Semua Program Studi</option>
                     </select>
                 </div>
 
@@ -47,7 +47,10 @@
                     <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Semester</label>
                     <select id="filter-semester" class="w-full p-2.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:bg-white focus:border-[#009DA5] focus:ring-2 focus:ring-[#009DA5]/20 transition-all">
                         <option value="all">Semua</option>
-                        @for($i=1; $i<=8; $i++) <option value="{{ $i }}">Smt {{ $i }}</option> @endfor
+                        <option value="1">Smt 1</option>
+                        <option value="2">Smt 2</option>
+                        <option value="3">Smt 3</option>
+                        <option value="4">Smt 4</option>
                     </select>
                 </div>
 
@@ -64,7 +67,12 @@
                     <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Hari</label>
                     <select id="filter-hari" class="w-full p-2.5 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:bg-white focus:border-[#009DA5] focus:ring-2 focus:ring-[#009DA5]/20 transition-all">
                         <option value="">Semua Hari</option>
-                        {{-- Will be populated by JavaScript from database --}}
+                        <option value="Senin">Senin</option>
+                        <option value="Selasa">Selasa</option>
+                        <option value="Rabu">Rabu</option>
+                        <option value="Kamis">Kamis</option>
+                        <option value="Jumat">Jumat</option>
+                        <option value="Sabtu">Sabtu</option>
                     </select>
                 </div>
 
@@ -119,17 +127,16 @@
                     <tr>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Hari</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[140px] border-b-2 border-gray-200">Waktu</th>
-                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[250px] border-b-2 border-gray-200">Mata Kuliah</th>
-                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[200px] border-b-2 border-gray-200">Dosen</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[250px] border-b-2 border-gray-200">Materi Ajar</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[200px] border-b-2 border-gray-200">Pendidik</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Kelas</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[120px] border-b-2 border-gray-200">Ruangan</th>
-                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[150px] border-b-2 border-gray-200">Status</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100 text-sm" id="jadwal-table-body">
                     <tr>
-                        <td colspan="8" class="px-6 py-10 text-center text-gray-500 italic">
+                        <td colspan="7" class="px-6 py-10 text-center text-gray-500 italic">
                              <div class="flex flex-col items-center justify-center">
                                 <span class="text-sm font-medium text-gray-400">Silakan klik tombol "Tampilkan Jadwal" untuk memuat.</span>
                             </div>
@@ -189,29 +196,35 @@ $(document).ready(function() {
         
         $('#toast-container').append(toast);
         
-        // Animate in
-        setTimeout(() => {
-            toast.removeClass('translate-x-full opacity-0');
-        }, 10);
-        
-        // Auto remove after 3 seconds
+        setTimeout(() => { toast.removeClass('translate-x-full opacity-0'); }, 10);
         setTimeout(() => {
             toast.addClass('translate-x-full opacity-0');
             setTimeout(() => toast.remove(), 300);
         }, 3000);
     }
 
-    let dropdownData = { bidang_keahlian: [], ruangan: [] };
+    let dropdownData = { program_studi: [], ruangan: [] };
     let mataKuliahCache = {};
     let kelasCache = {};
-    let dosenCache = {};
+    let pendidikCache = {};
 
-    // TIME SLOTS DATA
+    // TIME SLOTS DATA based on SKS
     const timeSlots = {
         2: ['08:00 - 09:40', '09:50 - 11:30', '13:00 - 14:40', '14:50 - 16:30', '16:40 - 18:20', '18:30 - 20:10', '20:20 - 22:00'],
         3: ['08:00 - 10:30', '10:40 - 13:10', '13:20 - 15:50'],
         4: ['08:00 - 11:30', '13:00 - 16:30', '16:40 - 20:10', '20:20 - 22:00']
     };
+
+    function updateTimeSlots(modalPrefix, sks) {
+        const $waktuDropdown = $(`#${modalPrefix}-waktu`);
+        $waktuDropdown.empty();
+        if (!sks || !timeSlots[sks]) { 
+            $waktuDropdown.append('<option value="">-- Pilih Materi Ajar Dulu --</option>'); 
+            return; 
+        }
+        $waktuDropdown.append('<option value="">-- Pilih Waktu --</option>');
+        timeSlots[sks].forEach(slot => { $waktuDropdown.append(`<option value="${slot}">${slot}</option>`); });
+    }
 
     // 1. LOAD DROPDOWN DATA
     function loadDropdownData() {
@@ -220,27 +233,36 @@ $(document).ready(function() {
             method: 'GET',
             success: function(data) {
                 dropdownData = data;
-                populateBidangKeahlianDropdowns();
+                populateProgramStudiDropdowns();
                 populateRuanganDropdowns();
-                populateHariDropdowns();
-                populateStatusDropdowns();
-                populateSemesterDropdowns();
             },
             error: function(xhr) { console.error('Error loading dropdown data', xhr); }
         });
+        loadPendidikList();
     }
 
-    function populateBidangKeahlianDropdowns() {
-        if (!dropdownData.bidang_keahlian || dropdownData.bidang_keahlian.length === 0) {
-            console.warn('Bidang Keahlian data is empty');
+    function loadPendidikList() {
+        $.ajax({
+            url: "{{ route('admin.api.pendidik.list') }}",
+            method: 'GET',
+            success: function(data) {
+                pendidikCache['all'] = data;
+                populatePendidikDropdowns(data);
+            }
+        });
+    }
+
+    function populateProgramStudiDropdowns() {
+        if (!dropdownData.program_studi || dropdownData.program_studi.length === 0) {
+            console.warn('Program Studi data is empty');
             return;
         }
-        const selectors = ['#filter-bidang-keahlian', '#tambah-bidang-keahlian', '#edit-bidang-keahlian'];
+        const selectors = ['#filter-program-studi', '#tambah-program-studi', '#edit-program-studi'];
         selectors.forEach(selector => {
             const $select = $(selector);
             $select.find('option:not(:first)').remove();
-            dropdownData.bidang_keahlian.forEach(bk => {
-                $select.append(`<option value="${bk.id_bidang_keahlian}">${bk.nama} (${bk.kode})</option>`);
+            dropdownData.program_studi.forEach(ps => {
+                $select.append(`<option value="${ps.id_program_studi}">${ps.nama_program_studi} (${ps.kode_program_studi})</option>`);
             });
         });
         loadFilterKelas('all');
@@ -259,80 +281,25 @@ $(document).ready(function() {
         });
     }
 
-    function populateHariDropdowns() {
-        const selectors = ['#filter-hari', '#tambah-hari', '#edit-hari'];
+    function populatePendidikDropdowns(pendidikData) {
+        const selectors = ['#tambah-id-pendidik', '#edit-id-pendidik'];
         selectors.forEach(selector => {
             const $select = $(selector);
             $select.find('option:not(:first)').remove();
-            if (dropdownData.hari) {
-                dropdownData.hari.forEach(h => { $select.append(`<option value="${h}">${h}</option>`); });
-            }
-        });
-    }
-
-    function populateStatusDropdowns() {
-        const selectors = ['#tambah-status', '#edit-status'];
-        selectors.forEach(selector => {
-            const $select = $(selector);
-            $select.find('option:not(:first)').remove();
-            if (dropdownData.status) {
-                dropdownData.status.forEach(s => { $select.append(`<option value="${s}">${s}</option>`); });
-            }
-        });
-    }
-
-    function populateSemesterDropdowns() {
-        const selectors = ['#tambah-semester', '#edit-semester'];
-        selectors.forEach(selector => {
-            const $select = $(selector);
-            $select.find('option:not(:first)').remove();
-            if (dropdownData.semester && dropdownData.semester.length > 0) {
-                dropdownData.semester.forEach(s => { $select.append(`<option value="${s}">Semester ${s}</option>`); });
-            }
+            pendidikData.forEach(p => {
+                $select.append(`<option value="${p.id_pendidik}">${p.nama_pendidik}</option>`);
+            });
         });
     }
 
     // 2. LOAD DATA HELPERS
-    function loadDosen(id_matkul, modalPrefix) {
-        const cacheKey = id_matkul || 'all';
-        if (dosenCache[cacheKey]) { populateDosenDropdown(dosenCache[cacheKey], modalPrefix); return; }
-        $.ajax({
-            url: "{{ route('admin.api.jadwal.dosen_filtered') }}",
-            method: 'GET',
-            data: { id_matkul: id_matkul || 'all' },
-            success: function(data) {
-                dosenCache[cacheKey] = data;
-                populateDosenDropdown(data, modalPrefix);
-            }
-        });
-    }
-
-    function populateDosenDropdown(dosenData, modalPrefix) {
-        const $select = $(`#${modalPrefix}-id-dosen`);
-        $select.find('option:not(:first)').remove();
-        $select.prop('disabled', false);
-        if (dosenData.length === 0) { $select.append('<option value="">-- Tidak Ada Dosen --</option>'); return; }
-        
-        // Deduplicate by nama_dosen
-        const seenNames = new Set();
-        const uniqueDosen = [];
-        dosenData.forEach(d => {
-            if (!seenNames.has(d.nama_dosen)) {
-                seenNames.add(d.nama_dosen);
-                uniqueDosen.push(d);
-            }
-        });
-        
-        uniqueDosen.forEach(d => { $select.append(`<option value="${d.id_dosen}">${d.nama_dosen}</option>`); });
-    }
-
-    function loadKelas(id_bidang_keahlian, semester, modalPrefix) {
-        const cacheKey = `${id_bidang_keahlian || 'all'}_${semester || 'all'}`;
+    function loadKelas(id_program_studi, modalPrefix) {
+        const cacheKey = id_program_studi || 'all';
         if (kelasCache[cacheKey]) { populateKelasDropdown(kelasCache[cacheKey], modalPrefix); return; }
         $.ajax({
             url: "{{ route('admin.api.jadwal.kelas_filtered') }}",
             method: 'GET',
-            data: { id_bidang_keahlian: id_bidang_keahlian || 'all', semester: semester || 'all' },
+            data: { id_program_studi: id_program_studi || 'all' },
             success: function(data) {
                 kelasCache[cacheKey] = data;
                 populateKelasDropdown(data, modalPrefix);
@@ -340,16 +307,15 @@ $(document).ready(function() {
         });
     }
 
-    function loadFilterKelas(id_bidang_keahlian) {
+    function loadFilterKelas(id_program_studi) {
         $.ajax({
             url: "{{ route('admin.api.jadwal.kelas_filtered') }}",
             method: 'GET',
-            data: { id_bidang_keahlian: id_bidang_keahlian || 'all' },
+            data: { id_program_studi: id_program_studi || 'all' },
             success: function(data) {
                 const $select = $('#filter-kelas');
                 $select.find('option:not(:first)').remove();
                 
-                // Deduplicate by nama_kelas
                 const seenNames = new Set();
                 const uniqueKelas = [];
                 data.forEach(k => {
@@ -372,7 +338,6 @@ $(document).ready(function() {
         $select.prop('disabled', false);
         if (kelasData.length === 0) { $select.append('<option value="">-- Tidak Ada Kelas --</option>'); return; }
         
-        // Deduplicate by nama_kelas
         const seenNames = new Set();
         const uniqueKelas = [];
         kelasData.forEach(k => {
@@ -385,13 +350,13 @@ $(document).ready(function() {
         uniqueKelas.forEach(k => { $select.append(`<option value="${k.id_kelas}">${k.nama_kelas}</option>`); });
     }
 
-    function loadMataKuliah(id_bidang_keahlian, semester, modalPrefix) {
-        const cacheKey = `${id_bidang_keahlian || 'all'}_${semester || 'all'}`;
+    function loadMataKuliah(id_program_studi, semester, modalPrefix) {
+        const cacheKey = `${id_program_studi || 'all'}_${semester || 'all'}`;
         if (mataKuliahCache[cacheKey]) { populateMataKuliahDropdown(mataKuliahCache[cacheKey], modalPrefix); return; }
         $.ajax({
             url: "{{ route('admin.api.jadwal.matkul_filtered') }}",
             method: 'GET',
-            data: { id_bidang_keahlian: id_bidang_keahlian || 'all', semester: semester || 'all' },
+            data: { id_program_studi: id_program_studi || 'all', semester: semester || 'all' },
             success: function(data) {
                 mataKuliahCache[cacheKey] = data;
                 populateMataKuliahDropdown(data, modalPrefix);
@@ -400,50 +365,44 @@ $(document).ready(function() {
     }
 
     function populateMataKuliahDropdown(matkulData, modalPrefix) {
-        const $select = $(`#${modalPrefix}-id-matkul`);
+        const $select = $(`#${modalPrefix}-id-mk`);
         $select.find('option:not(:first)').remove();
         $select.prop('disabled', false);
-        if (matkulData.length === 0) { $select.append('<option value="">-- Tidak Ada Mata Kuliah --</option>'); return; }
-        matkulData.forEach(mk => { $select.append(`<option value="${mk.id_matkul}" data-sks="${mk.sks}">${mk.kode_mk} - ${mk.nama_mk} (${mk.sks} SKS)</option>`); });
-    }
-
-    function updateTimeSlots(modalPrefix, sks) {
-        const $waktuDropdown = $(`#${modalPrefix}-waktu`);
-        $waktuDropdown.empty();
-        if (!sks || !timeSlots[sks]) { $waktuDropdown.append('<option value="">-- Pilih Mata Kuliah Dulu --</option>'); return; }
-        $waktuDropdown.append('<option value="">-- Pilih Waktu --</option>');
-        timeSlots[sks].forEach(slot => { $waktuDropdown.append(`<option value="${slot}">${slot}</option>`); });
+        if (matkulData.length === 0) { $select.append('<option value="">-- Tidak Ada Materi Ajar --</option>'); return; }
+        matkulData.forEach(mk => { $select.append(`<option value="${mk.id_mk}" data-sks="${mk.sks}">${mk.kode_mk} - ${mk.nama_mk} (${mk.sks} SKS)</option>`); });
     }
 
     // 3. EVENT HANDLERS - TAMBAH & EDIT MODAL (Combined Logic)
     const setupCascading = (prefix) => {
-        $(document).on('change', `#${prefix}-bidang-keahlian`, function() {
-            $(`#${prefix}-semester`).prop('disabled', false).val('');
-            $(`#${prefix}-id-kelas, #${prefix}-id-matkul`).html('<option value="">-- Pilih Semester Dulu --</option>').prop('disabled', true);
-            $(`#${prefix}-waktu`).html('<option value="">-- Pilih Mata Kuliah Dulu --</option>');
-            $(`#${prefix}-sks-info`).addClass('hidden');
+        $(document).on('change', `#${prefix}-program-studi`, function() {
+            const id_ps = $(this).val();
+            if (id_ps) {
+                // Enable semester dropdown when program studi is selected
+                $(`#${prefix}-semester`).prop('disabled', false);
+                loadKelas(id_ps, prefix);
+            } else {
+                // Disable semester if no program studi selected
+                $(`#${prefix}-semester`).prop('disabled', true).val('');
+            }
+            $(`#${prefix}-id-mk`).html('<option value="">-- Pilih Semester Dulu --</option>').prop('disabled', true);
         });
 
         $(document).on('change', `#${prefix}-semester`, function() {
             const semester = $(this).val();
-            const id_bk = $(`#${prefix}-bidang-keahlian`).val();
-            if (semester && id_bk) {
-                loadKelas(id_bk, semester, prefix);
-                loadMataKuliah(id_bk, semester, prefix);
+            const id_ps = $(`#${prefix}-program-studi`).val();
+            if (semester && id_ps) {
+                loadMataKuliah(id_ps, semester, prefix);
             }
         });
 
-        $(document).on('change', `#${prefix}-id-matkul`, function() {
+        $(document).on('change', `#${prefix}-id-mk`, function() {
             const sks = $(this).find(':selected').data('sks');
-            const id_matkul = $(this).val();
-            if (sks && id_matkul) {
+            if (sks) {
                 $(`#${prefix}-sks-info`).removeClass('hidden').text(`SKS: ${sks}`);
                 updateTimeSlots(prefix, sks);
-                loadDosen(id_matkul, prefix);
             } else {
                 $(`#${prefix}-sks-info`).addClass('hidden');
                 updateTimeSlots(prefix, null);
-                $(`#${prefix}-id-dosen`).html('<option value="">-- Pilih Mata Kuliah Dulu --</option>').prop('disabled', true);
             }
         });
     };
@@ -451,23 +410,12 @@ $(document).ready(function() {
     setupCascading('tambah');
     setupCascading('edit');
 
-    $(document).on('change', '#filter-bidang-keahlian', function() { loadFilterKelas($(this).val()); });
+    $(document).on('change', '#filter-program-studi', function() { loadFilterKelas($(this).val()); });
 
     // 4. RENDER TABLE
-    function getStatusBadge(status) {
-        const badges = {
-            'Offline': '<span class="inline-flex items-center px-2.5 py-0.5 text-xs font-bold rounded-full bg-green-100 text-green-700 uppercase tracking-wide">Offline</span>',
-            'Online': '<span class="inline-flex items-center px-2.5 py-0.5 text-xs font-bold rounded-full bg-yellow-100 text-yellow-700 uppercase tracking-wide">Online</span>',
-            'Libur': '<span class="inline-flex items-center px-2.5 py-0.5 text-xs font-bold rounded-full bg-red-100 text-red-700 uppercase tracking-wide">Libur</span>',
-            'Kelas Tunjangan': '<span class="inline-flex items-center px-2.5 py-0.5 text-xs font-bold rounded-full bg-amber-100 text-amber-700 uppercase tracking-wide">Tunjangan</span>',
-            'Belum Ada Konfirmasi': '<span class="inline-flex items-center px-2.5 py-0.5 text-xs font-bold rounded-full bg-gray-100 text-gray-600 uppercase tracking-wide">Pending</span>'
-        };
-        return badges[status] || status;
-    }
-
     function renderTable() {
         const filters = {
-            id_bidang_keahlian: $('#filter-bidang-keahlian').val(),
+            id_program_studi: $('#filter-program-studi').val(),
             semester: $('#filter-semester').val(),
             id_kelas: $('#filter-kelas').val(),
             hari: $('#filter-hari').val(),
@@ -475,7 +423,7 @@ $(document).ready(function() {
         };
 
         const $tbody = $('#jadwal-table-body');
-        $tbody.html('<tr><td colspan="8" class="px-6 py-16 text-center"><div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-[#004269] transition ease-in-out duration-150 cursor-not-allowed"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Sedang memuat data...</div></td></tr>');
+        $tbody.html('<tr><td colspan="7" class="px-6 py-16 text-center"><div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-[#004269] transition ease-in-out duration-150 cursor-not-allowed"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Sedang memuat data...</div></td></tr>');
         $('#btn-filter').prop('disabled', true).addClass('opacity-75');
 
         $.ajax({
@@ -491,21 +439,21 @@ $(document).ready(function() {
                     $('#no-data-message').addClass('hidden');
                     $tbody.closest('table').removeClass('hidden');
                     data.forEach(j => {
+                        const waktu = j.jam_mulai && j.jam_selesai ? `${j.jam_mulai} - ${j.jam_selesai}` : '-';
                         const row = `
                             <tr class="hover:bg-gray-50 transition-colors duration-200 group border-b border-gray-100 last:border-b-0">
                                 <td class="px-3 py-3 text-sm font-bold text-gray-700">${j.hari}</td>
                                 <td class="px-3 py-3 whitespace-nowrap">
-                                    <span class="font-mono text-sm text-[#004269] font-bold bg-[#004269]/5 px-2 py-1 rounded border border-[#004269]/10">${j.waktu}</span>
+                                    <span class="font-mono text-sm text-[#004269] font-bold bg-[#004269]/5 px-2 py-1 rounded border border-[#004269]/10">${waktu}</span>
                                 </td>
                                 <td class="px-3 py-3 text-sm font-bold text-gray-800 group-hover:text-[#004269] transition-colors">${j.mata_kuliah ? j.mata_kuliah.nama_mk : '-'}</td>
-                                <td class="px-3 py-3 text-sm text-gray-600 font-medium">${j.dosen ? j.dosen.nama_dosen : '-'}</td>
+                                <td class="px-3 py-3 text-sm text-gray-600 font-medium">${j.pendidik ? j.pendidik.nama_pendidik : '-'}</td>
                                 <td class="px-3 py-3 text-center text-sm font-bold text-gray-700">
                                     ${j.kelas ? `<span class="bg-gray-100 px-2.5 py-1 rounded border border-gray-200">${j.kelas.nama_kelas}</span>` : '-'}
                                 </td>
                                 <td class="px-3 py-3 text-center text-sm font-bold text-gray-700">
                                     ${j.ruangan ? `<span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded border border-blue-100">${j.ruangan.nama_ruangan}</span>` : '-'}
                                 </td>
-                                <td class="px-3 py-3 text-center">${getStatusBadge(j.status || 'Belum Ada Konfirmasi')}</td>
                                 <td class="px-3 py-3 text-center whitespace-nowrap text-sm font-medium">
                                     <div class="flex justify-center space-x-1">
                                         <button data-id="${j.id_jadwal}" title="Edit" class="btn-edit-jadwal p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded transition-all duration-200">
@@ -528,7 +476,6 @@ $(document).ready(function() {
 
     // 5. MODAL & ACTIONS
     $('#btn-open-tambah-jadwal-modal').click(function() { 
-        // Semester, Hari, Status are already populated by loadDropdownData()
         $('#tambah-jadwal-modal').removeClass('hidden'); 
     });
 
@@ -560,27 +507,29 @@ $(document).ready(function() {
             method: 'GET',
             success: function(data) {
                 $('#edit-jadwal-id').val(data.id_jadwal);
-                const id_bidang_keahlian = data.mata_kuliah?.id_bidang_keahlian;
-                const semester = data.mata_kuliah?.semester;
+                const id_program_studi = data.mata_kuliah?.id_program_studi;
+                const semester = data.semester;
                 
-                $('#edit-bidang-keahlian').val(id_bidang_keahlian);
-                $('#edit-semester').val(semester);
+                $('#edit-program-studi').val(id_program_studi);
+                $('#edit-semester').val(semester).prop('disabled', false);
                 
                 // Load cascading data
-                loadKelas(id_bidang_keahlian, semester, 'edit');
-                loadMataKuliah(id_bidang_keahlian, semester, 'edit');
+                loadKelas(id_program_studi, 'edit');
+                loadMataKuliah(id_program_studi, semester, 'edit');
                 
                 // Wait for cascading data to load before setting values
                 setTimeout(() => {
-                    $('#edit-id-matkul').val(data.id_matkul).trigger('change');
+                    $('#edit-id-mk').val(data.id_mk).trigger('change');
                     $('#edit-id-kelas').val(data.id_kelas);
-                    $('#edit-hari').val(data.hari); // Options already populated by loadDropdownData
-                    $('#edit-id-ruangan').val(data.id_ruangan); // Options already populated by loadDropdownData
-                    $('#edit-status').val(data.status || 'Belum Ada Konfirmasi'); // Options already populated by loadDropdownData
+                    $('#edit-hari').val(data.hari);
+                    $('#edit-id-ruangan').val(data.id_ruangan);
+                    $('#edit-id-pendidik').val(data.id_pendidik);
+                    
+                    // Set waktu dropdown after timeSlots are updated
                     setTimeout(() => {
-                        $('#edit-waktu').val(data.waktu);
-                        $('#edit-id-dosen').val(data.id_dosen);
-                    }, 300);
+                        const waktu = data.jam_mulai && data.jam_selesai ? `${data.jam_mulai} - ${data.jam_selesai}` : '';
+                        $('#edit-waktu').val(waktu);
+                    }, 200);
                 }, 300);
                 $('#edit-jadwal-modal').removeClass('hidden');
             },
@@ -618,7 +567,6 @@ $(document).ready(function() {
 
     $('#btn-filter').click(function() { renderTable(); });
     loadDropdownData();
-    // loadHariOptions(); // REMOVED (Replaced by populateHariDropdowns inside loadDropdownData)
 });
 </script>
 @endpush

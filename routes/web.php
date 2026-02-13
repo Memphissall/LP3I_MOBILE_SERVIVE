@@ -85,7 +85,7 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::get('/dosen/print', [App\Http\Controllers\DosenController::class, 'printDosen'])->name('dosen.print');
     
     // Matkul CRUD Routes
-    Route::get('/api/bidang-keahlian-list', [App\Http\Controllers\MatkulController::class, 'getBidangKeahlianList'])->name('api.bidang_keahlian.list');
+    Route::get('/api/program-studi-list', [App\Http\Controllers\MatkulController::class, 'getProgramStudiList'])->name('api.program_studi.list');
     Route::get('/api/matkul/filter-options', [App\Http\Controllers\MatkulController::class, 'getFilterOptions'])->name('api.matkul.filter-options');
     Route::get('/api/matkul-list', [App\Http\Controllers\MatkulController::class, 'index'])->name('api.matkul.list');
     Route::post('/matkul', [App\Http\Controllers\MatkulController::class, 'store'])->name('matkul.store');
@@ -94,10 +94,13 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::delete('/matkul/{id}', [App\Http\Controllers\MatkulController::class, 'destroy'])->name('matkul.destroy');
     Route::get('/matkul/print', [App\Http\Controllers\MatkulController::class, 'printMatkul'])->name('matkul.print');
     
+    // Pendidik Routes (using Dosen model which points to pendidik table)
+    Route::get('/api/pendidik-list', [App\Http\Controllers\DosenController::class, 'apiList'])->name('api.pendidik.list');
+    
     // Jadwal CRUD Routes
-    Route::get('/api/jadwal/bidang-keahlian-list', [App\Http\Controllers\JadwalController::class, 'getBidangKeahlianList'])->name('api.jadwal.bidang_keahlian.list');
+    Route::get('/api/jadwal/program-studi-list', [App\Http\Controllers\JadwalController::class, 'getProgramStudiList'])->name('api.jadwal.program_studi.list');
     Route::get('/api/jadwal/matkul-filtered', [App\Http\Controllers\JadwalController::class, 'getMataKuliahByFilter'])->name('api.jadwal.matkul_filtered');
-    Route::get('/api/jadwal/kelas-filtered', [App\Http\Controllers\JadwalController::class, 'getKelasByBidangKeahlian'])->name('api.jadwal.kelas_filtered');
+    Route::get('/api/jadwal/kelas-filtered', [App\Http\Controllers\JadwalController::class, 'getKelasByProgramStudi'])->name('api.jadwal.kelas_filtered');
     Route::get('/api/jadwal/dosen-filtered', [App\Http\Controllers\JadwalController::class, 'getDosenByMataKuliah'])->name('api.jadwal.dosen_filtered');
     Route::get('/api/jadwal/dropdown', [App\Http\Controllers\JadwalController::class, 'getDropdownData'])->name('api.jadwal.dropdown');
     Route::get('/api/jadwal/filter-options', [App\Http\Controllers\JadwalController::class, 'getFilterOptions'])->name('api.jadwal.filter-options');
@@ -108,7 +111,7 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::put('/jadwal/{id}', [App\Http\Controllers\JadwalController::class, 'update'])->name('jadwal.update');
     Route::delete('/jadwal/{id}', [App\Http\Controllers\JadwalController::class, 'destroy'])->name('jadwal.destroy');
     Route::get('/jadwal/print', [App\Http\Controllers\JadwalController::class, 'printJadwal'])->name('jadwal.print');
-    Route::get('/get-waktu/{id}', [JadwalController::class, 'getWaktu']);
+    Route::get('/get-waktu/{id}', [App\Http\Controllers\JadwalController::class, 'getWaktu']);
 
     // KHS Routes
     Route::get('/khs', [App\Http\Controllers\KhsController::class, 'index'])->name('khs.index');
@@ -124,7 +127,7 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     Route::post('/krs/batch', [App\Http\Controllers\KrsController::class, 'storeBatch'])->name('krs.store.batch');
     
     // KRS API Routes
-    Route::get('/api/krs/bidang-keahlian', [App\Http\Controllers\KrsController::class, 'getBidangKeahlianList'])->name('api.krs.bidang_keahlian');
+    Route::get('/api/krs/program-studi', [App\Http\Controllers\KrsController::class, 'getProgramStudiList'])->name('api.krs.program_studi');
     Route::get('/api/krs/matkul-filtered', [App\Http\Controllers\KrsController::class, 'getMataKuliahFiltered'])->name('api.krs.matkul_filtered');
     
     // Transkrip Nilai Routes

@@ -144,14 +144,14 @@
             Dicetak pada: Memuat waktu...
         </div>
 
-        <h3 class="judul-laporan">LAPORAN DATA MATA KULIAH</h3>
+        <h3 class="judul-laporan">LAPORAN DATA Materi Ajar</h3>
 
         <table>
             <thead>
                 <tr>
                     <th width="10">No</th>
-                    <th width="20">Kode Mata kuliah</th>
-                    <th width="70">Nama Mata Kuliah</th>
+                    <th width="20">Kode Materi Ajar</th>
+                    <th width="70">Nama Materi Ajar</th>
                     <th width="10">SKS</th>
                     <th width="15">Bobot</th>
                     <th width="20">Semester</th>

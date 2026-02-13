@@ -145,7 +145,7 @@
                     <th width="40">No</th>
                     <th width="100">Hari</th>
                     <th width="120">Waktu</th>
-                    <th width="80">Mata Kuliah</th>
+                    <th width="80">Materi Ajar</th>
                     <th width="100">Kelas</th>
                     <th width="120">Ruangan</th>
                 </tr>

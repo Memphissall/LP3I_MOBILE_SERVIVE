@@ -47,7 +47,7 @@ class NilaiSeeder extends Seeder
             
             // Loop through semesters
             for ($sem = 1; $sem <= $maxSemester; $sem++) {
-                // Get mata kuliah for this semester
+                // Get Materi Ajar for this semester
                 $mataKuliahList = MataKuliah::where('semester', $sem)
                     ->limit(6) // Take 6 courses per semester
                     ->get();

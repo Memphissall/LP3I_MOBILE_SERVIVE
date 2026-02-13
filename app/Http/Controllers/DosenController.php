@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class DosenController extends Controller
 {
     /**
-     * Display the dosen management page
+     * Display the dosen/pendidik management page
      */
     public function index()
     {
@@ -22,22 +22,29 @@ class DosenController extends Controller
      */
     public function getFilterOptions()
     {
-        // Return all possible status enum values
         $status = ['Aktif', 'Tidak Aktif', 'Kontrak', 'Tetap', 'Honorer'];
         
-        $pendidikan = DB::table('dosen')
+        $pendidikan = DB::table('pendidik')
             ->distinct()
+            ->whereNotNull('pendidikan')
             ->orderBy('pendidikan')
             ->pluck('pendidikan');
         
+        $bidang = DB::table('pendidik')
+            ->distinct()
+            ->whereNotNull('bidang')
+            ->orderBy('bidang')
+            ->pluck('bidang');
+        
         return response()->json([
             'status' => $status,
-            'pendidikan' => $pendidikan
+            'pendidikan' => $pendidikan,
+            'bidang' => $bidang
         ]);
     }
 
     /**
-     * Get list of lecturers with filters (for AJAX)
+     * Get list of pendidik with filters (for AJAX)
      */
     public function apiList(Request $request)
     {
@@ -53,14 +60,17 @@ class DosenController extends Controller
             $query->where('pendidikan', $request->pendidikan);
         }
 
-        $dosens = $query->get()->unique('nama_dosen')->values();
-        return response()->json($dosens);
+        // Filter by bidang
+        if ($request->filled('bidang') && $request->bidang !== 'Semua Bidang') {
+            $query->where('bidang', $request->bidang);
+        }
+
+        $pendidik = $query->orderBy('nama_pendidik')->get();
+        return response()->json($pendidik);
     }
 
-
-
     /**
-     * Get lecturer data for editing
+     * Get pendidik data for editing
      */
     public function edit($id)
     {
@@ -69,25 +79,22 @@ class DosenController extends Controller
     }
 
     /**
-     * Update lecturer data
+     * Update pendidik data
      */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nidn' => 'required|string|unique:dosen,nidn,' . $id . ',id_dosen',
-            'id_dosen_internal' => 'nullable|string|unique:dosen,id_dosen_internal,' . $id . ',id_dosen',
-            'nama_dosen' => 'required|string|max:255',
-            'pendidikan' => 'required|string|max:255',
-            'bidang' => 'required|string|max:255',
-            'tempat' => 'required|string',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'agama' => 'required|string',
-            'alamat' => 'nullable|string',
-            'email' => 'required|email|unique:dosen,email,' . $id . ',id_dosen',
-            'no_telp' => 'required|string',
-            'honor_per_sks' => 'required|integer|min:0',
-            'status' => 'required|in:aktif,tidak aktif,kontrak,tetap,honorer',
+            'nama_pendidik' => 'required|string|max:255',
+            'pendidikan' => 'required|string|max:50',
+            'bidang' => 'required|string|max:100',
+            'tempat_lahir' => 'nullable|string|max:100',
+            'tgl_lahir' => 'nullable|date',
+            'jenis_kelamin' => 'required|in:L,P',
+            'agama' => 'nullable|string|max:50',
+            'email' => 'required|email|unique:pendidik,email,' . $id . ',id_pendidik',
+            'no_tlp' => 'nullable|string|max:20',
+            'rate_gaji' => 'nullable|numeric|min:0',
+            'status' => 'required|string',
             'foto' => 'nullable|string'
         ]);
 
@@ -100,7 +107,7 @@ class DosenController extends Controller
             $dosen->update($request->all());
 
             return response()->json([
-                'message' => 'Data dosen berhasil diupdate',
+                'message' => 'Data pendidik berhasil diupdate',
                 'data' => $dosen
             ]);
         } catch (\Exception $e) {
@@ -109,7 +116,7 @@ class DosenController extends Controller
     }
 
     /**
-     * Delete lecturer
+     * Delete pendidik
      */
     public function destroy($id)
     {
@@ -118,7 +125,7 @@ class DosenController extends Controller
             $dosen->delete();
 
             return response()->json([
-                'message' => 'Data dosen berhasil dihapus'
+                'message' => 'Data pendidik berhasil dihapus'
             ]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
@@ -126,7 +133,7 @@ class DosenController extends Controller
     }
 
     /**
-     * Print lecturers data based on filters
+     * Print pendidik data based on filters
      */
     public function printDosen(Request $request)
     {
@@ -135,19 +142,14 @@ class DosenController extends Controller
 
         $query = Dosen::query();
 
-        // Enforce only Active lecturers for print
+        // Only active pendidik for print
         $query->where('status', 'Aktif');
-
-        // Remove dynamic status filter since we only want Aktif
-        // if ($status && $status !== 'Semua Status') {
-        //     $query->where('status', strtolower($status));
-        // }
 
         if ($pendidikan && $pendidikan !== 'Semua Pendidikan') {
             $query->where('pendidikan', $pendidikan);
         }
 
-        $dosens = $query->get()->unique('nama_dosen');
+        $dosens = $query->orderBy('nama_pendidik')->get();
 
         return view('akademik.print_dosen', compact('dosens'));
     }

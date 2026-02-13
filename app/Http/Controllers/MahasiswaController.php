@@ -24,14 +24,14 @@ class MahasiswaController extends Controller
     public function getFilterData()
 {
     try {
-        // Get bidang keahlian from bidang_keahlian table
-        $jurusan = DB::table('bidang_keahlian')->select('id_bidang_keahlian', 'nama', 'kode')->get();
+        // Get program studi from program_studi table
+        $jurusan = DB::table('program_studi')->select('id_program_studi', 'nama_program_studi', 'kode_program_studi')->get();
         $angkatan = DB::table('mahasiswa')->whereNotNull('angkatan')->distinct()->pluck('angkatan');
         $periode = DB::table('mahasiswa')->whereNotNull('periode')->distinct()->pluck('periode')->sort()->values();
         
-        // Get kelas with id_bidang_keahlian for filtering (DISTINCT to prevent duplicates)
+        // Get kelas with id_program_studi for filtering (DISTINCT to prevent duplicates)
         $kelas = DB::table('kelas')
-            ->select('id_kelas', 'nama_kelas', 'id_bidang_keahlian')
+            ->select('id_kelas', 'nama_kelas', 'id_program_studi')
             ->distinct()
             ->get();
         
@@ -53,16 +53,16 @@ class MahasiswaController extends Controller
     public function apiList(Request $request)
 {
     try {
-        // Eager load both kelas and bidang_keahlian relationships
+        // Eager load kelas and program_studi relationships
         $query = Mahasiswa::with(['data_kelas' => function($q) {
             $q->select('id_kelas', 'nama_kelas');
-        }, 'bidangKeahlian' => function($q) {
-            $q->select('id_bidang_keahlian', 'nama', 'kode');
+        }, 'programStudi' => function($q) {
+            $q->select('id_program_studi', 'nama_program_studi', 'kode_program_studi');
         }]);
 
-        // 1. Filter Bidang Keahlian (was Jurusan)
+        // 1. Filter Program Studi (was Jurusan/Bidang Keahlian)
         if ($request->filled('jurusan') && !in_array($request->jurusan, ['', 'Semua Jurusan'])) {
-            $query->where('id_bidang_keahlian', $request->jurusan);
+            $query->where('id_program_studi', $request->jurusan);
         }
 
         // 2. Filter Angkatan
@@ -104,7 +104,7 @@ class MahasiswaController extends Controller
         // --- OPTIMASI UTAMA BUBUB ---
         // Batasi kolom yang ditarik dari tabel mahasiswa.
         // Ganti nama kolom sesuai database kamu (nipd/nim/nama/jurusan/angkatan/id_kelas)
-        $mahasiswa = $query->select('id_mahasiswa', 'nipd', 'nama', 'id_bidang_keahlian', 'angkatan', 'periode', 'status', 'id_kelas', 'tempat_lahir', 'tgl_lahir', 'alamat', 'no_tlp', 'email')
+        $mahasiswa = $query->select('id_mahasiswa', 'nipd', 'nama_mhs', 'id_program_studi', 'angkatan', 'periode', 'status', 'id_kelas', 'tempat_lahir', 'tgl_lahir', 'alamat', 'no_tlp', 'email')
                            ->limit(500)
                            ->get();
         
@@ -126,7 +126,7 @@ class MahasiswaController extends Controller
             
             // Apply existing filters untuk narrow down options
             if ($request->filled('jurusan') && $request->jurusan !== '') {
-                $query->where('id_bidang_keahlian', $request->jurusan);
+                $query->where('id_program_studi', $request->jurusan);
             }
             if ($request->filled('angkatan') && $request->angkatan !== '') {
                 $query->where('angkatan', $request->angkatan);  
@@ -136,7 +136,7 @@ class MahasiswaController extends Controller
             }
             
             // Get distinct values sesuai filter yang sudah dipilih
-            $jurusan = DB::table('bidang_keahlian')->select('id_bidang_keahlian', 'nama', 'kode')->get();
+            $jurusan = DB::table('program_studi')->select('id_program_studi', 'nama_program_studi', 'kode_program_studi')->get();
             $angkatan = (clone $query)->whereNotNull('angkatan')->distinct()->orderBy('angkatan', 'desc')->pluck('angkatan');
             $periode = (clone $query)->whereNotNull('periode')->distinct()->pluck('periode')->sort()->values();
             
@@ -144,9 +144,9 @@ class MahasiswaController extends Controller
         // Start with base query for kelas
         $kelasBaseQuery = DB::table('kelas');
         
-        // Filter by bidang keahlian if specified
+        // Filter by program studi if specified
         if ($request->filled('jurusan') && $request->jurusan !== '') {
-            $kelasBaseQuery->where('id_bidang_keahlian', $request->jurusan);
+            $kelasBaseQuery->where('id_program_studi', $request->jurusan);
         }
         
         // If angkatan is specified, filter to only classes that have students from that angkatan
@@ -212,8 +212,8 @@ class MahasiswaController extends Controller
 
     // Validasi data
     $request->validate([
-        'nama' => 'required',
-        'id_bidang_keahlian' => 'required',
+        'nama_mhs' => 'required',
+        'id_program_studi' => 'required',
         'angkatan' => 'required',
         'id_kelas' => 'nullable',
         'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -228,15 +228,15 @@ class MahasiswaController extends Controller
     ]);
 
     // UPDATE SEMUA KOLOM
-    $mahasiswa->nama = $request->nama;
+    $mahasiswa->nama_mhs = $request->nama_mhs;
     $mahasiswa->nipd = $request->nipd; 
-    $mahasiswa->id_bidang_keahlian = $request->id_bidang_keahlian;
+    $mahasiswa->id_program_studi = $request->id_program_studi;
     $mahasiswa->angkatan = $request->angkatan;
     $mahasiswa->periode = $request->periode;
     $mahasiswa->id_kelas = $request->id_kelas;
     
     // Personal data
-    $mahasiswa->jenis_kelamin = $request->jenis_kelamin == 'L' ? 'Laki-laki' : ($request->jenis_kelamin == 'P' ? 'Perempuan' : $request->jenis_kelamin);
+    $mahasiswa->jenis_kelamin = $request->jenis_kelamin;
     $mahasiswa->tempat_lahir = $request->tempat_lahir;
     $mahasiswa->tgl_lahir = $request->tgl_lahir;
     $mahasiswa->agama = $request->agama;
@@ -293,7 +293,7 @@ class MahasiswaController extends Controller
             $query->where('status', 'Aktif');
 
             if ($request->filled('jurusan') && $request->jurusan !== 'Semua Jurusan') {
-                $query->where('id_bidang_keahlian', $request->jurusan);
+                $query->where('id_program_studi', $request->jurusan);
             }
             if ($request->filled('angkatan') && $request->angkatan !== 'Semua Tahun') {
                 $query->where('angkatan', $request->angkatan);

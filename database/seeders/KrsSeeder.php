@@ -27,7 +27,7 @@ class KrsSeeder extends Seeder
 
             $currentSem = $mhs->data_kelas->semester ?? 1;
             $idKelas = $mhs->id_kelas;
-            $idProdi = $mhs->data_kelas->id_bidang_keahlian;
+            $idProdi = $mhs->data_kelas->id_program_studi;
 
             // Scenario 1: Current Academic Year (2025/2026)
             // Assign courses for the current semester
@@ -54,7 +54,7 @@ class KrsSeeder extends Seeder
     {
         // Get courses for this semester and prodi
         $courses = \App\Models\MataKuliah::where('semester', $semester)
-            ->where('id_bidang_keahlian', $idProdi)
+            ->where('id_program_studi', $idProdi)
             ->inRandomOrder()
             ->take(6) // Take 6 random courses
             ->get();

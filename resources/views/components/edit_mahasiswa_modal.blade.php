@@ -41,14 +41,14 @@
                         {{-- Kolom Nama --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                            <input type="text" id="edit-nama" name="nama" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                            <input type="text" id="edit-nama" name="nama_mhs" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         </div>
 
-                        {{-- Kolom Bidang Keahlian --}}
+                        {{-- Kolom Program Studi --}}
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Bidang Keahlian</label>
-                            <select id="edit-id-bidang-keahlian" name="id_bidang_keahlian" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-                                <option value="">-- Pilih Bidang Keahlian --</option>
+                            <label class="block text-sm font-medium text-gray-700">Program Studi</label>
+                            <select id="edit-id-bidang-keahlian" name="id_program_studi" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <option value="">-- Pilih Program Studi --</option>
                             </select>
                         </div>
 

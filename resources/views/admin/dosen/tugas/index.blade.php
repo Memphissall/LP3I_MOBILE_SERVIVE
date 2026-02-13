@@ -6,7 +6,7 @@
     <h1 class="text-xl mb-4 font-bold">Daftar Tugas</h1>
 
     <p><strong>Kelas:</strong> {{ $kelas->nama_kelas }}</p>
-    <p><strong>Mata Kuliah:</strong> {{ $matkul->nama_mk }}</p>
+    <p><strong>Materi Ajar:</strong> {{ $matkul->nama_mk }}</p>
 
     {{-- Tombol Kembali --}}
     <a href="{{ route('tugas.pilih') }}"

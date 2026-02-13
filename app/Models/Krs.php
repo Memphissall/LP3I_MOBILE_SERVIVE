@@ -10,15 +10,12 @@ class Krs extends Model
     protected $primaryKey = 'id_krs';
 
     protected $fillable = [
-        'nipd',
-        'nama_mhs',
+        'id_mahasiswa',
+        'id_pendidik',
         'id_kelas',
-        'id_matkul',
+        'id_mk',
         'semester',
-        'periode',
-        'tahun_akademik',
-        'status',
-        'catatan'
+        'tahun_akademik'
     ];
 
     // Relationships
@@ -29,10 +26,10 @@ class Krs extends Model
 
     public function mataKuliah()
     {
-        return $this->belongsTo(MataKuliah::class, 'id_matkul', 'id_matkul');
+        return $this->belongsTo(MataKuliah::class, 'id_matkul', 'id_mk');
     }
 
-    // Helper: Calculate total SKS for a student in a semester
+    // Helper: Calculate Total BK for a student in a semester
     public static function getTotalSKS($nipd, $semester, $tahun_akademik)
     {
         return self::where('nipd', $nipd)

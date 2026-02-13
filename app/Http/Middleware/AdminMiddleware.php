@@ -14,6 +14,6 @@ class AdminMiddleware
             return $next($request);
         }
 
-        abort(403, 'Unauthorized');
+        return redirect()->route('login')->with('error', 'Anda harus login sebagai admin untuk mengakses halaman ini.');
     }
 }

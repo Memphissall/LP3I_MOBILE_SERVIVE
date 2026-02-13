@@ -14,21 +14,41 @@
 
         <div class="mb-4 bg-[#004269]/10 p-4 rounded-md">
             <p class="text-sm text-[#004269]">
-                <span class="font-bold">Info:</span> Mata kuliah yang dipilih akan ditambahkan ke KRS seluruh mahasiswa di kelas ini.
+                <span class="font-bold">Info:</span> Materi Ajar yang dipilih akan ditambahkan ke KRS seluruh mahasiswa di kelas ini.
             </p>
         </div>
 
-        <form id="form-batch-add">
+        <form id="form-batch-krs">
             @csrf
             <input type="hidden" name="id_kelas" value="{{ $id_kelas }}">
-            <input type="hidden" name="tahun_akademik" value="{{ $tahun_akademik }}">
             
-            <!-- Cascading Select Filters -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Bidang Keahlian</label>
-                    <select id="filter-bidang-keahlian" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="">Pilih Bidang Keahlian</option>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tahun Akademik</label>
+                    <input 
+                        type="text" 
+                        name="tahun_akademik" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md" 
+                        placeholder="2024/2025"
+                        pattern="\d{4}/\d{4}"
+                        title="Format: YYYY/YYYY (contoh: 2024/2025)"
+                        value="{{ $tahun_akademik }}"
+                        required
+                    >
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Dosen Pengampu</label>
+                    <select name="id_pendidik" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                        <option value="">Pilih Dosen</option>
+                        @foreach($pendidikList as $p)
+                            <option value="{{ $p->id_pendidik }}">{{ $p->nama_pendidik }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Program Studi</label>
+                    <select id="filter-program-studi" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <option value="">Pilih Program Studi</option>
                     </select>
                 </div>
                 <div>
@@ -45,13 +65,13 @@
             <div class="mb-4">
                 <label class="flex items-center">
                     <input type="checkbox" id="check-all" class="mr-2 rounded text-[#004269] focus:ring-[#009DA5]">
-                    <span class="font-bold text-gray-700">Pilih Semua Mata Kuliah</span>
+                    <span class="font-bold text-gray-700">Pilih Semua Materi Ajar</span>
                 </label>
             </div>
 
             <div id="batch-matkul-list" class="space-y-2 mb-6 min-h-[200px]">
                 <div class="text-center py-8 text-gray-500">
-                    Pilih Bidang Keahlian dan Semester untuk melihat daftar mata kuliah
+                    Pilih Program Studi dan Semester untuk melihat daftar Materi Ajar
                 </div>
             </div>
 
@@ -79,7 +99,7 @@ $(document).ready(function() {
             return;
         }
         $('#batch-add-modal').removeClass('hidden');
-        loadBidangKeahlian();
+        loadProgramStudi();
     });
 
     $('#close-batch-modal, #btn-cancel-batch').click(function() {
@@ -91,44 +111,44 @@ $(document).ready(function() {
         $('.matkul-checkbox').prop('checked', $(this).is(':checked'));
     });
 
-    // Load Bidang Keahlian
-    function loadBidangKeahlian() {
+    // Load Program Studi
+    function loadProgramStudi() {
         $.ajax({
-            url: "{{ route('admin.api.krs.bidang_keahlian') }}",
+            url: "{{ route('admin.api.krs.program_studi') }}",
             method: 'GET',
             success: function(data) {
-                const select = $('#filter-bidang-keahlian');
+                const select = $('#filter-program-studi');
                 select.find('option:not(:first)').remove();
-                data.forEach(bk => {
-                    select.append(`<option value="${bk.id_bidang_keahlian}">${bk.kode} - ${bk.nama}</option>`);
+                data.forEach(ps => {
+                    select.append(`<option value="${ps.id_program_studi}">${ps.kode_program_studi} - ${ps.nama_program_studi}</option>`);
                 });
             },
             error: function() {
-                Swal.fire({ icon: 'error', title: 'Gagal!', text: 'Gagal memuat bidang keahlian', confirmButtonColor: '#004269' });
+                Swal.fire({ icon: 'error', title: 'Gagal!', text: 'Gagal memuat program studi', confirmButtonColor: '#004269' });
             }
         });
     }
 
-    // Cascading: Load Mata Kuliah when filters change
-    $('#filter-bidang-keahlian, #filter-semester-modal').change(function() {
-        const id_bidang_keahlian = $('#filter-bidang-keahlian').val();
+    // Cascading: Load Materi Ajar when filters change
+    $('#filter-program-studi, #filter-semester-modal').change(function() {
+        const id_program_studi = $('#filter-program-studi').val();
         const semester = $('#filter-semester-modal').val();
 
-        if (id_bidang_keahlian && semester) {
-            loadMataKuliah(id_bidang_keahlian, semester);
+        if (id_program_studi && semester) {
+            loadMataKuliah(id_program_studi, semester);
         } else {
-            $('#batch-matkul-list').html('<div class="text-center py-8 text-gray-500">Pilih Bidang Keahlian dan Semester untuk melihat daftar mata kuliah</div>');
+            $('#batch-matkul-list').html('<div class="text-center py-8 text-gray-500">Pilih Program Studi dan Semester untuk melihat daftar Materi Ajar</div>');
         }
     });
 
-    function loadMataKuliah(id_bidang_keahlian, semester) {
-        $('#batch-matkul-list').html('<div class="text-center py-8 text-gray-500"><svg class="animate-spin h-8 w-8 text-gray-500 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memuat mata kuliah...</div>');
+    function loadMataKuliah(id_program_studi, semester) {
+        $('#batch-matkul-list').html('<div class="text-center py-8 text-gray-500"><svg class="animate-spin h-8 w-8 text-gray-500 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memuat Materi Ajar...</div>');
 
         $.ajax({
             url: "{{ route('admin.api.krs.matkul_filtered') }}",
             method: 'GET',
             data: {
-                id_bidang_keahlian: id_bidang_keahlian,
+                id_program_studi: id_program_studi,
                 semester: semester,
                 id_kelas: id_kelas,
                 tahun_akademik: tahun_akademik,
@@ -138,7 +158,7 @@ $(document).ready(function() {
                 renderMataKuliahList(mataKuliah);
             },
             error: function() {
-                $('#batch-matkul-list').html('<p class="text-red-500 text-center">Gagal memuat mata kuliah.</p>');
+                $('#batch-matkul-list').html('<p class="text-red-500 text-center">Gagal memuat Materi Ajar.</p>');
             }
         });
     }
@@ -148,14 +168,14 @@ $(document).ready(function() {
         container.empty();
 
         if (mataKuliah.length === 0) {
-            container.html('<p class="text-gray-500 text-center py-4">Tidak ada mata kuliah tersedia untuk kriteria filter ini.</p>');
+            container.html('<p class="text-gray-500 text-center py-4">Tidak ada Materi Ajar tersedia untuk kriteria filter ini.</p>');
             return;
         }
 
         mataKuliah.forEach(mk => {
             const row = $(`
                 <label class="flex items-center p-3 border rounded hover:bg-gray-50 cursor-pointer transition">
-                    <input type="checkbox" name="matkul_ids[]" value="${mk.id_matkul}" class="matkul-checkbox mr-3 h-5 w-5 text-[#004269] rounded focus:ring-[#009DA5]">
+                    <input type="checkbox" name="matkul_ids[]" value="${mk.id_mk}" class="matkul-checkbox mr-3 h-5 w-5 text-[#004269] rounded focus:ring-[#009DA5]">
                     <div class="flex-1">
                         <div class="font-bold text-gray-800">${mk.kode_mk} - ${mk.nama_mk}</div>
                         <div class="text-xs text-gray-500 mt-1">
@@ -171,11 +191,11 @@ $(document).ready(function() {
     }
 
     // Handle Form Submit
-    $('#form-batch-add').submit(function(e) {
+    $('#form-batch-krs').submit(function(e) {
         e.preventDefault();
         
         if ($('.matkul-checkbox:checked').length === 0) {
-            Swal.fire({ icon: 'warning', title: 'Perhatian!', text: 'Pilih minimal satu mata kuliah!', confirmButtonColor: '#004269' });
+            Swal.fire({ icon: 'warning', title: 'Perhatian!', text: 'Pilih minimal satu Materi Ajar!', confirmButtonColor: '#004269' });
             return;
         }
 

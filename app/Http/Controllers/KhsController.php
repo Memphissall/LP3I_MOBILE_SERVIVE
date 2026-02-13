@@ -17,7 +17,7 @@ class KhsController extends Controller
     {
         // 1. Get Filter Options First
         // Get kelas list for filter (deduplicated by name)
-        $kelasList = Kelas::with('bidangKeahlian')
+        $kelasList = Kelas::with('programStudi')
             ->get()
             ->unique('nama_kelas')
             ->sortBy('nama_kelas');
@@ -61,11 +61,11 @@ class KhsController extends Controller
                 $query->where('id_kelas', $id_kelas);
             }
 
-            $mahasiswaList = $query->with('data_kelas.bidangKeahlian')->get();
+            $mahasiswaList = $query->with('data_kelas.programStudi')->get();
 
             // For each mahasiswa, calculate KHS stats
             foreach ($mahasiswaList as $mhs) {
-                $nilaiQuery = Nilai::where('nipd', $mhs->nipd);
+                $nilaiQuery = Nilai::where('id_mahasiswa', $mhs->id_mahasiswa);
                 
                 // Only filter by tahun akademik if specified
                 if ($tahun_akademik) {
@@ -80,7 +80,7 @@ class KhsController extends Controller
                 
                 $mhs->nilai_count = $nilaiList->count();
                 
-                // Calculate Total SKS
+                // Calculate Total BK
                 $mhs->total_sks = $nilaiList->sum(function($nilai) {
                     return $nilai->mataKuliah->sks ?? 0;
                 });
@@ -119,10 +119,9 @@ class KhsController extends Controller
             return redirect()->back()->with('error', 'Harap pilih Tahun Akademik dan Semester terlebih dahulu untuk mencetak.');
         }
 
-        $mahasiswa = Mahasiswa::with('data_kelas.bidangKeahlian')->where('nipd', $id)->firstOrFail();
+        $mahasiswa = Mahasiswa::with('data_kelas.programStudi')->where('nipd', $id)->firstOrFail();
         
-        // For individual print, if no semester provided, Show ALL semesters (don't limit to current class semester)
-        
+        // Query nilai using nipd (not id_mahasiswa)
         $nilaiQuery = Nilai::with(['mataKuliah', 'kelas'])
             ->where('nipd', $mahasiswa->nipd);
             
@@ -164,14 +163,8 @@ class KhsController extends Controller
             }
         }
 
-        // Always populate batchData so view can render header/identity
-        $batchData = [[
-            'mahasiswa' => $mahasiswa,
-            'semesterData' => $semesterData
-        ]];
-
-        // Reuse the batch print view for consistency
-        return view('akademik.khs_print_batch', compact('batchData', 'semester', 'tahun_akademik'));
+        // Use individual print view with correct data structure
+        return view('akademik.khs_print', compact('mahasiswa', 'semesterData', 'semester', 'tahun_akademik'));
     }
 
     /**
@@ -193,7 +186,7 @@ class KhsController extends Controller
         }
 
         $mahasiswaList = Mahasiswa::where('id_kelas', $id_kelas)
-            ->with('data_kelas.bidangKeahlian')
+            ->with('data_kelas.programStudi')
             ->get();
 
         $batchData = [];
@@ -202,6 +195,7 @@ class KhsController extends Controller
             // Smart semester detection: use filter if provided, otherwise use student's class semester
             $semesterToFilter = $semester ?? ($mahasiswa->data_kelas->semester ?? null);
             
+            // Query nilai using nipd (not id_mahasiswa)
             $nilaiQuery = Nilai::with(['mataKuliah', 'kelas'])
                 ->where('nipd', $mahasiswa->nipd);
                 
@@ -268,7 +262,7 @@ class KhsController extends Controller
         }
 
         // Get all mahasiswa with their class data
-        $mahasiswaList = Mahasiswa::with('data_kelas.bidangKeahlian')
+        $mahasiswaList = Mahasiswa::with('data_kelas.programStudi')
             ->whereNotNull('id_kelas')
             ->get();
 
@@ -276,7 +270,7 @@ class KhsController extends Controller
 
         foreach ($mahasiswaList as $mahasiswa) {
             $nilaiQuery = Nilai::with(['mataKuliah', 'kelas'])
-                ->where('nipd', $mahasiswa->nipd);
+                ->where('id_mahasiswa', $mahasiswa->id_mahasiswa);
                 
             // Only filter by tahun akademik if specified
             if ($tahun_akademik) {

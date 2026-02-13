@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MataKuliah;
-use App\Models\BidangKeahlian;
+use App\Models\ProgramStudi;
 use Illuminate\Support\Facades\Validator;
 
 class MatkulController extends Controller
@@ -14,11 +14,11 @@ class MatkulController extends Controller
      */
     public function index(Request $request)
     {
-        $query = MataKuliah::with('bidangKeahlian');
+        $query = MataKuliah::with('programStudi');
 
-        // Filter by id_bidang_keahlian
-        if ($request->filled('id_bidang_keahlian') && $request->id_bidang_keahlian !== 'all') {
-            $query->where('id_bidang_keahlian', $request->id_bidang_keahlian);
+        // Filter by id_program_studi
+        if ($request->filled('id_program_studi') && $request->id_program_studi !== 'all') {
+            $query->where('id_program_studi', $request->id_program_studi);
         }
 
         // Filter by semester
@@ -31,12 +31,12 @@ class MatkulController extends Controller
     }
 
     /**
-     * Get bidang keahlian list for dropdown
+     * Get program studi list for dropdown
      */
-    public function getBidangKeahlianList()
+    public function getProgramStudiList()
     {
-        $bidangKeahlian = BidangKeahlian::orderBy('nama')->get();
-        return response()->json($bidangKeahlian);
+        $programStudi = ProgramStudi::orderBy('nama_program_studi')->get();
+        return response()->json($programStudi);
     }
 
     /**
@@ -60,12 +60,11 @@ class MatkulController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'kode_mk' => 'required|string|unique:mata_kuliah,kode_mk',
+            'kode_mk' => 'required|string|unique:matakuliah,kode_mk',
             'nama_mk' => 'required|string|max:255',
-            'sks' => 'required|integer|min:1|max:6',
-            'bobot_kompetensi' => 'required|integer|min:0|max:100',
-            'semester' => 'required|integer|min:1|max:8',
-            'id_bidang_keahlian' => 'required|exists:bidang_keahlian,id_bidang_keahlian',
+            'sks' => 'required|integer|min:0|max:6',
+            'semester' => 'required|integer|min:1|max:4',
+            'id_program_studi' => 'required|exists:program_studi,id_program_studi',
             'deskripsi' => 'nullable|string',
             'sap_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240'
         ]);
@@ -87,7 +86,7 @@ class MatkulController extends Controller
             
             $matkul = MataKuliah::create($data);
             return response()->json([
-                'message' => 'Mata kuliah berhasil ditambahkan',
+                'message' => 'Materi Ajar berhasil ditambahkan',
                 'data' => $matkul
             ]);
         } catch (\Exception $e) {
@@ -100,7 +99,7 @@ class MatkulController extends Controller
      */
     public function edit($id)
     {
-        $matkul = MataKuliah::with('bidangKeahlian')->findOrFail($id);
+        $matkul = MataKuliah::with('programStudi')->findOrFail($id);
         return response()->json($matkul);
     }
 
@@ -110,12 +109,11 @@ class MatkulController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'kode_mk' => 'required|string|unique:mata_kuliah,kode_mk,' . $id . ',id_matkul',
+            'kode_mk' => 'required|string|unique:matakuliah,kode_mk,' . $id . ',id_mk',
             'nama_mk' => 'required|string|max:255',
-            'sks' => 'required|integer|min:1|max:6',
-            'bobot_kompetensi' => 'required|integer|min:0|max:100',
-            'semester' => 'required|integer|min:1|max:8',
-            'id_bidang_keahlian' => 'required|exists:bidang_keahlian,id_bidang_keahlian',
+            'sks' => 'required|integer|min:0|max:6',
+            'semester' => 'required|integer|min:1|max:4',
+            'id_program_studi' => 'required|exists:program_studi,id_program_studi',
             'deskripsi' => 'nullable|string',
             'sap_file' => 'nullable|file|mimes:pdf,doc,docx|max:10240'
         ]);
@@ -149,7 +147,7 @@ class MatkulController extends Controller
             $matkul->update($data);
 
             return response()->json([
-                'message' => 'Mata kuliah berhasil diupdate',
+                'message' => 'Materi Ajar berhasil diupdate',
                 'data' => $matkul
             ]);
         } catch (\Exception $e) {
@@ -173,7 +171,7 @@ class MatkulController extends Controller
             $matkul->delete();
 
             return response()->json([
-                'message' => 'Mata kuliah berhasil dihapus'
+                'message' => 'Materi Ajar berhasil dihapus'
             ]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
@@ -185,13 +183,13 @@ class MatkulController extends Controller
      */
     public function printMatkul(Request $request)
     {
-        $id_bidang_keahlian = $request->input('id_bidang_keahlian');
+        $id_program_studi = $request->input('id_program_studi');
         $semester = $request->input('semester');
 
-        $query = MataKuliah::with('bidangKeahlian');
+        $query = MataKuliah::with('programStudi');
 
-        if ($id_bidang_keahlian && $id_bidang_keahlian !== 'all') {
-            $query->where('id_bidang_keahlian', $id_bidang_keahlian);
+        if ($id_program_studi && $id_program_studi !== 'all') {
+            $query->where('id_program_studi', $id_program_studi);
         }
 
         if ($semester && $semester !== 'Semua Semester') {

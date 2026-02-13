@@ -56,7 +56,7 @@
                         </td>
                         <td class="px-3 py-3">
                             <div class="text-sm font-bold text-gray-800 group-hover:text-[#004269] transition-colors">
-                                {{ $item->judul ?: '-' }}
+                                {{ $item->judul_pengumuman ?: '-' }}
                             </div>
                         </td>
                         <td class="px-3 py-3">
@@ -195,7 +195,7 @@ $(document).ready(function() {
             method: 'GET',
             success: function(data) {
                 $('#edit-pengumuman-id').val(data.id);
-                $('#edit-judul').val(data.judul);
+                $('#edit-judul').val(data.judul_pengumuman);
                 $('#edit-isi').val(data.isi);
                 
                 // Handle current file display

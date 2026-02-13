@@ -17,7 +17,7 @@ class DummyDataSeeder extends Seeder
 
         // Fetch Bidang Keahlian IDs
         // Map: Code => ID
-        $bkMap = BidangKeahlian::pluck('id_bidang_keahlian', 'kode')->toArray();
+        $bkMap = BidangKeahlian::pluck('id_program_studi', 'kode')->toArray();
 
         // 1. Create Dummy Kelas
         $kelasIds = [];
@@ -73,10 +73,10 @@ class DummyDataSeeder extends Seeder
         foreach ($kelas2024 as $k) {
             $kelas = Kelas::create([
                 'nama_kelas' => $k['nama'],
-                'id_bidang_keahlian' => $bkMap[$k['jurusan_code']] ?? null,
+                'id_program_studi' => $bkMap[$k['jurusan_code']] ?? null,
                 'tahun_ajaran' => $k['tahun_ajaran'],
                 'semester' => $k['semester'],
-                'nama_pa' => $faker->name,
+                'id_pendidik' => null,
             ]);
             $kelasIds['2024'][$k['jurusan_code']][] = $kelas->id_kelas;
         }
@@ -85,10 +85,10 @@ class DummyDataSeeder extends Seeder
         foreach ($kelas2025 as $k) {
             $kelas = Kelas::create([
                 'nama_kelas' => $k['nama'],
-                'id_bidang_keahlian' => $bkMap[$k['jurusan_code']] ?? null,
+                'id_program_studi' => $bkMap[$k['jurusan_code']] ?? null,
                 'tahun_ajaran' => $k['tahun_ajaran'],
                 'semester' => $k['semester'],
-                'nama_pa' => $faker->name,
+                'id_pendidik' => null,
             ]);
             $kelasIds['2025'][$k['jurusan_code']][] = $kelas->id_kelas;
         }
@@ -126,7 +126,7 @@ class DummyDataSeeder extends Seeder
                 'tgl_lahir' => $faker->date('Y-m-d', '2005-01-01'),
                 'kelas' => $kelasName, // Use kelas name from selected class
                 'id_kelas' => $selectedClass,
-                'id_bidang_keahlian' => $bkMap[$jurusanCode] ?? null,
+                'id_program_studi' => $bkMap[$jurusanCode] ?? null,
                 'angkatan' => $angkatan,
                 'periode' => $periode,
                 'email' => $faker->unique()->safeEmail,
@@ -159,7 +159,7 @@ class DummyDataSeeder extends Seeder
                         'tgl_lahir' => $faker->date('Y-m-d', '2005-01-01'),
                         'kelas' => '', // No class assigned, use empty string
                         'id_kelas' => null,
-                        'id_bidang_keahlian' => $bkMap[$jurusanCode] ?? null,
+                        'id_program_studi' => $bkMap[$jurusanCode] ?? null,
                         'angkatan' => $angkatan,
                         'periode' => $periode,
                         'email' => $faker->unique()->safeEmail,

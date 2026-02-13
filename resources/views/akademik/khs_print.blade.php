@@ -3,234 +3,342 @@
 <head>
     <meta charset="UTF-8">
     <title>KHS - {{ $mahasiswa->nipd }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
-        * {
-            box-sizing: border-box;
-        }
-
-        /* Margin 0 untuk Full Bleed Frame Navy */
         @page { size: A4; margin: 0; }
         
+        *, *::before, *::after { box-sizing: border-box; }
+        
         body { 
-            font-family: 'Poppins', sans-serif; 
-            font-size: 10pt; 
-            color: #333; 
-            line-height: 1.4; 
-            margin: 0;
+            font-family: 'Roboto', Arial, sans-serif; 
+            font-size: 9pt; 
+            margin: 0; 
             padding: 0;
+            background: #e0e0e0; /* Background luar abu-abu biar keliatan kertasnya */
+            color: #333;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
 
-        /* Container dengan bingkai Navy */
-        .page-container { 
-            padding: 10mm 15mm; /* Top/Bot 10mm, Left/Right 15mm */
-            position: relative; 
+        /* === KERTAS A4 === */
+        .paper-a4 {
+            width: 210mm;
+            min-height: 297mm;
             background: white;
-            border-top: 15px solid #000066 !important; 
-            min-height: 297mm; /* Ensure border is at bottom if content is short */
-        }
-        
-        /* HEADER STYLE - Garis Ganda (Tebal & Tipis) */
-        .header-container { 
-            text-align: center; 
-            padding-bottom: 5px;
-            border-bottom: 1px solid #000; 
-            margin-bottom: 20px;
-            position: relative; 
-            min-height: 80px;
+            margin: 20px auto;
+            padding: 10mm 15mm; 
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        /* REVISI: Styling Logo di Pojok Kiri */
-        .header-logo {
+        /* HEADER / KOP */
+        .kop-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        .kop-logo {
+            width: 80px;
             position: absolute;
             left: 0;
-            width: 60px; /* Sesuaikan ukuran logo */
-            height: auto;
+            top: 0;
         }
-
-        /* Membuat garis tebal tambahan */
-        .header-container::after {
-            content: "";
-            display: block;
-            position: absolute;
-            bottom: 2px;
-            left: 0;
-            right: 0;
-            border-bottom: 3px solid #000; /* Garis tebal */
+        .kop-text {
+            text-align: center;
+            width: 100%;
         }
-
-        .campus-name { 
-            font-weight: bold; 
-            font-size: 18pt; 
-            color: #000066 !important; 
-            letter-spacing: 1px;
+        .kop-text h1 {
+            font-size: 18pt;
+            font-weight: 900;
+            color: #004269; /* Warna Biru LP3I */
             margin: 0;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
-        .campus-address {
-            font-size: 8.5pt;
-            color: #333;
-            margin: 2px 0;
-            padding-bottom: 10px; /* Memberi ruang untuk garis ganda */
+        .kop-text p {
+            font-size: 8pt;
+            margin: 2px 0 0 0;
+            line-height: 1.3;
+            color: #444;
         }
 
-        .document-title { 
-            text-align: center; 
-            font-weight: bold; 
-            font-size: 13pt; 
-            text-decoration: underline; 
-            margin: 15px 0; 
+        .garis-biru-tebal { border-bottom: 3px solid #004269; margin-bottom: 2px; }
+        .garis-biru-tipis { border-bottom: 1px solid #004269; margin-bottom: 20px; }
+
+        /* BIODATA */
+        .judul-dokumen {
+            text-align: center;
+            font-weight: 700;
+            font-size: 12pt;
             text-transform: uppercase;
+            margin-bottom: 20px;
+            color: #000;
         }
 
-        /* Student Info */
-        .info-table { width: 100%; margin-bottom: 15px; border-collapse: collapse; font-size: 10pt; }
-        .info-table td { padding: 3px 0; vertical-align: top; }
-        .info-table .label { width: 160px; font-weight: 600; }
-
-        /* Grades Table */
-        table.grades { 
-            width: 99%; 
-            margin: 0 auto;
+        .table-biodata { 
+            width: 100%; 
             border-collapse: collapse; 
-            margin-bottom: 10px; 
-            border: 1px solid #000; 
             font-size: 9pt; 
-            table-layout: fixed;
+            margin-bottom: 15px; 
         }
-        table.grades th { 
-            box-shadow: inset 0 0 0 1000px #a6a6a6 !important; 
-            background-color: #a6a6a6 !important;
-            color: #000 !important;
-            border: 1px solid #000; 
-            padding: 8px; 
-            text-align: center; 
+        .table-biodata td { 
+            padding: 2px 0;
+            vertical-align: top;
+        }
+        .label-bio { width: 150px; }
+        .sep-bio { width: 15px; text-align: center; }
+        .val-bio { font-weight: 500; }
+
+        /* TABLE NILAI */
+        .table-nilai {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+            margin-bottom: 5px;
+        }
+        
+        .table-nilai thead th {
+            background-color: #555555; /* Header Gelap sesuai gambar */
+            color: white;
+            padding: 8px 5px;
+            border: 1px solid #999;
+            font-weight: 700;
             text-transform: uppercase;
-            font-weight: bold;
-            word-wrap: break-word;
-        }
-        table.grades td { 
-            border: 1px solid #000; 
-            padding: 6px; 
-            text-align: center; 
-            word-wrap: break-word;
-        }
-        table.grades td.left { text-align: left; }
-        
-        /* Summary Table specific styles */
-        table.grades.summary th { background-color: #e0e0e0 !important; }
-        
-        .signature-wrapper { margin-top: 30px; width: 100%; }
-        .sig-box-right { width: 40%; float: right; text-align: center; }
-        .sig-space { height: 60px; }
-        
-        .btn-print {
-            position: fixed; top: 20px; right: 20px;
-            padding: 10px 20px; background: #000066; color: white;
-            border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
-            z-index: 9999; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            font-size: 8pt;
         }
 
-        .semester-block {
-            page-break-inside: avoid;
-            break-inside: avoid;
-            margin-bottom: 30px;
-            padding-top: 40px; /* Jarak untuk antisipasi halaman baru */
+        .table-nilai tbody td {
+            border: 1px solid #999;
+            padding: 4px 6px;
+            vertical-align: middle;
         }
+
+        /* Semester Row */
+        .row-semester td {
+            background-color: #e0e0e0;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: 1px solid #999;
+        }
+
+        /* FOOTER IPS/IPK (Kotak bawah tabel) */
+        .summary-box {
+            border: 1px solid #999;
+            border-top: none; /* Nyatu sama tabel */
+            padding: 8px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background-color: #f9f9f9;
+            margin-bottom: 30px;
+        }
+        
+        .ips-group {
+            font-size: 9pt;
+            line-height: 1.5;
+        }
+
+        /* TANDA TANGAN */
+        .signature-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+            padding-right: 20px;
+        }
+        .ttd-container {
+            text-align: center;
+            width: 250px;
+            position: relative;
+        }
+        .ttd-img {
+            height: 60px;
+            width: auto;
+            margin: 5px auto;
+            display: block;
+        }
+        .stempel-img {
+            position: absolute;
+            left: 20px;
+            top: 30px;
+            width: 70px;
+            opacity: 0.7;
+            transform: rotate(-10deg);
+        }
+
+
 
         @media print {
+            body { background: white; }
+            .paper-a4 { width: 100%; margin: 0; box-shadow: none; padding: 10mm 15mm; }
             .btn-print { display: none; }
         }
     </style>
 </head>
 <body>
-    <button onclick="window.print()" class="btn-print">Print PDF</button>
 
-    <div class="page-container">
-        <!-- Header -->
-        <div class="header-container">
-            <img src="{{ asset('images/lp3i_krw.png') }}" class="header-logo" alt="logo LP3I">
+    <div class="paper-a4">
+        
+        {{-- WATERMARK BACKGROUND --}}
+        <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 0; pointer-events: none;">
+            <img src="{{ asset('/images/lp3i-college-putih.png') }}" style="width: 60%; opacity: 0.08;">
+        </div>
+
+        <div style="position: relative; z-index: 10;">
             
-            <div class="campus-name">LP3I COLLEGE KARAWANG</div>
-            <div class="campus-address">
-                Gedung Karawang Hijau, Ruko Karawang Hijau, Jl. Tarumanagara No.4-6, Desa Purwadana,<br>
-                Kecamatan Telukjambe Timur, Kab. Karawang, Jawa Barat. <br>
-                <span style="font-weight: bold;">ACADEMIC YEAR {{ $tahun_akademik }}</span>
-            </div>
-        </div>
-
-        <div class="document-title">STUDY RESULT CARD (KHS)</div>
-
-        <table class="info-table">
-            <tr>
-                <td class="label">NIM (NIPD)</td><td>: <strong>{{ $mahasiswa->nipd }}</strong></td>
-            </tr>
-            <tr>
-                <td class="label">FULL NAME</td><td>: <strong>{{ strtoupper($mahasiswa->nama) }}</strong></td>
-            </tr>
-            <tr>
-                <td class="label">MAJOR / FIELD</td><td>: {{ $mahasiswa->data_kelas->bidangKeahlian->nama_bidang ?? 'Software Engineering' }}</td>
-            </tr>
-        </table>
-
-        <!-- Loop Grades by Semester -->
-        @foreach($semesterData as $sem => $data)
-            <div class="semester-block">
-                <div style="font-weight: bold; display: inline-block; padding-bottom: 2px; margin-bottom: 5px;">
-                    SEMESTER {{ $sem }}
+            {{-- KOP SURAT --}}
+            <div class="kop-container">
+                <div class="kop-logo">
+                    <img src="{{ asset('/images/lp3i-college-putih.png') }}" style="width: 100%;">
                 </div>
-
-                <table class="grades">
-                    <thead>
-                        <tr>
-                            <th style="width: 7%;">NO</th>
-                            <th style="width: 45%;">COURSES SUBJECT</th>
-                            <th style="width: 10%;">SKS</th>
-                            <th style="width: 15%;">SCORE</th>
-                            <th style="width: 10%;">GRADE</th>
-                            <th style="width: 15%;">POINT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($data['nilai'] as $index => $nilai)
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td class="left">{{ $nilai->mataKuliah->nama_mk ?? $nilai->kode_mk }}</td>
-                                <td>{{ $nilai->mataKuliah->sks ?? '-' }}</td>
-                                <td><strong>{{ number_format($nilai->nilai_akhir, 1) }}</strong></td>
-                                <td><strong>{{ $nilai->mutu ?? '-' }}</strong></td>
-                                <td>{{ number_format($nilai->bobot_ip, 1) }}</td>
-                            </tr>
-                        @endforeach
-                        <tr style="background-color: #f9f9f9; font-weight: bold;">
-                            <td colspan="2" style="text-align: right; padding-right: 10px;">TOTAL</td>
-                            <td>{{ $data['total_sks'] }}</td>
-                            <td colspan="2" style="text-align: right; padding-right: 10px;">IPS :</td>
-                            <td>{{ number_format($data['ips'], 2) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="kop-text">
+                    <h1>LP3I COLLEGE</h1>
+                    <p>
+                        Gedung Karawang Hijau, Jl. Tarumanegara No. 4-6, Desa Purwadana,<br>
+                        Kecamatan Telukjambe Timur, Kabupaten Karawang, Jawa Barat 41361<br>
+                        Telp (0267) 411286
+                    </p>
+                </div>
             </div>
-        @endforeach
+            
+            <div class="garis-biru-tebal"></div>
+            <div class="garis-biru-tipis"></div>
 
-        <div class="signature-wrapper">
-            <div class="sig-box-right">
-                <div>Karawang, {{ date('d F Y') }}</div>
-                <div>Head of Education,</div>
-                <div class="sig-space"></div>
-                <div style="font-weight: bold; text-decoration: underline;">{{ $mahasiswa->data_kelas->nama_pa ?? '.........................' }}</div>
-                <div>NIP. -</div>
+            {{-- JUDUL --}}
+            <div class="judul-dokumen">KARTU HASIL STUDI</div>
+
+            {{-- BIODATA --}}
+            <table class="table-biodata">
+                <tr>
+                    <td class="label-bio">Nama</td>
+                    <td class="sep-bio">:</td>
+                    <td class="val-bio">{{ ucfirst($mahasiswa->nama_mhs ?? $mahasiswa->nama) }}</td>
+                </tr>
+                <tr>
+                    <td class="label-bio">NIPD</td>
+                    <td class="sep-bio">:</td>
+                    <td class="val-bio">{{ $mahasiswa->nipd }}</td>
+                </tr>
+                <tr>
+                    <td class="label-bio">Tempat / Tanggal Lahir</td>
+                    <td class="sep-bio">:</td>
+                    <td class="val-bio">{{ $mahasiswa->tempat_lahir ?? 'Karawang' }} / {{ $mahasiswa->tgl_lahir ? \Carbon\Carbon::parse($mahasiswa->tgl_lahir)->translatedFormat('d F Y') : '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="label-bio">Bidang Keahlian</td>
+                    <td class="sep-bio">:</td>
+                    <td class="val-bio">{{ ucfirst($mahasiswa->data_kelas->programStudi->nama_program_studi ?? '-') }}</td>
+                </tr>
+            </table>
+
+            {{-- LOOP SEMESTER --}}
+            @foreach($semesterData as $sem => $data)
+            <table class="table-nilai">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width: 40px;">NO</th>
+                        <th rowspan="2">MATERI AJAR</th>
+                        <th rowspan="2" style="width: 40px;">BK</th> <th colspan="3">Nilai</th>
+                    </tr>
+                    <tr>
+                        <th style="width: 50px;">Angka</th>
+                        <th style="width: 50px;">Huruf</th>
+                        <th style="width: 60px;">Kumulatif</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="row-semester">
+                        <td colspan="6">Semester {{ $sem }}</td>
+                    </tr>
+
+                    @php 
+                        $no = 1; 
+                        $totalSks = $data['total_sks'] ?? 0; 
+                        $totalMutu = 0; 
+                    @endphp
+                    
+                    @foreach($data['nilai'] as $nilai)
+                    @php
+                        $sks = $nilai->mataKuliah->sks ?? $nilai->materiAjar->sks ?? 0;
+                        $huruf = ucfirst($nilai->mutu ?? $nilai->grade ?? '-');
+                        $angka = match($huruf) {
+                            'A' => 4.0, 'A-' => 3.7, 'B+' => 3.3, 'B' => 3.0, 'B-' => 2.7,
+                            'C+' => 2.3, 'C' => 2.0, 'D' => 1.0, default => 0
+                        };
+                        $mutu = $nilai->bobot_ip ?? ($sks * $angka);
+                        $totalMutu += $mutu;
+                    @endphp
+                    <tr>
+                        <td style="text-align: center;">{{ $no++ }}</td>
+                        <td>{{ $nilai->mataKuliah->nama_mk ?? $nilai->materiAjar->nama_mk ?? $nilai->kode_mk }}</td>
+                        <td style="text-align: center;">{{ $sks }}</td>
+                        <td style="text-align: center;">{{ number_format($angka, 1) }}</td>
+                        <td style="text-align: center;">{{ $huruf }}</td>
+                        <td style="text-align: center;">{{ number_format($mutu, 1) }}</td>
+                    </tr>
+                    @endforeach
+
+                    <tr style="font-weight: bold; background: #fff;">
+                        <td colspan="2" style="text-align: left; padding-left: 10px;">JUMLAH</td>
+                        <td style="text-align: center;">{{ $totalSks }}</td>
+                        <td colspan="2"></td>
+                        <td style="text-align: center;">{{ number_format($totalMutu, 1) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            {{-- BOX RINGKASAN IPS/IPK (Sesuai Gambar) --}}
+            <div class="summary-box">
+                <div class="ips-group">
+                    @php
+                        $ips = $data['ips'] ?? ($totalSks > 0 ? $totalMutu / $totalSks : 0);
+                        // Logika IPK sederhana (jika data ipk tidak ada, samakan dgn IPS utk smstr 1)
+                        $ipk = $ips; 
+                    @endphp
+                    <div>Index Prestasi Semester (IPS) : <strong>{{ number_format($ips, 2) }}</strong></div>
+                    <div>Index Prestasi Kumulatif (IPK) : <strong>{{ number_format($ipk, 2) }}</strong></div>
+                </div>
+                <div class="ips-group">
+                    Predikat : 
+                    <strong>
+                        @if($ips >= 3.51) Dengan Pujian
+                        @elseif($ips >= 3.00) Sangat Memuaskan
+                        @elseif($ips >= 2.50) Memuaskan
+                        @elseif($ips >= 2.00) Cukup
+                        @else Kurang
+                        @endif
+                    </strong>
+                </div>
             </div>
-            <div style="clear: both;"></div>
-        </div>
+            @endforeach
 
-        <div style="margin-top: 25px; border-top: 1px dashed #ccc; padding-top: 15px; text-align: center;">
-            <small style="color: #888;">#beranipunyaskill - This Page is a temporary Study Result Card for internal use.</small>
+            {{-- TANDA TANGAN --}}
+            <div class="signature-section">
+                <div class="ttd-container">
+                    <p style="margin-bottom: 5px;">Karawang, {{ now()->translatedFormat('d F Y') }}</p>
+                    
+                    {{-- Area Tanda Tangan & Stempel --}}
+                    <div style="height: 80px; position: relative; display: flex; align-items: center; justify-content: center;">
+                        <!-- Space for manual signature -->
+                    </div>
+
+                    <p style="font-weight: bold; margin: 0; text-decoration: underline;">
+                        {{ $mahasiswa->data_kelas->pendidik->nama_pendidik ?? 'Eko Marmanto P.U, S.Kom.,M.Kom.,MOS.' }}
+                    </p>
+                    <p style="margin: 2px 0 0 0; font-size: 8pt;">Head of Education</p>
+                </div>
+            </div>
+
         </div>
     </div>
+
+    <script>
+        window.onload = function() {
+            window.print();
+        }
+    </script>
 </body>
 </html>

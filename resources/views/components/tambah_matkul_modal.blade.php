@@ -5,7 +5,7 @@
         
         {{-- Modal Header --}}
         <div class="flex justify-between items-center pb-3 border-b">
-            <h3 class="text-xl font-bold text-gray-900">Tambah Mata Kuliah</h3>
+            <h3 class="text-xl font-bold text-gray-900">Tambah Materi Ajar</h3>
             <button class="close-tambah-matkul-modal text-gray-400 hover:text-gray-900 text-2xl font-bold">
                 &times;
             </button>
@@ -21,29 +21,21 @@
                 <div>
                     <label for="tambah-kode-mk" class="block text-sm font-medium text-gray-700">Kode MK *</label>
                     <input type="text" id="tambah-kode-mk" name="kode_mk" required
-                        placeholder="e.g., TI101"
+                        placeholder="e.g., 23IC0101"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
-                {{-- Nama Mata Kuliah --}}
+                {{-- Nama Materi Ajar --}}
                 <div>
-                    <label for="tambah-nama-mk" class="block text-sm font-medium text-gray-700">Nama Mata Kuliah *</label>
+                    <label for="tambah-nama-mk" class="block text-sm font-medium text-gray-700">Nama Materi Ajar *</label>
                     <input type="text" id="tambah-nama-mk" name="nama_mk" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
-                {{-- SKS --}}
+                {{-- BK (SKS) --}}
                 <div>
-                    <label for="tambah-sks" class="block text-sm font-medium text-gray-700">SKS *</label>
-                    <input type="number" id="tambah-sks" name="sks" required min="1" max="6"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                {{-- Bobot Kompetensi --}}
-                <div>
-                    <label for="tambah-bobot-kompetensi" class="block text-sm font-medium text-gray-700">Bobot Kompetensi *</label>
-                    <input type="number" id="tambah-bobot-kompetensi" name="bobot_kompetensi" required min="0" max="100"
-                        placeholder="0-100"
+                    <label for="tambah-sks" class="block text-sm font-medium text-gray-700">BK (SKS) *</label>
+                    <input type="number" id="tambah-sks" name="sks" required min="0" max="6"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
@@ -53,16 +45,19 @@
                     <select id="tambah-semester" name="semester" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Pilih Semester --</option>
-                        {{-- Will be populated by JavaScript from database --}}
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
                     </select>
                 </div>
 
-                {{-- Bidang Keahlian --}}
+                {{-- Program Studi --}}
                 <div>
-                    <label for="tambah-bidang-keahlian" class="block text-sm font-medium text-gray-700">Bidang Keahlian *</label>
-                    <select id="tambah-bidang-keahlian" name="id_bidang_keahlian" required
+                    <label for="tambah-program-studi" class="block text-sm font-medium text-gray-700">Program Studi *</label>
+                    <select id="tambah-program-studi" name="id_program_studi" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- Pilih Bidang Keahlian --</option>
+                        <option value="">-- Pilih Program Studi --</option>
                         {{-- Will be populated by JavaScript --}}
                     </select>
                 </div>
@@ -72,7 +67,7 @@
                     <label for="tambah-sap-file" class="block text-sm font-medium text-gray-700">File SAP (PDF/DOC/DOCX, Max 10MB)</label>
                     <input type="file" id="tambah-sap-file" name="sap_file" accept=".pdf,.doc,.docx"
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <p class="mt-1 text-xs text-gray-500">Optional: Upload file SAP mata kuliah</p>
+                    <p class="mt-1 text-xs text-gray-500">Optional: Upload file SAP Materi Ajar</p>
                 </div>
 
                 {{-- Deskripsi (Full Width) --}}

@@ -8,7 +8,7 @@
         @endforeach
     </select>
 
-    <label>Pilih Mata Kuliah</label>
+    <label>Pilih Materi Ajar</label>
     <select name="kode_mk" required>
         @foreach($matkul as $mk)
             <option value="{{ $mk->kode_mk }}">{{ $mk->nama_mk }}</option>

@@ -13,15 +13,15 @@ class Kelas extends Model
 
     protected $fillable = [
         'nama_kelas',
-        'id_bidang_keahlian',
+        'id_program_studi',
         'semester',
         'tahun_ajaran',
-        'nama_pa'
+        'id_pendidik'
     ];
 
-    public function bidangKeahlian()
+    public function programStudi()
     {
-        return $this->belongsTo(BidangKeahlian::class, 'id_bidang_keahlian', 'id_bidang_keahlian');
+        return $this->belongsTo(ProgramStudi::class, 'id_program_studi', 'id_program_studi');
     }
 
     public function mahasiswa()
@@ -32,5 +32,10 @@ class Kelas extends Model
     public function jadwal()
     {
         return $this->hasMany(Jadwal::class, 'id_kelas', 'id_kelas');
+    }
+
+    public function pendidik()
+    {
+        return $this->belongsTo(Pendidik::class, 'id_pendidik', 'id_pendidik');
     }
 }

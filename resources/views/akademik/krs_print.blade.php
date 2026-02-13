@@ -155,7 +155,7 @@
                 <td class="label">SEMESTER</td><td>: {{ $semester ?? '-' }} @if($semester) ({{ $semester % 2 == 0 ? 'Even' : 'Odd' }}) @endif</td>
             </tr>
             <tr>
-                <td class="label">MAJOR / FIELD</td><td>: {{ $mahasiswa->data_kelas->bidangKeahlian->nama_bidang ?? 'Software Engineering' }}</td>
+                <td class="label">MAJOR / FIELD</td><td>: {{ $mahasiswa->data_kelas->programStudi->nama ?? 'Software Engineering' }}</td>
             </tr>
         </table>
 
@@ -182,7 +182,7 @@
                     </tr>
                 @endforelse
                 <tr class="total-row">
-                    <td colspan="3" style="text-align: right; padding-right: 15px;">TOTAL SKS (TOTAL BK)</td>
+                    <td colspan="3" style="text-align: right; padding-right: 15px;">Total BK (TOTAL BK)</td>
                     <td class="text-center" style="color: #000066;">{{ $totalSKS }}</td>
                 </tr>
             </tbody>

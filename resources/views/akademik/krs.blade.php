@@ -6,7 +6,7 @@
     <div class="flex justify-between items-center mb-8">
         <div>
             <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Kartu Rencana Studi (KRS)</h1>
-            <p class="text-sm text-gray-500 mt-1">Manajemen pengambilan mata kuliah dan pencetakan KRS mahasiswa.</p>
+            <p class="text-sm text-gray-500 mt-1">Manajemen pengambilan Materi Ajar dan pencetakan KRS mahasiswa.</p>
         </div>
     </div>
 
@@ -45,7 +45,7 @@
                                 <option value="">Semua Kelas</option>
                                 @foreach($kelasList as $kelas)
                                     <option value="{{ $kelas->id_kelas }}" {{ $id_kelas == $kelas->id_kelas ? 'selected' : '' }}>
-                                        {{ $kelas->nama_kelas }} - {{ $kelas->bidangKeahlian->nama ?? '' }}
+                                        {{ $kelas->nama_kelas }} - {{ $kelas->programStudi->nama_program_studi ?? '' }}
                                     </option>
                                 @endforeach
                             </select>
@@ -148,9 +148,9 @@
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[120px] border-b-2 border-gray-200">NIPD</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[200px] border-b-2 border-gray-200">Nama Mahasiswa</th>
                         <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[150px] border-b-2 border-gray-200">Kelas</th>
-                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[180px] border-b-2 border-gray-200">Bidang Keahlian</th>
+                        <th class="px-3 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[180px] border-b-2 border-gray-200">Program Studi</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Jumlah MK</th>
-                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Total SKS</th>
+                        <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Total BK</th>
                         <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Aksi</th>
                     </tr>
                 </thead>
@@ -164,7 +164,7 @@
                                 <span class="font-mono text-xs text-[#004269] font-bold bg-[#004269]/5 px-1.5 py-0.5 rounded border border-[#004269]/10">{{ $mhs->nipd }}</span>
                             </td>
                             <td class="px-3 py-3">
-                                <div class="text-xs font-bold text-gray-800 group-hover:text-[#004269] transition-colors">{{ $mhs->nama }}</div>
+                                <div class="text-xs font-bold text-gray-800 group-hover:text-[#004269] transition-colors">{{ $mhs->nama_mhs }}</div>
                             </td>
                             <td class="px-3 py-3">
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-700 uppercase tracking-wide border border-gray-200">
@@ -172,7 +172,7 @@
                                 </span>
                             </td>
                             <td class="px-3 py-3 text-xs text-gray-600 font-medium">
-                                {{ $mhs->data_kelas->bidangKeahlian->nama ?? '-' }}
+                                {{ $mhs->data_kelas->programStudi->nama_program_studi ?? '-' }}
                             </td>
                             <td class="px-3 py-3 text-center text-xs font-bold text-gray-600">
                                 {{ $mhs->krs_count }} MK

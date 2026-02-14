@@ -19,7 +19,7 @@
         <div class="flex w-full lg:w-1/2 justify-center items-center bg-gradient-to-b from-blue-800 to-blue-600">
             <div class="w-full max-w-md bg-white bg-opacity-10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl text-white">
                 <div class="text-center mb-6">
-                   <img src="{{ asset('images/logo_white.png') }}" alt="Logo" 
+                   <img src="{{ asset('images/Logo-removebg-preview.png') }}" alt="Logo" 
                         class="mx-auto mb-3 max-h-20 w-auto object-contain drop-shadow-lg">
                     <h2 class="text-3xl font-bold tracking-tight">E-Lecturer System</h2>
                     <p class="text-blue-200 text-sm mt-1">Masuk ke akun pendidik Anda</p>

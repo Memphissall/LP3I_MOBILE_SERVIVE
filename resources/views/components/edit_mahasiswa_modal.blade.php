@@ -96,23 +96,23 @@
                         {{-- Jenis Kelamin --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
-                            <select id="edit-jenis-kelamin" name="jenis_kelamin" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <select id="edit-jenis-kelamin" name="jenis_kelamin" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
                                 <option value="">-- Pilih --</option>
-                                <option value="L">Laki-laki</option>
-                                <option value="P">Perempuan</option>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
                             </select>
                         </div>
 
                         {{-- Tempat Lahir --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
-                            <input type="text" id="edit-tempat-lahir" name="tempat_lahir" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <input type="text" id="edit-tempat-lahir" name="tempat_lahir" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
                         </div>
 
                         {{-- Tanggal Lahir --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
-                            <input type="date" id="edit-tgl-lahir" name="tgl_lahir" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <input type="date" id="edit-tgl-lahir" name="tgl_lahir" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
                         </div>
 
                         {{-- Agama --}}

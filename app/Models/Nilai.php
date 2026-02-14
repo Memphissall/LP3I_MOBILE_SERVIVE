@@ -37,7 +37,7 @@ class Nilai extends Model
 
     public function mataKuliah()
     {
-        return $this->belongsTo(MataKuliah::class, 'kode_mk', 'kode_mk');
+        return $this->belongsTo(MataKuliah::class, 'id_mk', 'id_mk');
     }
 
     // Helper: Calculate nilai akhir

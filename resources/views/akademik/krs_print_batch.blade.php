@@ -257,7 +257,7 @@
                 <tr>
                     <td>NAMA LENGKAP</td>
                     <td>:</td>
-                    <td>{{ $data['mahasiswa']->nama }}</td>
+                    <td>{{ $data['mahasiswa']->nama_mhs }}</td>
                 </tr>
                 <tr>
                     <td>SEMESTER</td>
@@ -284,7 +284,7 @@
                 <tr>
                     <td>PROGRAM STUDI</td>
                     <td>:</td>
-                    <td>{{ $data['mahasiswa']->data_kelas->programStudi->nama ?? '-' }}</td>
+                    <td>{{ $data['mahasiswa']->data_kelas->programStudi->nama_program_studi ?? '-' }}</td>
                 </tr>
             </table>
         </div>
@@ -334,13 +334,13 @@
             <div class="signature-box">
                 <p>Pembimbing Akademik (PA)</p>
                 <div class="signature-space"></div>
-                <p class="signature-name">...................................</p>
+                <p class="signature-name">{{ $data['mahasiswa']->data_kelas->pendidik->nama_pendidik ?? '...................................' }}</p>
             </div>
             <div class="signature-box" style="text-align: right;">
                 <p>Karawang, {{ date('d-M-Y') }}</p>
                 <p>PD yang bersangkutan,</p>
                 <div class="signature-space"></div>
-                <p class="signature-name">{{ $data['mahasiswa']->nama }}</p>
+                <p class="signature-name">{{ $data['mahasiswa']->nama_mhs }}</p>
             </div>
         </div>
     </div>

@@ -689,9 +689,9 @@
                     $('#edit-angkatan').val(s.angkatan);
                     $('#edit-periode').val(s.periode);
                     $('#edit-id-kelas').val(s.id_kelas);
-                    $('#edit-jenis-kelamin').val(s.jenis_kelamin === 'Laki-laki' ? 'L' : (s.jenis_kelamin === 'Perempuan' ? 'P' : s.jenis_kelamin));
+                    $('#edit-jenis-kelamin').val(s.jenis_kelamin);
                     $('#edit-tempat-lahir').val(s.tempat_lahir);
-                    $('#edit-tgl-lahir').val(s.tgl_lahir);
+                    $('#edit-tgl-lahir').val(s.tgl_lahir ? s.tgl_lahir.substring(0, 10) : '');
                     $('#edit-agama').val(s.agama);
                     $('#edit-email').val(s.email);
                     $('#edit-no-tlp').val(s.no_tlp);

@@ -72,6 +72,7 @@ class TranskripController extends Controller
             ->sortBy('nama_kelas');
         
         // Get distinct tahun akademik from nilai table
+        // Get distinct tahun akademik from Nilai table
         $tahunAkademikList = Nilai::select('tahun_akademik')
             ->distinct()
             ->orderBy('tahun_akademik', 'desc')

@@ -223,10 +223,10 @@ class KrsController extends Controller
             return redirect()->back()->with('error', 'Harap pilih Tahun Akademik dan Semester terlebih dahulu untuk mencetak.');
         }
 
-        $mahasiswa = Mahasiswa::where('nipd', $nipd)->with('data_kelas.programStudi')->firstOrFail();
+        $mahasiswa = Mahasiswa::where('nipd', $nipd)->with(['data_kelas.programStudi', 'data_kelas.pendidik'])->firstOrFail();
         
         $krsQuery = Krs::with(['mataKuliah', 'kelas'])
-            ->where('nipd', $mahasiswa->nipd);
+            ->where('id_mahasiswa', $mahasiswa->id_mahasiswa);
             
         // Only filter by tahun akademik if specified
         if ($tahun_akademik) {
@@ -276,7 +276,7 @@ class KrsController extends Controller
         }
 
         $mahasiswaList = Mahasiswa::where('id_kelas', $id_kelas)
-            ->with('data_kelas.programStudi')
+            ->with(['data_kelas.programStudi', 'data_kelas.pendidik'])
             ->get();
 
         $batchData = [];
@@ -286,7 +286,7 @@ class KrsController extends Controller
             $semesterToFilter = $semester ?? ($mahasiswa->data_kelas->semester ?? null);
             
             $krsList = Krs::with(['mataKuliah', 'kelas'])
-                ->where('nipd', $mahasiswa->nipd);
+                ->where('id_mahasiswa', $mahasiswa->id_mahasiswa);
                 
             // Only filter by tahun akademik if specified
             if ($tahun_akademik) {
@@ -333,7 +333,7 @@ class KrsController extends Controller
         }
 
         // Get all mahasiswa with their class data
-        $mahasiswaList = Mahasiswa::with('data_kelas.programStudi')
+        $mahasiswaList = Mahasiswa::with(['data_kelas.programStudi', 'data_kelas.pendidik'])
             ->whereNotNull('id_kelas')
             ->get();
 
@@ -341,7 +341,7 @@ class KrsController extends Controller
 
         foreach ($mahasiswaList as $mahasiswa) {
             $krsList = Krs::with(['mataKuliah', 'kelas'])
-                ->where('nipd', $mahasiswa->nipd);
+                ->where('id_mahasiswa', $mahasiswa->id_mahasiswa);
                 
             // Only filter by tahun akademik if specified
             if ($tahun_akademik) {

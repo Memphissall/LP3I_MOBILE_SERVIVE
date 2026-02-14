@@ -26,7 +26,7 @@ class Krs extends Model
 
     public function mataKuliah()
     {
-        return $this->belongsTo(MataKuliah::class, 'id_matkul', 'id_mk');
+        return $this->belongsTo(MataKuliah::class, 'id_mk', 'id_mk');
     }
 
     // Helper: Calculate Total BK for a student in a semester

@@ -47,8 +47,16 @@
         .table-surat th { background-color: rgba(240, 240, 240, 0.9) !important; font-weight: 700; text-align: center; vertical-align: middle; padding: 8px 5px; border: 1px solid #000; }
         .table-surat td { padding: 6px 8px; border: 1px solid #000; vertical-align: middle; }
 
-        .garis-kop { border-bottom: 4px double #000; margin-bottom: 2px; position: relative; z-index: 10; }
-        .garis-tipis { border-bottom: 1px solid #000; margin-bottom: 25px; position: relative; z-index: 10; }
+        .line-separator {
+            border-top: 3px solid #000;
+            border-bottom: 1px solid #000;
+            height: 2px;
+            margin-bottom: 25px;
+            margin-left: 100px; /* Offset for logo */
+            width: auto;
+            position: relative;
+            z-index: 10;
+        }
         .tegak { font-style: normal !important; position: relative; z-index: 10; }
 
         /* === PRINT STYLES === */
@@ -94,9 +102,9 @@
 
         <div class="paper-a4 font-poppins text-black relative overflow-hidden">
             
-            {{-- === GAMBAR BACKGROUND (WATERMARK) === --}}
-            <div class="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
-                <img src="{{ asset('/images/lp3i-college-putih.png') }}" style="width: 70%; height: auto; object-fit: contain; opacity: 0.15;">
+            {{-- === GAMBAR BACKGROUND (WATERMARK) - FIXED POSITIONING === --}}
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; z-index: 0; opacity: 0.15; pointer-events: none;">
+                <img src="{{ asset('/images/lp3i-college-putih.png') }}" style="width: 100%; height: auto; object-fit: contain;">
             </div>
 
             {{-- === KONTEN SURAT (WRAPPER z-10) === --}}
@@ -115,8 +123,7 @@
                     </p>
                 </div>
                 
-                <div class="garis-kop"></div>
-                <div class="garis-tipis"></div>
+                <div class="line-separator"></div>
 
                 {{-- JUDUL --}}
                 <div style="font-size: 14pt; font-weight: 700; text-decoration: underline; text-transform: uppercase; text-align: center; margin-bottom: 5px;" class="tegak">KARTU HASIL STUDI (KHS)</div>

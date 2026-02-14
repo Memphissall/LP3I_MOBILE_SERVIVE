@@ -210,15 +210,22 @@ $(document).ready(function() {
 
     // TIME SLOTS DATA based on SKS
     const timeSlots = {
+        0: ['08:00 - 09:40', '09:50 - 11:30', '13:00 - 14:40', '14:50 - 16:30', '16:40 - 18:20', '18:30 - 20:10', '20:20 - 22:00'],
+        1: ['08:00 - 08:50', '09:00 - 09:50', '10:00 - 10:50', '11:00 - 11:50', '13:00 - 13:50', '14:00 - 14:50', '15:00 - 15:50'],
         2: ['08:00 - 09:40', '09:50 - 11:30', '13:00 - 14:40', '14:50 - 16:30', '16:40 - 18:20', '18:30 - 20:10', '20:20 - 22:00'],
-        3: ['08:00 - 10:30', '10:40 - 13:10', '13:20 - 15:50'],
+        3: ['08:00 - 10:30', '10:40 - 13:10', '13:20 - 15:50', '16:00 - 18:30', '18:30 - 21:00'],
         4: ['08:00 - 11:30', '13:00 - 16:30', '16:40 - 20:10', '20:20 - 22:00']
     };
 
     function updateTimeSlots(modalPrefix, sks) {
         const $waktuDropdown = $(`#${modalPrefix}-waktu`);
         $waktuDropdown.empty();
-        if (!sks || !timeSlots[sks]) { 
+        
+        // Convert to string key just to be safe, though timeSlots[0] works with int key too
+        // Fallback to 2 SKS if sks is defined but not in list
+        const slots = timeSlots[sks] || timeSlots[2]; 
+        
+        if (sks === undefined || sks === null) { 
             $waktuDropdown.append('<option value="">-- Pilih Materi Ajar Dulu --</option>'); 
             return; 
         }
@@ -293,9 +300,13 @@ $(document).ready(function() {
     }
 
     // 2. LOAD DATA HELPERS
-    function loadKelas(id_program_studi, modalPrefix) {
+    function loadKelas(id_program_studi, modalPrefix, callback) {
         const cacheKey = id_program_studi || 'all';
-        if (kelasCache[cacheKey]) { populateKelasDropdown(kelasCache[cacheKey], modalPrefix); return; }
+        if (kelasCache[cacheKey]) { 
+            populateKelasDropdown(kelasCache[cacheKey], modalPrefix);
+            if(callback) callback();
+            return; 
+        }
         $.ajax({
             url: "{{ route('admin.api.jadwal.kelas_filtered') }}",
             method: 'GET',
@@ -303,6 +314,7 @@ $(document).ready(function() {
             success: function(data) {
                 kelasCache[cacheKey] = data;
                 populateKelasDropdown(data, modalPrefix);
+                if(callback) callback();
             }
         });
     }
@@ -350,9 +362,13 @@ $(document).ready(function() {
         uniqueKelas.forEach(k => { $select.append(`<option value="${k.id_kelas}">${k.nama_kelas}</option>`); });
     }
 
-    function loadMataKuliah(id_program_studi, semester, modalPrefix) {
+    function loadMataKuliah(id_program_studi, semester, modalPrefix, callback) {
         const cacheKey = `${id_program_studi || 'all'}_${semester || 'all'}`;
-        if (mataKuliahCache[cacheKey]) { populateMataKuliahDropdown(mataKuliahCache[cacheKey], modalPrefix); return; }
+        if (mataKuliahCache[cacheKey]) { 
+            populateMataKuliahDropdown(mataKuliahCache[cacheKey], modalPrefix);
+            if(callback) callback();
+            return; 
+        }
         $.ajax({
             url: "{{ route('admin.api.jadwal.matkul_filtered') }}",
             method: 'GET',
@@ -360,6 +376,7 @@ $(document).ready(function() {
             success: function(data) {
                 mataKuliahCache[cacheKey] = data;
                 populateMataKuliahDropdown(data, modalPrefix);
+                if(callback) callback();
             }
         });
     }
@@ -397,7 +414,7 @@ $(document).ready(function() {
 
         $(document).on('change', `#${prefix}-id-mk`, function() {
             const sks = $(this).find(':selected').data('sks');
-            if (sks) {
+            if (sks !== undefined && sks !== null) {
                 $(`#${prefix}-sks-info`).removeClass('hidden').text(`SKS: ${sks}`);
                 updateTimeSlots(prefix, sks);
             } else {
@@ -501,39 +518,47 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.btn-edit-jadwal', function() {
+        // Reset form first
+        $('#edit-jadwal-form')[0].reset();
+        
         const jadwalId = $(this).data('id');
-        $.ajax({
-            url: "{{ route('admin.jadwal.edit', ':id') }}".replace(':id', jadwalId),
-            method: 'GET',
-            success: function(data) {
-                $('#edit-jadwal-id').val(data.id_jadwal);
-                const id_program_studi = data.mata_kuliah?.id_program_studi;
-                const semester = data.semester;
+        const url = "{{ route('admin.jadwal.edit', ':id') }}".replace(':id', jadwalId);
+        
+        $.get(url, function(data) {
+            $('#edit-jadwal-id').val(data.id_jadwal);
+            
+            // 1. Set Program Studi & Semester
+            const id_program_studi = data.mata_kuliah?.id_program_studi;
+            const semester = data.semester;
+            
+            $('#edit-program-studi').val(id_program_studi);
+            $('#edit-semester').val(semester).prop('disabled', false);
+
+            $('#edit-id-pendidik').val(data.id_pendidik);
+            $('#edit-hari').val(data.hari);
+            $('#edit-id-ruangan').val(data.id_ruangan);
+
+            // 2. Load Cascading Options with Callbacks
+            // Load Kelas first
+            loadKelas(id_program_studi, 'edit', function() {
+                $('#edit-id-kelas').val(data.id_kelas);
+            });
+
+            // Load Matkul, then set value, then trigger change for time slots
+            loadMataKuliah(id_program_studi, semester, 'edit', function() {
+                $('#edit-id-mk').val(data.id_mk).trigger('change');
                 
-                $('#edit-program-studi').val(id_program_studi);
-                $('#edit-semester').val(semester).prop('disabled', false);
-                
-                // Load cascading data
-                loadKelas(id_program_studi, 'edit');
-                loadMataKuliah(id_program_studi, semester, 'edit');
-                
-                // Wait for cascading data to load before setting values
+                // Set time slot after trigger change logic runs
+                const waktu = data.jam_mulai && data.jam_selesai ? `${data.jam_mulai} - ${data.jam_selesai}` : '';
+                // Wait small microtask because trigger('change') might have async part or UI update
                 setTimeout(() => {
-                    $('#edit-id-mk').val(data.id_mk).trigger('change');
-                    $('#edit-id-kelas').val(data.id_kelas);
-                    $('#edit-hari').val(data.hari);
-                    $('#edit-id-ruangan').val(data.id_ruangan);
-                    $('#edit-id-pendidik').val(data.id_pendidik);
-                    
-                    // Set waktu dropdown after timeSlots are updated
-                    setTimeout(() => {
-                        const waktu = data.jam_mulai && data.jam_selesai ? `${data.jam_mulai} - ${data.jam_selesai}` : '';
-                        $('#edit-waktu').val(waktu);
-                    }, 200);
-                }, 300);
-                $('#edit-jadwal-modal').removeClass('hidden');
-            },
-            error: function() { showToast('Gagal mengambil data', 'error'); }
+                    $('#edit-waktu').val(waktu);
+                }, 50);
+            });
+
+            $('#edit-jadwal-modal').removeClass('hidden');
+        }).fail(function() {
+            showToast('Gagal mengambil data jadwal', 'error');
         });
     });
 

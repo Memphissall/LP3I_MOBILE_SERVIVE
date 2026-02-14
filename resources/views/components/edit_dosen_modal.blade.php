@@ -55,15 +55,15 @@
 
                 {{-- Tempat Lahir --}}
                 <div>
-                    <label for="edit-tempat" class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
-                    <input type="text" id="edit-tempat" name="tempat_lahir"
+                    <label for="edit-tempat" class="block text-sm font-medium text-gray-700">Tempat Lahir *</label>
+                    <input type="text" id="edit-tempat" name="tempat_lahir" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
                 {{-- Tanggal Lahir --}}
                 <div>
-                    <label for="edit-tanggal-lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
-                    <input type="date" id="edit-tanggal-lahir" name="tgl_lahir"
+                    <label for="edit-tanggal-lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir *</label>
+                    <input type="date" id="edit-tanggal-lahir" name="tgl_lahir" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
@@ -73,8 +73,8 @@
                     <select id="edit-jenis-kelamin" name="jenis_kelamin" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Pilih --</option>
-                        <option value="L">Laki-laki</option>
-                        <option value="P">Perempuan</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
                     </select>
                 </div>
 

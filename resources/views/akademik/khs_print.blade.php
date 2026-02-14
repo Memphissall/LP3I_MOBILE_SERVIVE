@@ -66,8 +66,14 @@
             color: #444;
         }
 
-        .garis-biru-tebal { border-bottom: 3px solid #004269; margin-bottom: 2px; }
-        .garis-biru-tipis { border-bottom: 1px solid #004269; margin-bottom: 20px; }
+        .header-line { 
+            border-top: 3px solid #004269; 
+            border-bottom: 1px solid #004269; 
+            height: 2px; 
+            margin-bottom: 20px;
+            margin-left: 90px; /* Offset for logo */
+            width: auto;
+        }
 
         /* BIODATA */
         .judul-dokumen {
@@ -184,7 +190,7 @@
         
         {{-- WATERMARK BACKGROUND --}}
         <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 0; pointer-events: none;">
-            <img src="{{ asset('/images/lp3i-college-putih.png') }}" style="width: 60%; opacity: 0.08;">
+            <img src="{{ asset('/images/lp3i_krw.png') }}" style="width: 60%; opacity: 0.08;">
         </div>
 
         <div style="position: relative; z-index: 10;">
@@ -192,7 +198,7 @@
             {{-- KOP SURAT --}}
             <div class="kop-container">
                 <div class="kop-logo">
-                    <img src="{{ asset('/images/lp3i-college-putih.png') }}" style="width: 100%;">
+                    <img src="{{ asset('/images/lp3i_krw.png') }}" style="width: 100%;">
                 </div>
                 <div class="kop-text">
                     <h1>LP3I COLLEGE</h1>
@@ -204,8 +210,7 @@
                 </div>
             </div>
             
-            <div class="garis-biru-tebal"></div>
-            <div class="garis-biru-tipis"></div>
+            <div class="header-line"></div>
 
             {{-- JUDUL --}}
             <div class="judul-dokumen">KARTU HASIL STUDI</div>

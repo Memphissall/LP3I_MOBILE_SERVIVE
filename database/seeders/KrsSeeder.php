@@ -58,6 +58,9 @@ class KrsSeeder extends Seeder
             ->inRandomOrder()
             ->take(6) // Take 6 random courses
             ->get();
+            
+        $pendidik = \App\Models\Pendidik::inRandomOrder()->first();
+        $idPendidik = $pendidik ? $pendidik->id_pendidik : 1;
 
         if ($courses->isEmpty()) {
             // No courses available for this combination
@@ -67,14 +70,15 @@ class KrsSeeder extends Seeder
         $count = 0;
         foreach ($courses as $mk) {
             DB::table('krs')->insert([
-                'nipd' => $mhs->nipd,
-                'nama_mhs' => $mhs->nama,
+                'id_mahasiswa' => $mhs->id_mahasiswa,
+                // 'nama_mhs' removed as column doesn't exist
+                'id_pendidik' => $idPendidik, // Add required id_pendidik
                 'id_kelas' => $mhs->id_kelas,
-                'id_matkul' => $mk->id_matkul,
+                'id_mk' => $mk->id_mk,
                 'semester' => $semester,
-                'periode' => ($semester % 2 == 1) ? 'Ganjil' : 'Genap',
+                // 'periode' removed as column doesn't exist
                 'tahun_akademik' => $tahunAkademik,
-                'status' => 'Approved',
+                // 'status' removed as column doesn't exist
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

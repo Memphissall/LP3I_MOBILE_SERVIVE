@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('status', ['Hadir', 'Izin', 'Alpha', 'Sakit'])->nullable();
             $table->string('materi')->nullable();
             $table->text('catatan')->nullable();
+            $table->text('sub_pembahasan')->nullable();
             $table->string('metode_mengajar')->default('Teori')->nullable();
             $table->foreign('id_pendidik')->references('id_pendidik')->on('pendidik')->onDelete('cascade');
             $table->foreign('id_mk')->references('id_mk')->on('matakuliah')->onDelete('cascade');

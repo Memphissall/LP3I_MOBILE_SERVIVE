@@ -25,6 +25,18 @@
           class="bg-white p-6 rounded shadow">
         @csrf
 
+        {{-- PERTEMUAN --}}
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">Pertemuan</label>
+            <select name="pertemuan"
+                    class="w-full border rounded px-3 py-2" required>
+                <option value="">-- Pilih Pertemuan --</option>
+                @for($i=1; $i<=14; $i++)
+                    <option value="{{ $i }}">Pertemuan {{ $i }}</option>
+                @endfor
+            </select>
+        </div>
+
         {{-- JUDUL --}}
         <div class="mb-4">
             <label class="block font-semibold mb-1">Judul Materi</label>
@@ -38,18 +50,6 @@
             <textarea name="deskripsi"
                       rows="4"
                       class="w-full border rounded px-3 py-2"></textarea>
-        </div>
-
-        {{-- PERTEMUAN --}}
-        <div class="mb-4">
-            <label class="block font-semibold mb-1">Pertemuan</label>
-            <select name="pertemuan"
-                    class="w-full border rounded px-3 py-2" required>
-                <option value="">-- Pilih Pertemuan --</option>
-                @for($i=1; $i<=14; $i++)
-                    <option value="{{ $i }}">Pertemuan {{ $i }}</option>
-                @endfor
-            </select>
         </div>
 
         {{-- TIPE MATERI --}}

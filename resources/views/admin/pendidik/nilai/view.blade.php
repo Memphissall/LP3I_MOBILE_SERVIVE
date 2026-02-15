@@ -10,7 +10,6 @@
                 📊 List Score Mahasiswa
             </h1>
 
-            {{-- INFO MATAKULIAH --}}
             <div class="mt-2 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2">
                 <p class="text-sm text-blue-800">
                     <strong>Mata Kuliah:</strong> {{ $matakuliah->nama_mk ?? '-' }} |
@@ -27,72 +26,91 @@
     </div>
 
     {{-- TABLE --}}
-    <div class="overflow-x-auto bg-white shadow rounded-lg">
-        <table class="min-w-full border border-gray-200">
-            <thead class="bg-gray-100 text-gray-700">
+    <div class="overflow-x-auto bg-white shadow rounded-xl">
+        <table class="min-w-full text-sm">
+            <thead class="bg-gray-100 text-gray-700 uppercase text-xs tracking-wider">
                 <tr>
-                    <th class="px-4 py-3 border">No</th>
-                    <th class="px-4 py-3 border text-left">Student Name</th>
-                    <th class="px-4 py-3 border">Attendance</th>
-                    <th class="px-4 py-3 border">Attitude</th>
-                    <th class="px-4 py-3 border">Formative</th>
-                    <th class="px-4 py-3 border">Assignment</th>
-                    <th class="px-4 py-3 border">Mid Exam</th>
-                    <th class="px-4 py-3 border">Final Exam</th>
-                    <th class="px-4 py-3 border">Total Score</th>
-                    <th class="px-4 py-3 border">Grade</th>
-                    <th class="px-4 py-3 border">Action</th>
+                    <th class="px-4 py-3 text-center w-12">No</th>
+                    <th class="px-4 py-3 text-left w-32">NIPD</th>
+                    <th class="px-4 py-3 text-left w-48">Student Name</th>
+                    <th class="px-3 py-3 text-center w-24">Attend</th>
+                    <th class="px-3 py-3 text-center w-24">Attitude</th>
+                    <th class="px-3 py-3 text-center w-24">Formative</th>
+                    <th class="px-3 py-3 text-center w-24">Assign</th>
+                    <th class="px-3 py-3 text-center w-24">UTS</th>
+                    <th class="px-3 py-3 text-center w-24">UAS</th>
+                    <th class="px-3 py-3 text-center w-28">Final</th>
+                    <th class="px-3 py-3 text-center w-20">Grade</th>
+                    <th class="px-3 py-3 text-center w-20">Action</th>
                 </tr>
             </thead>
 
-            <tbody class="text-gray-700">
+            <tbody class="divide-y divide-gray-200 text-gray-700">
                 @forelse ($nilai as $i => $n)
-                <tr class="hover:bg-gray-50 transition">
-                    <td class="px-4 py-2 border text-center">
+                <tr class="hover:bg-blue-50 transition">
+
+                    <td class="px-4 py-3 text-center">
                         {{ $i + 1 }}
                     </td>
-                    <td class="px-4 py-2 border font-medium">
+
+                    <td class="px-4 py-3 font-medium text-blue-600">
+                        {{ $n->mahasiswa->nipd ?? '-' }}
+                    </td>
+
+                    <td class="px-4 py-3 font-semibold text-gray-800">
                         {{ $n->mahasiswa->nama_mhs ?? '-' }}
                     </td>
-                    <td class="px-4 py-2 border text-center">
-                        {{ $n->nilai_kehadiran ?? '-' }}
+
+                    <td class="px-3 py-3 text-center">
+                        {{ number_format($n->nilai_kehadiran, 0) ?? '-' }}
                     </td>
-                    <td class="px-4 py-2 border text-center">
+
+                    <td class="px-3 py-3 text-center">
                         {{ $n->nilai_sikap ?? '-' }}
                     </td>
-                    <td class="px-4 py-2 border text-center">
+
+                    <td class="px-3 py-3 text-center">
                         {{ $n->nilai_formative ?? '-' }}
                     </td>
-                    <td class="px-4 py-2 border text-center">
+
+                    <td class="px-3 py-3 text-center">
                         {{ $n->nilai_tugas ?? '-' }}
                     </td>
-                    <td class="px-4 py-2 border text-center">
+
+                    <td class="px-3 py-3 text-center">
                         {{ $n->nilai_uts ?? '-' }}
                     </td>
-                    <td class="px-4 py-2 border text-center">
+
+                    <td class="px-3 py-3 text-center">
                         {{ $n->nilai_uas ?? '-' }}
                     </td>
-                    <td class="px-4 py-2 border text-center font-semibold">
-                        {{ $n->nilai_akhir ?? '-' }}
+
+                    <td class="px-3 py-3 text-center font-bold text-indigo-600">
+                        {{ number_format($n->nilai_akhir, 2) ?? '-' }}
                     </td>
-                    <td class="px-4 py-2 border text-center font-semibold">
-                        {{ $n->grade ?? '-' }}
+
+                    <td class="px-3 py-3 text-center font-bold">
+                        <span class="px-2 py-1 rounded bg-green-100 text-green-700 text-xs">
+                            {{ $n->grade ?? '-' }}
+                        </span>
                     </td>
-                    <td class="px-4 py-2 border text-center">
+
+                    <td class="px-3 py-3 text-center">
                         <a href="{{ route('nilai.edit', $n->id_nilai) }}"
-                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
-                            <i class="fa-solid fa-pen"></i>
+                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs">
+                            Edit
                         </a>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="11" class="text-center py-6 text-gray-500">
+                    <td colspan="12" class="text-center py-6 text-gray-500">
                         Data nilai belum tersedia
                     </td>
                 </tr>
                 @endforelse
             </tbody>
+
         </table>
     </div>
 

@@ -73,7 +73,7 @@
     text-decoration: none;
 }
 
-/* ICON GRID (ABSENSI, GAJI DLL) */
+/* ICON GRID */
 .icon-grid {
     display: grid;
     grid-template-columns: repeat(2,1fr);
@@ -89,6 +89,7 @@
     text-align: center;
     font-weight: 600;
     color: #374151;
+    text-decoration: none;
 }
 
 .icon-card i {
@@ -142,8 +143,11 @@
     <!-- LEFT -->
     <div>
 
+        <!-- 🔥 WELCOME (Sudah ditambahkan ucapan waktu) -->
         <div class="welcome">
-            <h2>HII, {{ Auth::user()->name }}!</h2>
+            <h2>
+                <span id="greeting"></span>, {{ Auth::user()->name }}!
+            </h2>
             <p>Dashboard Pendidik</p>
             <p id="datetime"></p>
         </div>
@@ -171,7 +175,6 @@
             </div>
         </div>
 
-        <!-- 🔴 BAGIAN INI TIDAK HILANG -->
         <div class="icon-grid">
             <a href="{{ route('pendidik.absen') }}" class="icon-card">
                 <i class="fa-solid fa-user-check"></i>
@@ -193,7 +196,6 @@
                 <div>Nilai</div>
             </a>
         </div>
-        <!-- 🔴 END -->
 
     </div>
 
@@ -209,25 +211,43 @@
 </div>
 </div>
 
-<!-- ================= REAL TIME CLOCK + CALENDAR ================= -->
+<!-- ================= REAL TIME CLOCK + GREETING + CALENDAR ================= -->
 <script>
-// JAM REAL TIME
+
+// 🔥 UCAPAN + JAM REAL TIME
 function updateDateTime() {
     const now = new Date();
     const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
     const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 
-    const h = String(now.getHours()).padStart(2,'0');
-    const m = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
+    const hour = now.getHours();
+    const minute = String(now.getMinutes()).padStart(2,'0');
+    const second = String(now.getSeconds()).padStart(2,'0');
+
+    let greetingText = "";
+
+    if (hour >= 5 && hour < 11) {
+        greetingText = "Selamat Pagi";
+    } else if (hour >= 11 && hour < 15) {
+        greetingText = "Selamat Siang";
+    } else if (hour >= 15 && hour < 18) {
+        greetingText = "Selamat Sore";
+    } else {
+        greetingText = "Selamat Malam";
+    }
+
+    document.getElementById('greeting').innerText = greetingText;
 
     document.getElementById('datetime').innerText =
-        `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} • ${h}:${m}:${s} WIB`;
+        `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} • ${hour}:${minute}:${second} WIB`;
 }
+
 updateDateTime();
 setInterval(updateDateTime,1000);
 
-// CALENDAR
+
+// ================= CALENDAR =================
+
 const today = new Date();
 const year = today.getFullYear();
 const month = today.getMonth();
@@ -236,11 +256,11 @@ const dateToday = today.getDate();
 const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 document.getElementById('calendar-title').innerText = `${monthNames[month]} ${year}`;
 
-const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const daysShort = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const daysEl = document.getElementById('calendar-days');
 const datesEl = document.getElementById('calendar-dates');
 
-days.forEach(d=>{
+daysShort.forEach(d=>{
     const div=document.createElement('div');
     div.className='day';
     div.innerText=d;
@@ -250,7 +270,9 @@ days.forEach(d=>{
 const firstDay = new Date(year,month,1).getDay();
 const totalDays = new Date(year,month+1,0).getDate();
 
-for(let i=0;i<firstDay;i++) datesEl.appendChild(document.createElement('div'));
+for(let i=0;i<firstDay;i++) {
+    datesEl.appendChild(document.createElement('div'));
+}
 
 for(let d=1;d<=totalDays;d++){
     const div=document.createElement('div');
@@ -259,6 +281,7 @@ for(let d=1;d<=totalDays;d++){
     div.innerText=d;
     datesEl.appendChild(div);
 }
+
 </script>
 
 @endsection

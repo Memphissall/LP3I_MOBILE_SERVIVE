@@ -14,6 +14,7 @@ class AbsensiLkm extends Model
         'id_mahasiswa',
         'id_kelas', 
         'nama_mhs',
+        'sub_pembahasan',
         'id_mk',
         'tanggal',
         'pertemuan',

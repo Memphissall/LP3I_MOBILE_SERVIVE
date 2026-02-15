@@ -30,22 +30,34 @@ public function index()
         ->where('id_pendidik', $pendidik->id_pendidik)
         ->whereBetween('tanggal', [$tgl_awal, $tgl_akhir])
         ->orderBy('tanggal', 'desc') 
-        ->orderByDesc('id_honor')
+        ->orderByDesc('id_honor') 
         ->get();
 
-    // ================= TOTAL =================
-    $totalGajiBersih = $honor->sum('gaji_bersih');
-    $totalHonorMengajar = $honor->sum('honor_mengajar');
-    $totalPPN = $honor->sum('ppn');
+    // // ================= TOTAL =================
+    // $totalGajiBersih = $honor->sum('gaji_bersih');
+    // $totalHonorMengajar = $honor->sum('honor_mengajar');
+    // $totalPPN = $honor->sum('ppn');
+
+   // ================= TOTAL KOTOR =================
+$totalKotor = $honor->sum('total_kotor');
+
+// ================= HITUNG PAJAK SEKALI =================
+$totalPPN = intval($totalKotor * 0.05);
+
+// ================= GAJI BERSIH =================
+$totalGajiBersih = $totalKotor - $totalPPN;
+
+
 
     return view('admin.pendidik.gaji.index', compact(
-        'honor',
-        'tgl_awal',
-        'tgl_akhir',
-        'totalGajiBersih',
-        'totalHonorMengajar',
-        'totalPPN'
-    ));
+    'honor',
+    'tgl_awal',
+    'tgl_akhir',
+    'totalKotor',
+    'totalPPN',
+    'totalGajiBersih'
+));
+
 }
 
 public function rekapGaji(Request $request)

@@ -32,6 +32,22 @@
                 <textarea name="materi" rows="3" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500" placeholder="Contoh: Pengenalan Dasar PHP" required></textarea>
             </div>
 
+                    {{-- Input Sub Pembahasan --}}
+        <div class="mb-4">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">
+                Sub Pembahasan
+            </label>
+            <textarea name="sub_pembahasan"
+                rows="3"
+                class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500"
+                placeholder="Contoh:
+        - Variabel & Tipe Data
+        - Struktur Kontrol
+        - Function PHP">
+            </textarea>
+        </div>
+
+
             {{--: METODE PEMBELAJARAN (DI TENAH) --}}
             <div class="mb-4">
                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Metode Pembelajaran</label>
@@ -43,7 +59,7 @@
 
             {{-- Input Catatan --}}
             <div class="mb-6">
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Catatan/Evaluasi (Opsional)</label>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Motivation (Max 5 Minutes)</label>
                 <textarea name="catatan" rows="2" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500" placeholder="Contoh: Mahasiswa cukup antusias"></textarea>
             </div>
                <div class="mt-6 flex justify-between items-center">

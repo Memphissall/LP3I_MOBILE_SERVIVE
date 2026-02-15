@@ -143,8 +143,10 @@ $sesi = ceil($matkul->sks / 2);
 $honorMengajar = $sesi * $honorPerSesi;
 
 $totalKotor = $honorMengajar;
-$ppn = intval($totalKotor * 0.05);
-$gajiBersih = $totalKotor - $ppn;
+
+// sementara di kosongkan
+$ppn = 0;
+$gajiBersih = $totalKotor;
 
 
 
@@ -237,6 +239,7 @@ $gajiBersih = $totalKotor - $ppn;
             ->where('pertemuan', $request->pertemuan)
             ->update([
                 'materi'          => $request->materi,
+                'sub_pembahasan'   => $request->sub_pembahasan,
                 'catatan'         => $request->catatan,
                 'metode_mengajar' => $request->metode_mengajar
             ]);
@@ -257,8 +260,8 @@ $gajiBersih = $totalKotor - $ppn;
         $riwayatLkm = AbsensiLkm::where('id_pendidik', $id_pendidik)
             ->where('id_mk', $id_mk)
             ->where('id_kelas', $id_kelas)
-            ->select('pertemuan','tanggal','materi','metode_mengajar')
-            ->groupBy('pertemuan','tanggal','materi','metode_mengajar')
+            ->select('pertemuan','tanggal','materi','sub_pembahasan','metode_mengajar')
+            ->groupBy('pertemuan','tanggal','materi','sub_pembahasan','metode_mengajar')
             ->orderBy('pertemuan')
             ->get();
 

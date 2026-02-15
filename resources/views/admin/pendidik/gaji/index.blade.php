@@ -23,19 +23,40 @@
             </p>
         </div>
 
-        {{-- TOTAL GAJI BERSIH --}}
-        <div class="bg-gray-50 rounded-lg p-6 mb-10 border-l-4 border-[#009DA5] flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-500 mb-1">
-                    Total Gaji Bersih (Periode Ini)
-                </p>
-                <p class="text-3xl font-semibold text-[#004269]">
-                    Rp {{ number_format($totalGajiBersih,0,',','.') }}
-                </p>
+        {{-- ===================== --}}
+        {{-- TOTAL REKAP GLOBAL --}}
+        {{-- ===================== --}}
+        <div class="bg-gray-50 rounded-lg p-6 mb-10 border-l-4 border-[#009DA5]">
+
+            <div class="grid md:grid-cols-3 gap-6">
+
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">Total Kotor</p>
+                    <p class="text-xl font-semibold text-gray-800">
+                        Rp {{ number_format($totalKotor,0,',','.') }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">PPN 5%</p>
+                    <p class="text-xl font-semibold text-red-600">
+                        Rp {{ number_format($totalPPN,0,',','.') }}
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">Total Gaji Bersih</p>
+                    <p class="text-2xl font-bold text-[#009DA5]">
+                        Rp {{ number_format($totalGajiBersih,0,',','.') }}
+                    </p>
+                </div>
+
             </div>
         </div>
 
-        {{-- TABLE --}}
+        {{-- ===================== --}}
+        {{-- TABLE DETAIL --}}
+        {{-- ===================== --}}
         <div class="overflow-x-auto">
             <table class="w-full text-sm border border-gray-200 rounded-lg">
                 <thead class="bg-gray-50 text-gray-600 uppercase text-xs tracking-wider">
@@ -48,22 +69,22 @@
                         <th class="px-4 py-3 text-center">Sesi</th>
                         <th class="px-4 py-3 text-center">Tanggal</th>
 
-                        <th class="px-4 py-3 text-right">Rate</th>
+                        <th class="px-4 py-3 text-right">Honor Mengajar</th>
                         <th class="px-4 py-3 text-right">Lainnya</th>
-                        <th class="px-4 py-3 text-right">Total</th>
-                        <th class="px-4 py-3 text-right">PPN</th>
-                        <th class="px-4 py-3 text-right">Bersih</th>
+                        <th class="px-4 py-3 text-right">Total Kotor</th>
                     </tr>
                 </thead>
 
                 <tbody class="divide-y divide-gray-200">
                     @forelse($honor as $i => $h)
+
                         @php
                             $honorLainnya = $h->total_kotor - $h->honor_mengajar;
                         @endphp
 
                         <tr class="hover:bg-gray-50 transition">
-                            {{-- NO + BADGE TERBARU --}}
+
+                            {{-- NO --}}
                             <td class="px-4 py-3 text-center font-medium">
                                 {{ $i + 1 }}
                                 @if($i === 0)
@@ -111,22 +132,17 @@
                                 Rp {{ number_format($h->total_kotor,0,',','.') }}
                             </td>
 
-                            <td class="px-4 py-3 text-right text-red-600">
-                                Rp {{ number_format($h->ppn,0,',','.') }}
-                            </td>
-
-                            <td class="px-4 py-3 text-right font-semibold text-[#009DA5]">
-                                Rp {{ number_format($h->gaji_bersih,0,',','.') }}
-                            </td>
                         </tr>
+
                     @empty
                         <tr>
-                            <td colspan="12" class="px-4 py-10 text-center text-gray-500">
+                            <td colspan="10" class="px-4 py-10 text-center text-gray-500">
                                 Belum ada data honor di periode ini
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
+
             </table>
         </div>
 

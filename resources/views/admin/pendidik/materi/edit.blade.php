@@ -24,6 +24,23 @@
         @csrf
         @method('PUT')
 
+        {{-- PERTEMUAN --}}
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">Pertemuan</label>
+            <select name="pertemuan"
+                    class="w-full border rounded px-3 py-2"
+                    required>
+                <option value="">-- Pilih Pertemuan --</option>
+                @for ($i = 1; $i <= 16; $i++)
+                    <option value="{{ $i }}"
+                        {{ old('pertemuan', $materi->pertemuan) == $i ? 'selected' : '' }}>
+                        Pertemuan {{ $i }}
+                    </option>
+                @endfor
+            </select>
+        </div>
+
+
         {{-- JUDUL --}}
         <div class="mb-4">
             <label class="block font-semibold mb-1">Judul Materi</label>
@@ -40,22 +57,6 @@
             <textarea name="deskripsi"
                       rows="3"
                       class="w-full border rounded px-3 py-2">{{ old('deskripsi', $materi->deskripsi) }}</textarea>
-        </div>
-
-        {{-- PERTEMUAN --}}
-        <div class="mb-4">
-            <label class="block font-semibold mb-1">Pertemuan</label>
-            <select name="pertemuan"
-                    class="w-full border rounded px-3 py-2"
-                    required>
-                <option value="">-- Pilih Pertemuan --</option>
-                @for ($i = 1; $i <= 16; $i++)
-                    <option value="{{ $i }}"
-                        {{ old('pertemuan', $materi->pertemuan) == $i ? 'selected' : '' }}>
-                        Pertemuan {{ $i }}
-                    </option>
-                @endfor
-            </select>
         </div>
 
         {{-- TIPE MATERI --}}

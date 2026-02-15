@@ -16,6 +16,7 @@ class MataKuliahSeeder extends Seeder
                 'semester'  => 1,
                 'sks'       => 2,
                 'deskripsi' => 'Mata kuliah pengenalan dasar akuntansi',
+                'sap'       => 1, // Menggunakan integer
                 'created_at'=> now(),
                 'updated_at'=> now(),
             ],
@@ -25,6 +26,7 @@ class MataKuliahSeeder extends Seeder
                 'semester'  => 1,
                 'sks'       => 4,
                 'deskripsi' => 'Mata kuliah akuntansi keuangan dasar',
+                'sap'       => 2, // Menggunakan integer
                 'created_at'=> now(),
                 'updated_at'=> now(),
             ],
@@ -34,6 +36,7 @@ class MataKuliahSeeder extends Seeder
                 'semester'  => 1,
                 'sks'       => 4,
                 'deskripsi' => 'Pemrograman web dasar menggunakan HTML, CSS, dan PHP',
+                'sap'       => 3, // Menggunakan integer
                 'created_at'=> now(),
                 'updated_at'=> now(),
             ],

@@ -3,7 +3,6 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 py-6">
 
-<!-- <form action="{{ route('nilai.store') }}" method="POST" > -->
     <form id="form-nilai" action="{{ route('nilai.store') }}" method="POST">
 
 @csrf
@@ -29,13 +28,14 @@
         <table class="min-w-full text-sm text-center border-separate border-spacing-y-2 px-4 py-3">
             <thead>
                 <tr class="text-gray-600">
+                    <th class="text-left px-3 py-2">NIPD</th> {{-- TAMBAHAN --}}
                     <th class="text-left px-3 py-2">Nama Mahasiswa</th>
-                    <th>Kehadiran</th>
-                    <th>Sikap</th>
-                    <th>Formatif</th>
-                    <th>Tugas</th>
-                    <th>UTS</th>
-                    <th>UAS</th>
+                    <th>Attendance</th>
+                    <th>Attitude</th>
+                    <th>Formative</th>
+                    <th>Assignment</th>
+                    <th>Mid Exam</th>
+                    <th>Final Exam</th>
                 </tr>
             </thead>
 
@@ -43,12 +43,15 @@
             @foreach($mahasiswa as $mhs)
                 <tr class="bg-gray-50 hover:bg-blue-50 transition rounded-lg">
 
+                    {{-- NIPD --}}
+                    <td class="text-left px-3 py-2 font-medium text-gray-600 whitespace-nowrap">
+                        {{ $mhs->nipd }}
+                    </td>
+
                     {{-- NAMA --}}
                     <td class="text-left px-3 py-2 font-medium text-gray-700 whitespace-nowrap">
                         {{ $mhs->nama_mhs }}
                         <input type="hidden" name="id_mahasiswa[]" value="{{ $mhs->id_mahasiswa }}">
-                       
-
                     </td>
 
                     {{-- KEHADIRAN --}}
@@ -58,7 +61,6 @@
                         value="{{ $nilaiKehadiran[$mhs->id_mahasiswa] }}"
                         readonly
                         class="w-28 mx-auto text-center rounded-md border-gray-300 bg-gray-100 focus:ring-0">
-
                     </td>
 
                     {{-- INPUT NILAI --}}
@@ -93,6 +95,7 @@
 </div>
 </form>
 </div>
+
 @push('scripts')
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -111,7 +114,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (i.value.trim() !== "") filled++;
             });
 
-            // ❌ sebagian diisi
             if (filled > 0 && filled < inputs.length) {
                 e.preventDefault();
 
@@ -127,7 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // reset validasi saat ngetik
     document.querySelectorAll(".nilai-input").forEach(input => {
         input.addEventListener("input", () => {
             input.required = false;

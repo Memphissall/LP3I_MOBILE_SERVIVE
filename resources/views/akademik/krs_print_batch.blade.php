@@ -44,9 +44,16 @@
         .header {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #000;
+            margin-bottom: 0px; 
             padding-bottom: 10px;
+        }
+
+        .header-line {
+            border-top: 3px solid #000;
+            border-bottom: 1px solid #000;
+            height: 5px; /* Disamakan 5px biar konsisten */
+            margin-bottom: 20px;
+            width: 100%;
         }
         
         .logo {
@@ -240,6 +247,7 @@
                 <p class="academic-year">TAHUN AKADEMIK {{ $tahun_akademik ?? '2024/2025' }}</p>
             </div>
         </div>
+        <div class="header-line"></div>
         
         <!-- Title -->
         <div class="title">

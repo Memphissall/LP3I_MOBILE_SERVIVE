@@ -32,14 +32,25 @@
             border-bottom: 15px solid #000066 !important; 
         }
         
-        /* HEADER STYLE - Garis Ganda (Tebal & Tipis) */
+        /* HEADER STYLE - No Border here (Moved to Separator) */
         .header-container { 
             text-align: center; 
-            padding-bottom: 5px;
-            border-bottom: 1px solid #000; /* Garis tipis */
-            margin-bottom: 20px;
+            margin-bottom: 0px;
             position: relative; /* Kunci patokan untuk logo */
             min-height: 80px;
+            padding-bottom: 10px;
+        }
+
+        /* GARIS TEBAL & TIPIS - SINGLE BOX TECHNIQUE */
+        .separator-container {
+            width: 100%;
+            display: block;
+            margin-bottom: 20px;
+            border-top: 3px solid #000;     /* Garis Tebal (Atas) */
+            border-bottom: 1px solid #000;  /* Garis Tipis (Bawah) */
+            height: 5px;                    /* Jarak antar garis */
+            padding: 0;
+            box-sizing: border-box;
         }
 
         /* REVISI: Styling Logo di Pojok Kiri */
@@ -50,16 +61,7 @@
             height: auto;
         }
 
-        /* Membuat garis tebal tambahan */
-        .header-container::after {
-            content: "";
-            display: block;
-            position: absolute;
-            bottom: 2px;
-            left: 0;
-            right: 0;
-            border-bottom: 3px solid #000; /* Garis tebal */
-        }
+
 
         .campus-name { 
             font-weight: bold; 
@@ -141,6 +143,9 @@
                 <span style="font-weight: bold;">ACADEMIC YEAR 2023/2024</span>
             </div>
         </div>
+        
+        <!-- Separator Line (Moved outside header) -->
+        <div class="separator-container"></div>
 
         <div class="document-title">STUDY PLAN CARD (KRS)</div>
 

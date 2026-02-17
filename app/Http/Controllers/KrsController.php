@@ -108,7 +108,7 @@ class KrsController extends Controller
      * Get Materi Ajar filtered by Bidang Keahlian and Semester
      */
     // API for modal
-    public function getMatakuliah(Request $request)
+    public function getMataKuliahFiltered(Request $request)
     {
         $id_program_studi = $request->input('id_program_studi');
         $semester = $request->input('semester');

@@ -66,13 +66,16 @@
             color: #444;
         }
 
-        .header-line { 
-            border-top: 3px solid #004269; 
-            border-bottom: 1px solid #004269; 
-            height: 2px; 
+        /* GARIS TEBAL & TIPIS - SINGLE BOX TECHNIQUE (GUARANTEED ALIGNMENT) */
+        .separator-container {
+            width: 100%;
+            display: block;
             margin-bottom: 20px;
-            margin-left: 90px; /* Offset for logo */
-            width: auto;
+            border-top: 3px solid #000;     /* Garis Tebal (Atas) */
+            border-bottom: 1px solid #000;  /* Garis Tipis (Bawah) */
+            height: 5px;                    /* Jarak antar garis */
+            padding: 0;
+            box-sizing: border-box;
         }
 
         /* BIODATA */
@@ -104,7 +107,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 9pt;
-            margin-bottom: 5px;
+            margin-bottom: 0; /* Ubah jadi 0 biar nempel sama footer IPS */
         }
         
         .table-nilai thead th {
@@ -198,7 +201,7 @@
             {{-- KOP SURAT --}}
             <div class="kop-container">
                 <div class="kop-logo">
-                    <img src="{{ asset('/images/lp3i_krw.png') }}" style="width: 100%;">
+                    <img src="{{ asset('/images/lp3i_krw.png') }}" style="width: 40px; height: 55px;">
                 </div>
                 <div class="kop-text">
                     <h1>LP3I COLLEGE</h1>
@@ -210,7 +213,7 @@
                 </div>
             </div>
             
-            <div class="header-line"></div>
+            <div class="separator-container"></div>
 
             {{-- JUDUL --}}
             <div class="judul-dokumen">KARTU HASIL STUDI</div>

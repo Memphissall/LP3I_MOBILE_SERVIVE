@@ -47,13 +47,16 @@
         .table-surat th { background-color: rgba(240, 240, 240, 0.9) !important; font-weight: 700; text-align: center; vertical-align: middle; padding: 8px 5px; border: 1px solid #000; }
         .table-surat td { padding: 6px 8px; border: 1px solid #000; vertical-align: middle; }
 
-        .line-separator {
-            border-top: 3px solid #000;
-            border-bottom: 1px solid #000;
-            height: 2px;
+        /* GARIS TEBAL & TIPIS - SINGLE BOX TECHNIQUE (GUARANTEED ALIGNMENT) */
+        .separator-container {
+            width: 100%;
+            display: block;
             margin-bottom: 25px;
-            margin-left: 100px; /* Offset for logo */
-            width: auto;
+            border-top: 3px solid #000;     /* Garis Tebal (Atas) */
+            border-bottom: 1px solid #000;  /* Garis Tipis (Bawah) */
+            height: 5px;                    /* Jarak antar garis */
+            padding: 0;
+            box-sizing: border-box;
             position: relative;
             z-index: 10;
         }
@@ -123,7 +126,7 @@
                     </p>
                 </div>
                 
-                <div class="line-separator"></div>
+                <div class="separator-container"></div>
 
                 {{-- JUDUL --}}
                 <div style="font-size: 14pt; font-weight: 700; text-decoration: underline; text-transform: uppercase; text-align: center; margin-bottom: 5px;" class="tegak">KARTU HASIL STUDI (KHS)</div>

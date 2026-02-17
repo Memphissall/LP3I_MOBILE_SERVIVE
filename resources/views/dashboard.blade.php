@@ -5,61 +5,56 @@
 @section('content')
 <div class="bg-gray-50 min-h-screen p-6">
     
-    {{-- 1. TOP BAR: Header --}}
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800 tracking-tight">Dashboard Akademik</h1>
-            <nav class="flex text-sm text-gray-500 mt-1">
-                <span class="hover:text-[#004269]">Home</span>
-                <span class="mx-2">/</span>
-                <span class="text-[#004269] font-semibold">Dashboard</span>
-            </nav>
-        </div>
-    </div>
-
-    {{-- 2. MAIN LAYOUT --}}
+    {{-- MAIN LAYOUT --}}
     <div class="space-y-6">
 
         {{-- A. STATISTIK REAL-TIME (Cards Minimalis) --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {{-- Mahasiswa --}}
-            <div class="bg-white p-5 rounded-lg border-l-4 border-[#004269] shadow-sm flex justify-between items-center">
+            <div class="bg-gradient-to-br from-[#004269] to-[#003051] p-6 rounded-lg shadow-lg flex justify-between items-center text-white">
                 <div>
-                    <p class="text-xs font-bold text-gray-400 uppercase">Mahasiswa Aktif</p>
-                    <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $stats['mahasiswa_aktif'] ?? '1,240' }}</h3>
-                    <p class="text-xs text-gray-500 mt-1">Total: {{ $stats['total_mahasiswa'] ?? '1,500' }}</p>
+                    <p class="text-xs font-bold text-white/80 uppercase">Mahasiswa Aktif</p>
+                    <h3 class="text-3xl font-bold mt-2">{{ $stats['mahasiswa_aktif'] ?? 0 }}</h3>
+                    <p class="text-xs text-white/70 mt-1">dari {{ $stats['total_mahasiswa'] ?? 0 }} Total Mahasiswa</p>
                 </div>
-                <div class="bg-blue-50 p-2 rounded text-[#004269]">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                <div class="bg-white/20 p-3 rounded-lg backdrop-blur-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 </div>
             </div>
 
             {{-- Pendidik --}}
-            <div class="bg-white p-5 rounded-lg border-l-4 border-[#009DA5] shadow-sm flex justify-between items-center">
+            <div class="bg-gradient-to-br from-[#009DA5] to-[#007a81] p-6 rounded-lg shadow-lg flex justify-between items-center text-white">
                 <div>
-                    <p class="text-xs font-bold text-gray-400 uppercase">Total Pendidik</p>
-                    <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $stats['total_pendidik'] ?? '85' }}</h3>
-                    <p class="text-xs text-green-600 mt-1 flex items-center">
-                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Dosen & Tenaga Pengajar
-                    </p>
+                    <p class="text-xs font-bold text-white/80 uppercase">Pendidik Aktif</p>
+                    <h3 class="text-3xl font-bold mt-2">{{ $stats['pendidik_aktif'] ?? 0 }}</h3>
+                    <p class="text-xs text-white/70 mt-1">dari {{ $stats['total_pendidik'] ?? 0 }} Total Pendidik</p>
                 </div>
-                <div class="bg-teal-50 p-2 rounded text-[#009DA5]">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <div class="bg-white/20 p-3 rounded-lg backdrop-blur-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 </div>
             </div>
+        </div>
 
-            {{-- Kelas / Jadwal --}}
-            <div class="bg-white p-5 rounded-lg border-l-4 border-amber-500 shadow-sm flex justify-between items-center">
-                <div>
-                    <p class="text-xs font-bold text-gray-400 uppercase">Kelas Hari Ini</p>
-                    <h3 class="text-2xl font-bold text-gray-800 mt-1">24 <span class="text-sm font-normal text-gray-400">/ 48 Sesi</span></h3>
-                    <p class="text-xs text-gray-500 mt-1">Ruangan Terpakai: 80%</p>
+        {{-- SUPER ADMIN LINK --}}
+        <div class="bg-gradient-to-r from-[#F15B67] to-[#ff7682] rounded-lg shadow-lg p-6 flex items-center justify-between text-white">
+            <div class="flex items-center space-x-4">
+                <div class="bg-white/20 p-4 rounded-lg backdrop-blur-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
                 </div>
-                <div class="bg-amber-50 p-2 rounded text-amber-500">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div>
+                    <h3 class="text-lg font-bold">Portal Super Admin</h3>
+                    <p class="text-white/80 text-sm">Akses ke sistem super administrator LP3I</p>
                 </div>
             </div>
+            <a href="https://superadmin.lp3i.ac.id" target="_blank" class="bg-white text-[#F15B67] px-6 py-3 rounded-lg font-semibold hover:bg-white/90 hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
+                <span>Buka Portal</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+            </a>
         </div>
 
         {{-- B. QUICK ACCESS MENU (Gaya Grid Icon + Text) --}}

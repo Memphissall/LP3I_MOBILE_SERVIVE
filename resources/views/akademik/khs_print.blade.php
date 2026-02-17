@@ -42,10 +42,10 @@
             position: relative;
         }
         .kop-logo {
-            width: 80px;
+            width: 65px;
             position: absolute;
             left: 0;
-            top: 0;
+            top: -20px;
         }
         .kop-text {
             text-align: center;

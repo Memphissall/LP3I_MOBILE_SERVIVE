@@ -51,6 +51,7 @@ class DashboardController extends Controller
             'total_pendidik' => Dosen::count(),
             'total_matkul' => MataKuliah::count(),
             'mahasiswa_aktif' => Mahasiswa::where('status', 'Aktif')->count(),
+            'pendidik_aktif' => Dosen::where('status', 'Aktif')->count(),
         ];
 
         // Get latest 3 announcements

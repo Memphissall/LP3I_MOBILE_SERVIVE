@@ -128,7 +128,7 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     
     // KRS API Routes
     Route::get('/api/krs/program-studi', [App\Http\Controllers\KrsController::class, 'getProgramStudiList'])->name('api.krs.program_studi');
-    Route::get('/api/krs/matkul-filtered', [App\Http\Controllers\KrsController::class, 'getMataKuliahFiltered'])->name('api.krs.matkul_filtered');
+    Route::get('/api/krs/matkul-filtered', [App\Http\Controllers\KrsController::class, 'getMatakuliah'])->name('api.krs.matkul_filtered');
     
     // Transkrip Nilai Routes
     Route::get('/transkrip', [App\Http\Controllers\TranskripController::class, 'index'])->name('transkrip.index');

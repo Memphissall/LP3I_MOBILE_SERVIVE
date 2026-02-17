@@ -1,15 +1,11 @@
 @extends('layouts.app')
 
+@section('title', 'Kelola Data Mahasiswa - E-Academic LP3I')
+@section('page-title', 'Kelola Data Mahasiswa')
+@section('page-description', 'Manajemen data akademik mahasiswa aktif dan alumni.')
+
 @section('content')
     <div class="p-6">
-        {{-- Header Page --}}
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Data Mahasiswa</h1>
-                <p class="text-sm text-gray-500 mt-1">Manajemen data akademik mahasiswa aktif dan alumni.</p>
-            </div>
-        </div>
-
         {{-- 1. Container Filter Utama (REMASTERED) --}}
         <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 mb-8 overflow-hidden relative border border-gray-100">
             {{-- Decorative Top Bar --}}

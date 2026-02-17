@@ -181,7 +181,6 @@ $(document).ready(function() {
                         <div class="text-xs text-gray-500 mt-1">
                             <span class="mr-4">SKS: ${mk.sks}</span>
                             <span class="mr-4">Semester: ${mk.semester}</span>
-                            <span>Bobot: ${mk.bobot_kompetensi || '-'}</span>
                         </div>
                     </div>
                 </label>

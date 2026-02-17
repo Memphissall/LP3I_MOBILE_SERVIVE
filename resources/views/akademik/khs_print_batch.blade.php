@@ -31,7 +31,47 @@
             box-sizing: border-box;
         }
 
-        /* 1. TABLE BIODATA (FIX JARAK) */
+        /* === KOP SURAT STRUKTUR === */
+        .kop-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 5px;
+            min-height: 80px;
+        }
+
+        .kop-logo-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 85px;
+        }
+
+        .kop-logo-container img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .kop-text-container {
+            text-align: center;
+            width: 100%;
+        }
+
+        .line-separator {
+            border-top: 3px solid #000;
+            border-bottom: 1px solid #000;
+            height: 2px;
+            margin-bottom: 25px;
+            /* Jarak agar garis tidak menabrak logo di kiri */
+            /* margin-left: 95px;  */
+            width: auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* === TABLE BIODATA === */
         .table-biodata { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 20px; position: relative; z-index: 10; }
         .table-biodata td { 
             padding: 4px 0;
@@ -42,21 +82,11 @@
         .col-separator { width: 15px; text-align: center; }
         .col-value { font-weight: 700; }
 
-        /* 2. TABLE NILAI (RESMI) */
+        /* === TABLE NILAI === */
         .table-surat { width: 100%; border-collapse: collapse; font-size: 10pt; line-height: 1.3; margin-top: 10px; position: relative; z-index: 10; background: transparent; }
         .table-surat th { background-color: rgba(240, 240, 240, 0.9) !important; font-weight: 700; text-align: center; vertical-align: middle; padding: 8px 5px; border: 1px solid #000; }
         .table-surat td { padding: 6px 8px; border: 1px solid #000; vertical-align: middle; }
 
-        .line-separator {
-            border-top: 3px solid #000;
-            border-bottom: 1px solid #000;
-            height: 2px;
-            margin-bottom: 25px;
-            margin-left: 100px; /* Offset for logo */
-            width: auto;
-            position: relative;
-            z-index: 10;
-        }
         .tegak { font-style: normal !important; position: relative; z-index: 10; }
 
         /* === PRINT STYLES === */
@@ -100,34 +130,43 @@
             $semesterData = $data['semesterData'];
         @endphp
 
-        <div class="paper-a4 font-poppins text-black relative overflow-hidden">
+        <div class="paper-a4">
             
-            {{-- === GAMBAR BACKGROUND (WATERMARK) - FIXED POSITIONING === --}}
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; z-index: 0; opacity: 0.15; pointer-events: none;">
-                <img src="{{ asset('/images/lp3i-college-putih.png') }}" style="width: 100%; height: auto; object-fit: contain;">
+            {{-- === WATERMARK BACKGROUND === --}}
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; z-index: 0; opacity: 0.10; pointer-events: none;">
+                <img src="{{ asset('/images/lp3i-college-putih.png') }}" style="width: 100%; height: auto; object-fit: contain; mix-blend-multiply: multiply;">
             </div>
 
-            {{-- === KONTEN SURAT (WRAPPER z-10) === --}}
+            {{-- === KONTEN SURAT === --}}
             <div class="relative z-10">
 
                 {{-- KOP SURAT --}}
-                <div style="text-align: center; padding-bottom: 10px;">
-                    <div style="margin: 0 auto 10px auto; width: 80px;">
-                        <img src="{{ asset('/images/lp3i-college-putih.png') }}" style="width: 100%; height: auto; object-fit: contain;">
+                <div class="kop-wrapper">
+                    <div class="kop-logo-container">
+                        <img src="{{ asset('/images/lp3i-college-putih.png') }}" alt="Logo">
                     </div>
-                    <h1 style="font-size: 20pt; font-weight: 800; color: #004269; margin: 0; line-height: 1;">LP3I COLLEGE KARAWANG</h1>
-                    <p style="font-size: 9pt; margin: 6px 0 0 0; line-height: 1.4; font-weight: 400;">
-                        Gedung Karawang Hijau, Jl. Tarumanegara No. 4-6, Desa Purwadana,<br>
-                        Kecamatan Telukjambe Timur, Kabupaten Karawang, Jawa Barat 41361<br>
-                        Telp (0267) 411286
-                    </p>
+                    
+                    <div class="kop-text-container">
+                        <h1 style="font-size: 20pt; font-weight: 800; color: #004269; margin: 0; line-height: 1;">
+                            LP3I COLLEGE KARAWANG
+                        </h1>
+                        <p style="font-size: 9pt; margin: 6px 0 0 0; line-height: 1.4; font-weight: 400;">
+                            Gedung Karawang Hijau, Jl. Tarumanegara No. 4-6, Desa Purwadana,<br>
+                            Kecamatan Telukjambe Timur, Kabupaten Karawang, Jawa Barat 41361<br>
+                            Telp (0267) 411286
+                        </p>
+                    </div>
                 </div>
                 
                 <div class="line-separator"></div>
 
                 {{-- JUDUL --}}
-                <div style="font-size: 14pt; font-weight: 700; text-decoration: underline; text-transform: uppercase; text-align: center; margin-bottom: 5px;" class="tegak">KARTU HASIL STUDI (KHS)</div>
-                <div style="font-size: 11pt; font-weight: 600; text-align: center; margin-bottom: 20px; text-transform: uppercase;" class="tegak">TAHUN AKADEMIK {{ $tahun_akademik ?? date('Y') . '/' . (date('Y') + 1) }}</div>
+                <div style="font-size: 14pt; font-weight: 700; text-decoration: underline; text-transform: uppercase; text-align: center; margin-bottom: 5px;" class="tegak">
+                    KARTU HASIL STUDI (KHS)
+                </div>
+                <div style="font-size: 11pt; font-weight: 600; text-align: center; margin-bottom: 20px; text-transform: uppercase;" class="tegak">
+                    TAHUN AKADEMIK {{ $tahun_akademik ?? date('Y') . '/' . (date('Y') + 1) }}
+                </div>
 
                 {{-- BIODATA --}}
                 <table class="table-biodata">
@@ -158,7 +197,7 @@
                     <table class="table-surat">
                         <thead>
                             <tr>
-                                <td colspan="6" style="padding: 6px 10px; font-weight: 700; background-color: rgba(249, 249, 249, 0.8); text-transform: uppercase; font-size: 9pt; border: 1px solid #000;" class="tegak">
+                                <td colspan="6" style="padding: 6px 10px; font-weight: 700; background-color: rgba(230, 230, 230, 0.8); text-transform: uppercase; font-size: 9pt; border: 1px solid #000;" class="tegak">
                                     Semester {{ $sem }}
                                 </td>
                             </tr>
@@ -234,36 +273,18 @@
                     </div>
                 @empty
                     {{-- Empty State --}}
-                    <table class="table-surat">
-                        <thead>
-                            <tr>
-                                <th style="width: 40px;">No</th>
-                                <th style="text-align: left; padding-left: 10px;">Materi Ajar</th>
-                                <th style="width: 50px;">SKS</th>
-                                <th style="width: 60px;">Angka</th>
-                                <th style="width: 60px;">Huruf</th>
-                                <th style="width: 80px;">Mutu</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="6" style="text-align: center; height: 100px; vertical-align: middle; font-style: italic; color: #666;">
-                                    Belum ada data nilai akademik yang tersedia.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 20px; border: 1px solid #000; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; background-color: rgba(255, 255, 255, 0.8);">
-                        <div style="font-size: 10pt;"><strong>IPS :</strong> <span style="font-weight: 800;">0.00</span></div>
-                        <div style="font-size: 10pt;"><strong>Predikat :</strong> <span style="font-weight: 600;">-</span></div>
+                    <div style="text-align: center; padding: 20px; border: 1px solid #000; font-style: italic;">
+                        Belum ada data nilai.
                     </div>
                 @endforelse
 
-                {{-- TANDA TANGAN - DOSEN/HEAD OF EDUCATION --}}
-                <div style="margin-top: 40px; display: flex; justify-content: flex-end;">
+                {{-- TANDA TANGAN --}}
+                <div style="margin-top: 50px; display: flex; justify-content: flex-end;">
                     <div style="text-align: center; min-width: 250px;">
                         <p style="margin-bottom: 60px;">Karawang, {{ now()->translatedFormat('d F Y') }}</p>
-                        <p style="font-weight: 700; text-decoration: underline; font-size: 10pt; margin: 0;">{{ $mahasiswa->data_kelas->pendidik->nama_pendidik ?? 'Eko Marmanto P.U, S.Kom.,M.Kom.,MOS. CDMP' }}</p>
+                        <p style="font-weight: 700; text-decoration: underline; font-size: 10pt; margin: 0;">
+                            {{ $mahasiswa->data_kelas->pendidik->nama_pendidik ?? 'Eko Marmanto P.U, S.Kom.,M.Kom.,MOS. CDMP' }}
+                        </p>
                         <p style="font-size: 9pt; margin: 5px 0 0 0;">Head of Education</p>
                     </div>
                 </div>

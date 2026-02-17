@@ -23,12 +23,6 @@
 
             {{-- Content (Z-Index agar di atas overlay) --}}
             <div class="relative z-10">
-                {{-- Logo dan Nama Kampus --}}
-                <div class="flex items-center mb-6">
-                    <img src="{{ asset('images/logo_white.png') }}" alt="LP3I Logo" class="h-12 w-auto mr-3">
-                    <img src="{{ asset('images/global_mandiri_putih.png') }}" alt="Global Mandiri Logo" class="h-12 w-auto">
-                </div>
-
                 {{-- Judul Sistem --}}
                 <div class="text-3xl font-bold text-gray-800">
                     <span class="text-4xl font-extrabold text-[#009DA5] mr-0.5">E</span><span
@@ -50,10 +44,16 @@
         </div>
 
         {{-- Bagian Kanan (Form Login) --}}
-        <div class="w-full lg:w-1/2 flex flex-col justify-center items-center p-12 bg-white">
+        <div class="w-full lg:w-1/2 flex flex-col justify-start items-center p-12 bg-white">
+            {{-- Logo LP3I & Global Mandiri di Atas --}}
+            <div class="flex items-center justify-center mb-12">
+                <img src="{{ asset('images/lp3i_krw.png') }}" alt="LP3I Logo" class="h-16 w-auto mr-3">
+                <img src="{{ asset('images/global_mandiri.png') }}" alt="Global Mandiri Logo" class="h-16 w-auto">
+            </div>
+            
             <div class="w-full max-w-md space-y-8">
                 <div>
-                    <h2 class="mt-6 text-center text-4xl font-extrabold text-gray-900">Login System</h2>
+                    <h2 class="text-center text-4xl font-extrabold text-gray-900">Login System</h2>
                     <p class="mt-2 text-center text-sm text-gray-600">
                         Silahkan masuk ke akun anda
                     </p>

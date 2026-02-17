@@ -115,8 +115,20 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
                 </button>
                 <div class="hidden md:block">
-                    <h2 class="text-lg font-bold text-gray-800">@yield('title', 'Dashboard')</h2>
-                    <p class="text-xs text-gray-500">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}</p>
+                    <h2 class="text-lg font-bold text-gray-800">
+                        @hasSection('page-title')
+                            @yield('page-title')
+                        @else
+                            @yield('title', 'Dashboard')
+                        @endif
+                    </h2>
+                    <p class="text-xs text-gray-500">
+                        @hasSection('page-description')
+                            @yield('page-description')
+                        @else
+                            {{ now()->isoFormat('dddd, D MMMM Y') }}
+                        @endif
+                    </p>
                 </div>
             </div>
 

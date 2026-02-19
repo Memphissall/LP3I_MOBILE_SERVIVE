@@ -23,10 +23,16 @@ protected $fillable = [
     'foto',
     'status'
 ];
-
+    
     // Relasi ke kelas
     public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'id_kelas');
     }
+
+    public function user()
+{
+    // Sesuaikan foreign key-nya, misalnya 'id_user' atau 'user_id'
+    return $this->belongsTo(User::class, 'id_user'); 
+}
 }

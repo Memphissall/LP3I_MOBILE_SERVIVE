@@ -1,13 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\ELecturer;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kelas;
 use App\Models\Matakuliah;
 use App\Models\Tugas;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotifTugasBaru;
+
 
 class TugasController extends Controller
 {
@@ -78,27 +83,45 @@ class TugasController extends Controller
     // ==========================
     // SIMPAN
     // ==========================
-   public function store(Request $request, $id_kelas, $id_mk)
-{
-    $request->validate([
-        'judul_tugas'    => 'required',
-        'deadline' => 'required|date'
-    ]);
+// ==========================
+    // SIMPAN & KIRIM EMAIL NOTIFIKASI
+    // ==========================
+    public function store(Request $request, $id_kelas, $id_mk)
+    {
+        // Validasi input
+        $request->validate([
+            'judul_tugas' => 'required',
+            'deadline'    => 'required|date'
+        ]);
 
-    Tugas::create([
-        'judul_tugas'    => $request->judul_tugas,   // ✅ sesuai migrasi
-        'deskripsi'      => $request->deskripsi,
-        'deadline'       => $request->deadline,
-        'tanggal_upload' => now(),
-        'status'         => 'Aktif',
-        'id_kelas'       => $id_kelas,
-        'id_mk'          => $id_mk,
-    ]);
+        // 1. Simpan data tugas ke database
+        $tugas = Tugas::create([
+            'judul_tugas'    => $request->judul_tugas,   
+            'deskripsi'      => $request->deskripsi,
+            'deadline'       => $request->deadline,
+            'tanggal_upload' => now(),
+            'status'         => 'Aktif',
+            'id_kelas'       => $id_kelas,
+            'id_mk'          => $id_mk,
+        ]);
 
-    return redirect()
-        ->route('tugas.index', [$id_kelas, $id_mk])
-        ->with('success', 'Tugas berhasil ditambahkan');
-}
+        // 2. Ambil HANYA mahasiswa yang berada di kelas tersebut
+        $daftarMahasiswa = Mahasiswa::where('id_kelas', $id_kelas)->get();
+
+        // 3. Kirim Email ke masing-masing mahasiswa di kelas itu
+        foreach ($daftarMahasiswa as $mhs) {
+            // Pastikan kolom 'email' di tabel mahasiswa ada isinya (tidak null/kosong)
+            if (!empty($mhs->email)) {
+                \Illuminate\Support\Facades\Mail::to($mhs->email)->send(new \App\Mail\NotifTugasBaru($tugas, $mhs));
+            }
+        }
+
+        // 4. Redirect kembali dengan pesan sukses
+        return redirect()
+            ->route('tugas.index', [$id_kelas, $id_mk])
+            ->with('success', 'Tugas berhasil ditambahkan dan notifikasi terkirim ke mahasiswa.');
+    }
+
 
 
     // ==========================

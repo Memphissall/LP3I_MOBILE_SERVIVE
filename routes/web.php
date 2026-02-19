@@ -21,6 +21,11 @@ use App\Http\Controllers\Admin\HonorTambahanController;
 use App\Http\Controllers\Admin\HonorRekapController;
 use App\Http\Controllers\Admin\LkmRekapController;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NotifTugasBaru;
+use App\Models\Tugas;
+use App\Models\Mahasiswa;
+
 
 // ==========================
 // HALAMAN AWAL
@@ -36,6 +41,7 @@ Route::get('/login', [AuthenticatedSessionController::class, 'create'])
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->name('login.store');
+
 
 // ==========================
 // AREA USER (HARUS LOGIN)
@@ -153,8 +159,7 @@ Route::prefix('pendidik/sap')->middleware('auth')->group(function () {
         
 
         // Store
-        Route::post('/{id_kelas}/{id_mk}', [TugasController::class, 'store'])
-            ->name('tugas.store');
+      Route::post('/pendidik/tugas/store/{id_kelas}/{id_mk}', [TugasController::class, 'store'])->name('tugas.store');
         
         // Lihat submissi mahasiswa untuk tugas tertentu
     
@@ -347,6 +352,9 @@ Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
     Route::get('/rekap-lkm', [LkmRekapController::class, 'index'])
         ->name('admin.rekap.lkm');
 });
+
+
+
 
 
 

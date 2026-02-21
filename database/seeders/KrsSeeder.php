@@ -17,7 +17,7 @@ class KrsSeeder extends Seeder
         // AMBIL MASTER DATA
         // =========================
         $mhsAIS = Mahasiswa::where('nipd', '2407810030002')->firstOrFail();
-        $mhsASE = Mahasiswa::where('nipd', '2407810040004')->firstOrFail();
+        $mhsASE = Mahasiswa::where('nipd', '2407810040005')->firstOrFail();
         $mhsOAA = Mahasiswa::where('nipd', '2407810070044')->firstOrFail();
 
         $kelasAIS = Kelas::where('nama_kelas', 'AIS-12')->firstOrFail();

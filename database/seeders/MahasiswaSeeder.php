@@ -48,8 +48,8 @@ class MahasiswaSeeder extends Seeder
             ],
             [
                 'id_user' => $userAse->id_user,
-                'nipd' => '2407810040004',
-                'nama_mhs' => 'Ari Aprianto',
+                'nipd' => '2407810040005',
+                'nama_mhs' => 'ari',
                 'alamat' => 'Jl. Coding No. 2',
                 'domisili' => 'Jakarta',
                 'tempat_lahir' => 'Jakarta',

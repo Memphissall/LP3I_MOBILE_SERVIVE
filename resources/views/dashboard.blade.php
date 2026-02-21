@@ -26,7 +26,7 @@
         }
 
         /* =========================================
-        HEADER STYLE: NAVY LP3I (FIXED COLORS)
+        HEADER STYLE: NAVY LP3I (FIXED COLORS & SHAPE)
         ========================================= */
         .header-wrapper {
             position: relative;
@@ -115,6 +115,75 @@
         }
 
         /* =========================================
+        RESPONSIVE HEADER (MENJAGA BENTUK TETAP SAMA)
+        ========================================= */
+        @media (max-width: 768px) {
+            .header-wrapper {
+                min-height: 130px; /* Diperkecil tapi tetap proporsional */
+                border-radius: 12px;
+            }
+            .header-inner {
+                padding: 15px 20px;
+            }
+            
+            /* Menyesuaikan Bentuk Background agar tetap memotong di tempat yang sama */
+            .bg-shape-dark {
+                width: 65%; /* Agak dilebarkan sedikit agar muat teks kanan */
+                clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+            }
+            .bg-shape-bar {
+                left: 30%;
+                width: 60px;
+            }
+            .bg-shape-line {
+                left: 28%;
+                width: 8px;
+            }
+            .bg-shape-dots {
+                bottom: 10px;
+                right: 10px;
+                width: 50px;
+                height: 40px;
+                background-size: 10px 10px;
+            }
+
+            /* Mengecilkan Teks Sisi Kiri (Putih) */
+            .header-left svg {
+                width: 20px; height: 20px;
+                margin-bottom: 5px;
+            }
+            .header-left h2 {
+                font-size: 0.5rem;
+                margin-bottom: 2px;
+            }
+            .header-left .text-xl {
+                font-size: 1rem;
+            }
+
+            /* Mengecilkan Teks Sisi Kanan (Navy) */
+            .header-right {
+                padding-left: 10px;
+            }
+            .header-right .opacity-30 {
+                font-size: 0.6rem;
+                margin-bottom: 2px;
+            }
+            .header-right h1 {
+                font-size: 0.85rem;
+                margin-bottom: 4px;
+            }
+            .header-right p {
+                display: none; /* Disembunyikan di HP agar menghemat ruang visual */
+            }
+            .header-right .border-t-2 {
+                padding-top: 5px;
+            }
+            .header-right .border-t-2 span {
+                font-size: 0.55rem;
+            }
+        }
+
+        /* =========================================
         CONTENT STYLE (TETAP SAMA)
         ========================================= */
         .card { background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02); }
@@ -152,42 +221,42 @@
                 
                 {{-- SISI KIRI (PUTIH) --}}
                 <div class="header-left">
-                    <div class="mb-3">
-                        <svg class="w-10 h-10 text-[#004269]" fill="currentColor" viewBox="0 0 24 24">
+                    <div>
+                        <svg class="w-10 h-10 text-[#004269] mb-3" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z"/>
                         </svg>
                     </div>
-                    <h2 class="text-sm font-bold text-slate-400 tracking-[0.2em] uppercase mb-1">
+                    <h2 class="text-xs sm:text-sm font-bold text-slate-400 tracking-[0.2em] uppercase mb-1">
                         ACADEMIC DASHBOARD
                     </h2>
-                    <h1 class="text-3xl font-black text-[#004269] uppercase tracking-tight">
-                        <div class="text-xl font-bold tracking-tight drop-shadow-sm text-white">
-                            <span class="text-red-600">E |</span> <span class="text-primary">Student</span>
+                    <h1 class="font-black text-[#004269] uppercase tracking-tight">
+                        <div class="text-xl sm:text-2xl font-black tracking-tight drop-shadow-sm text-[#004269]">
+                            <span>E |</span> <span>Student</span>
                         </div>
                     </h1>
                 </div>
 
                 {{-- SISI KANAN (NAVY) --}}
                 <div class="header-right">
-                    {{-- Salam Otomatis (Pengganti 2024) --}}
-                    <div class="text-xl md:text-2xl font-black text-white opacity-20 mb-1 uppercase">
+                    {{-- Salam Otomatis --}}
+                    <div class="text-lg md:text-2xl font-black text-white opacity-30 mb-1 uppercase">
                         {{ $greeting }}
                     </div>
 
                     {{-- Halo Nama User --}}
-                    <h1 class="text-2xl font-bold uppercase leading-tight mb-2">
-                        HALO, <br>
+                    <h1 class="text-xl md:text-2xl font-bold uppercase leading-tight mb-2">
+                        HALO, <br class="hidden sm:block">
                         <span class="text-[#8ecae6]">{{ auth()->user()->mahasiswa->nama_mhs ?? 'MAHASISWA' }}</span>
                     </h1>
 
-                    {{-- Teks Baru --}}
-                    <p class="text-xs text-slate-300 font-medium uppercase tracking-wider mb-4">
+                    {{-- Teks Deskripsi (Akan hilang di mobile) --}}
+                    <p class="text-[10px] md:text-xs text-slate-300 font-medium uppercase tracking-wider mb-4">
                         Informasi akademik terkini tersedia di sini
                     </p>
 
                     {{-- Tanggal --}}
                     <div class="border-t-2 border-white/20 pt-3 inline-block w-full text-right">
-                        <span class="text-xs font-bold text-[#8ecae6] mr-2">DATE:</span>
+                        <span class="text-xs font-bold text-[#8ecae6] mr-1 sm:mr-2">DATE:</span>
                         <span class="text-sm font-semibold">{{ now()->translatedFormat('d F Y') }}</span>
                     </div>
                 </div>
@@ -196,12 +265,18 @@
         </div>
         {{-- ===== END HEADER ===== --}}
 
-    {{-- ===== SECTION 1: JADWAL KULIAH (PAGINATION DI BAWAH) ===== --}}
-        <div class="card" x-data="{ 
+    {{-- ===== SECTION 1: JADWAL KULIAH ===== --}}
+        {{-- Perbaikan BUG JS: Menyimpan blade PHP di data-* attribute agar aman dibaca Alpine JS --}}
+        <div class="card" 
+             data-total="{{ isset($jadwal) ? count($jadwal) : 0 }}"
+             x-data="{ 
                 currentPage: 0, 
-                totalItems: {{ isset($jadwal) ? count($jadwal) : 0 }},
+                totalItems: 0,
                 perPage: 2,
-                get totalPages() { return Math.ceil(this.totalItems / this.perPage) - 1; },
+                init() {
+                    this.totalItems = parseInt(this.$el.dataset.total) || 0;
+                },
+                get totalPages() { return Math.max(0, Math.ceil(this.totalItems / this.perPage) - 1); },
                 nextPage() { if (this.currentPage < this.totalPages) this.currentPage++; },
                 prevPage() { if (this.currentPage > 0) this.currentPage--; }
             }">
@@ -220,7 +295,6 @@
                     </div>
                 </div>
                 
-                {{-- Chevron Accordion --}}
                 <svg id="jadwalIcon" class="w-5 h-5 text-slate-400 chevron-icon cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                 </svg>
@@ -233,7 +307,9 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 pb-4 min-h-[200px]">
                         @php $index = 0; @endphp
                         @foreach($jadwal as $hari => $items)
-                            <div x-show="Math.floor({{ $index }} / perPage) === currentPage"
+                            {{-- Perbaikan BUG JS: $index disimpan di data-index dan dipanggil lewat $el --}}
+                            <div data-index="{{ $index }}"
+                                x-show="Math.floor((parseInt($el.dataset.index) || 0) / perPage) === currentPage"
                                 x-transition:enter="transition ease-out duration-300"
                                 x-transition:enter-start="opacity-0 transform -translate-x-2"
                                 x-transition:enter-end="opacity-100 transform translate-x-0"
@@ -355,9 +431,17 @@
             icon.classList.toggle('rotate');
         }
 
-        const data = @json($graphData ?? []);
-        const labels = data.length ? data.map(d => d.label) : ['Smt 1', 'Smt 2', 'Smt 3', 'Smt 4'];
-        const values = data.length ? data.map(d => d.value) : [0, 0, 0, 0];
+        // Fix JS Parse Error untuk grafik
+        let parsedData = [];
+        try {
+            const raw = '{!! json_encode($graphData ?? []) !!}';
+            if (raw.startsWith('[') || raw.startsWith('{')) {
+                parsedData = JSON.parse(raw);
+            }
+        } catch(e) {}
+
+        const labels = parsedData.length ? parsedData.map(d => d.label) : ['Smt 1', 'Smt 2', 'Smt 3', 'Smt 4'];
+        const values = parsedData.length ? parsedData.map(d => d.value) : [0, 0, 0, 0];
 
         const ctx = document.getElementById('ipkChart').getContext('2d');
         

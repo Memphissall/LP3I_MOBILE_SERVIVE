@@ -19,14 +19,17 @@ class KelasSeeder extends Seeder
             [
                 'nama_kelas' => 'AIS-12',
                 'id_program_studi' => $ais->id_program_studi,
+                'semester'=> 1
             ],
             [
                 'nama_kelas' => 'ASE-10',
                 'id_program_studi' => $ase->id_program_studi,
+                'semester'=> 1
             ],
             [
                 'nama_kelas' => 'OAA-13A',
                 'id_program_studi' => $oaa->id_program_studi,
+                'semester'=> 1
             ],
         ];
 

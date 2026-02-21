@@ -147,10 +147,7 @@
                             <select id="edit-status" name="status" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
                                 <option value="">-- Pilih --</option>
                                 <option value="Aktif">Aktif</option>
-                                <option value="Cuti">Cuti</option>
-                                <option value="Non-Aktif">Non-Aktif</option>
-                                <option value="Lulus">Lulus</option>
-                                <option value="Drop Out">Drop Out</option>
+                                <option value="Tidak Aktif">Tidak Aktif</option>
                             </select>
                         </div>
 

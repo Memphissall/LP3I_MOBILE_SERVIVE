@@ -1,0 +1,4 @@
+﻿"D:\xampp\php\php.exe" artisan serve
+D:\xampp\php\php.exe  -S 127.0.0.1:8000 D:\LARAVEL_API\laravel_api\vendor\laravel\framework\src\Illuminate\Foundation\Console/../resources/server.php
+"D:\xampp\php\php.exe" artisan serve
+D:\xampp\php\php.exe  -S 127.0.0.1:8000 D:\E-Academic_BETA\LP3I_MOBILE_SERVIVE\vendor\laravel\framework\src\Illuminate\Foundation\Console/../resources/server.php

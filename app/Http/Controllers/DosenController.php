@@ -91,6 +91,7 @@ class DosenController extends Controller
             'tgl_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'agama' => 'nullable|string|max:50',
+            'alamat' => 'nullable|string|max:500',
             'email' => 'required|email|unique:pendidik,email,' . $id . ',id_pendidik',
             'no_tlp' => 'nullable|string|max:20',
             'rate_gaji' => 'nullable|numeric|min:0',

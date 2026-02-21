@@ -82,10 +82,10 @@
                         </td>
                         <td class="px-3 py-3 whitespace-nowrap text-center text-xs font-medium">
                             <div class="flex justify-center space-x-1">
-                                <button data-id="{{ $item->id }}" title="Edit" class="btn-edit-pengumuman p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded transition-all duration-200">
+                                <button data-id="{{ $item->id_pengumuman }}" title="Edit" class="btn-edit-pengumuman p-1.5 text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 rounded transition-all duration-200">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 </button>
-                                <button data-id="{{ $item->id }}" title="Hapus" class="btn-delete-pengumuman p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition-all duration-200">
+                                <button data-id="{{ $item->id_pengumuman }}" title="Hapus" class="btn-delete-pengumuman p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition-all duration-200">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
                             </div>
@@ -194,7 +194,7 @@ $(document).ready(function() {
             url: editUrl,
             method: 'GET',
             success: function(data) {
-                $('#edit-pengumuman-id').val(data.id);
+                $('#edit-pengumuman-id').val(data.id_pengumuman);
                 $('#edit-judul').val(data.judul_pengumuman);
                 $('#edit-isi').val(data.isi);
                 
@@ -211,12 +211,20 @@ $(document).ready(function() {
                 $('#edit-pengumuman-modal').removeClass('hidden');
             },
             error: function(xhr) {
+                let errorMessage = 'Gagal mengambil data pengumuman';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                } else if (xhr.statusText) {
+                    errorMessage = xhr.status + ': ' + xhr.statusText;
+                }
+                
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
-                    text: 'Gagal mengambil data pengumuman',
+                    text: errorMessage,
                     confirmButtonColor: '#004269'
                 });
+                console.error('Error fetching data:', xhr);
             }
         });
     });

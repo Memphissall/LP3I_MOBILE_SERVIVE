@@ -63,8 +63,7 @@
 
         .kop-text p {
             margin: 2px 0 0;
-            font-size: 11px;
-            font-style: italic;
+            font-size: 11px
             color: #555;
         }
 
@@ -90,7 +89,7 @@
         }
 
         .info-cetak {
-            text-align: center;
+            text-align: right;
             font-size: 9px;
             margin-bottom: 5px;
             color: #666;
@@ -243,13 +242,13 @@
                     @foreach($chunk->values() as $index => $d)
                         <tr>
                             <td>{{ ($chunkIndex * $perPage) + $index + 1 }}</td>
-                            <td style="font-size: 9px;"><b>{{ $d->nidn }}</b></td>
-                            <td style="text-align: left; padding-left: 5px;">{{ $d->nama_dosen }}</td>
-                            <td style="text-align: left; font-size: 9px;">{{ $d->tempat ?? '-' }}</td>
-                            <td style="text-align: center; font-size: 9px;">{{ $d->tanggal_lahir ? date('d/m/Y', strtotime($d->tanggal_lahir)) : '-' }}</td>
+                            <td style="font-size: 9px;"><b>{{ $d->id_pendidik }}</b></td>
+                            <td style="text-align: left; padding-left: 5px;">{{ $d->nama_pendidik }}</td>
+                            <td style="text-align: left; font-size: 9px;">{{ $d->tempat_lahir ?? '-' }}</td>
+                            <td style="text-align: center; font-size: 9px;">{{ $d->tgl_lahir ? date('d-m-Y', strtotime($d->tgl_lahir)) : '-' }}</td>
                             <td style="text-align: left; font-size: 9px;">{{ $d->alamat ?? '-' }}</td>
                             <td style="text-align: left;">{{ $d->pendidikan }}</td>
-                            <td>{{ $d->no_telp }}</td>
+                            <td>{{ $d->no_tlp ?? '-' }}</td>
                             <td style="text-align: left; font-size: 9px;">{{ $d->email }}</td>
                         </tr>
                     @endforeach

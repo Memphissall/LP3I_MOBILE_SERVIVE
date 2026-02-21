@@ -45,9 +45,8 @@
         }
 
         .kop-text h1 { margin: 0; font-size: 24px; text-transform: uppercase; color: #000066; }
-        .kop-text p { margin: 1.5px 0 0; font-size: 11px; font-style: italic; color: #555; padding-bottom: 2px; }
+        .kop-text p { margin: 1.5px 0 0; font-size: 11px; color: #555; padding-bottom: 2px; }
         
-        /* REVISI: Logo sekarang mengunci ke pojok kiri kop-surat */
         .kop-text img { 
             position: absolute; 
             left: 0; 
@@ -100,10 +99,10 @@
             -webkit-print-color-adjust: exact; 
         }
 
-        /* Repeating Header on New Pages - DISABLED STRICTLY */
+        /* Repeating Header on New Pages */
         @media print {
-            @page { margin: 10mm; size: landscape; }
-            thead { display: table-row-group; } /* FORCE it to be a normal row, preventing repeat */
+            @page { margin: 5mm; size: landscape; }
+            thead { display: table-header-group; } /* allows browser to repeat header automatically */
             tr { page-break-inside: avoid; }
         }
 
@@ -138,88 +137,136 @@
 <body>
 
     <div class="print-container">
-        <div class="kop-surat">
-            <div class="kop-text">
-                <img src="{{ asset('images/lp3i_krw.png') }}" alt="logo LP3I"> 
-                <h1>LP3I COLLEGE KARAWANG</h1>
-                <p>Gedung Karawang Hijau, Ruko Karawang Hijau, Jl. Tarumanagara No.4-6, Desa Purwadana</p>
-                <p>Kecamatan Telukjambe Timur, Kabupaten Karawang, Jawa Barat 41361</p>
-                <p>Telp: (0267) 411286 | Website: www.lp3i.ac.id | Email: info@lp3i.id</p>
-            </div>
-        </div>
-
-        <div class="info-cetak" id="waktu-cetak">Dicetak pada: Memuat waktu...</div>
-
-        <h3 class="judul-laporan">LAPORAN DATA MAHASISWA AKTIF</h3>
 
         @php
-            $perPage = 12;
-            $chunks = $mahasiswa->chunk($perPage);
-            $totalChunks = $chunks->count();
+            // Sort by Nama Kelas first for ordered output
+            $sortedMahasiswa = $mahasiswa->sortBy(function($m) {
+                return $m->data_kelas?->nama_kelas ?? 'Z-Unassigned';
+            });
+            
+            // Group by Class ID
+            $groupedMahasiswa = $sortedMahasiswa->groupBy(function($m) {
+                return $m->data_kelas?->id_kelas ?? 'Unassigned';
+            });
+            
+            $perPage = 15; // Increased to 15 to fit more rows and prevent single-row orphans
         @endphp
 
-        @foreach($chunks as $chunkIndex => $chunk)
-            @if($chunkIndex > 0)
-                <div style="page-break-before: always;"></div>
-            @endif
+        @if(count($mahasiswa) > 0)
+            @foreach($groupedMahasiswa as $classId => $studentsInClass)
+                @php
+                    $firstStudent = $studentsInClass->first();
+                    
+                    // Safe access to Class Info using optional chaining
+                    $namaKelas = $firstStudent->data_kelas?->nama_kelas ?? 'Tidak Diketahui';
+                    $namaJurusan = $firstStudent->data_kelas?->programStudi?->nama_program_studi ?? '-';
+                    $namaPA = $firstStudent->data_kelas?->pendidik?->nama_pendidik ?? '-';
+                @endphp
 
-            <table>
-                {{-- Column widths definition for consistent layout --}}
-                <colgroup>
-                    <col style="width: 40px;">
-                    <col style="width: 90px;">
-                    <col style="width: 150px;">
-                    <col style="width: 130px;">
-                    <col style="width: 110px;">
-                    <col style="width: 170px;">
-                    <col style="width: 100px;">
-                    <col style="width: 160px;">
-                </colgroup>
-                
-                @if($chunkIndex === 0)
-                {{-- Header only on first page --}}
-                <thead>
-                    <tr>
-                        <th>NO</th>
-                        <th>NIPD</th>
-                        <th>NAMA MAHASISWA</th>
-                        <th>TEMPAT LAHIR</th>
-                        <th>TANGGAL LAHIR</th>
-                        <th>ALAMAT</th>
-                        <th>NO TELP</th>
-                        <th>EMAIL</th>
-                    </tr>
-                </thead>
-                @endif
-                <tbody>
-                    @foreach($chunk->values() as $index => $mhs)
-                    <tr>
-                        <td>{{ ($chunkIndex * $perPage) + $index + 1 }}</td>
-                        <td><b>{{ $mhs->nipd }}</b></td>
-                        <td style="text-align: left;">{{ $mhs->nama_mhs }}</td>
-                        <td>{{ $mhs->tempat_lahir }}</td>
-                        <td>{{ $mhs->tgl_lahir }}</td>
-                        <td>{{ $mhs->alamat }}</td>
-                        <td>{{ $mhs->no_tlp }}</td>
-                        <td>{{ $mhs->email }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                <div class="page-container" style="page-break-after: {{ $loop->last ? 'auto' : 'always' }}; position: relative;">
+                    <table>
+                        {{-- Column widths --}}
+                        <colgroup>
+                            <col style="width: 40px;">
+                            <col style="width: 90px;">
+                            <col style="width: 150px;">
+                            <col style="width: 130px;">
+                            <col style="width: 110px;">
+                            <col style="width: 170px;">
+                            <col style="width: 100px;">
+                            <col style="width: 160px;">
+                        </colgroup>
+                        
+                        <thead>
+                            <!-- TABLE HEADER GROUP ensures these repeat on new pages -->
+                            <tr>
+                                <th colspan="8" style="border: none; padding: 0; background: white !important;">
+                                    <!-- Kop Surat -->
+                                    <div class="kop-surat">
+                                        <div class="kop-text">
+                                            <img src="{{ asset('images/lp3i_krw.png') }}" alt="logo LP3I"> 
+                                            <h1>LP3I COLLEGE KARAWANG</h1>
+                                            <p>Gedung Karawang Hijau, Ruko Karawang Hijau, Jl. Tarumanagara No.4-6, Desa Purwadana</p>
+                                            <p>Kecamatan Telukjambe Timur, Kabupaten Karawang, Jawa Barat 41361</p>
+                                            <p>Telp: (0267) 411286 | Website: www.lp3i.ac.id | Email: info@lp3i.id</p>
+                                        </div>
+                                    </div>
 
-            @if($chunkIndex === $totalChunks - 1)
-                {{-- Signature only on last page --}}
-                <div class="signature-container">
-                    <p id="tanggal-ttd">Karawang, ...</p>
-                    <p>Staf Akademik,</p>
-                    <div class="signature-wrapper">
-                        <span>(</span><div class="line-inside"></div><span>)</span>
+                                    <div class="info-cetak" style="text-align: right; font-size: 10px; color: #666; margin-bottom: 4px; font-weight: normal;">
+                                        <span id="waktu-cetak-{{ $loop->index }}">Dicetak pada: Memuat waktu...</span>
+                                    </div>
+
+                                    <h3 class="judul-laporan" style="color: black !important;">LAPORAN DATA MAHASISWA AKTIF</h3>
+
+                                    <!-- Class Info Header -->
+                                    <div style="font-size: 10pt; margin-top: 5px; margin-bottom: 5px; font-weight: bold; border-bottom: 1px dashed #ccc; padding-bottom: 5px; overflow: hidden; color: black !important;">
+                                        <div style="float: left;">
+                                            <table style="width: auto; border: none;">
+                                                <tr>
+                                                    <td style="border: none; padding: 1px 5px 1px 0; white-space: nowrap; min-width: 80px; text-align: left;">KELAS</td>
+                                                    <td style="border: none; padding: 1px 5px; text-align: center;">:</td>
+                                                    <td style="border: none; padding: 1px 0; text-align: left; white-space: nowrap;">{{ $namaKelas }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border: none; padding: 1px 5px 1px 0; white-space: nowrap; text-align: left;">DOSEN PA</td>
+                                                    <td style="border: none; padding: 1px 5px; text-align: center;">:</td>
+                                                    <td style="border: none; padding: 1px 0; text-align: left; white-space: nowrap;">{{ $namaPA }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div style="float: right;">
+                                            <table style="width: auto; border: none;">
+                                                <tr>
+                                                    <td style="border: none; padding: 1px 5px 1px 0; white-space: nowrap; text-align: left;">PROGRAM STUDI</td>
+                                                    <td style="border: none; padding: 1px 5px; text-align: center;">:</td>
+                                                    <td style="border: none; padding: 1px 0; text-align: left; white-space: nowrap;">{{ $namaJurusan }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>NO</th>
+                                <th>NIPD</th>
+                                <th>NAMA MAHASISWA</th>
+                                <th>TEMPAT LAHIR</th>
+                                <th>TANGGAL LAHIR</th>
+                                <th>ALAMAT</th>
+                                <th>NO TELP</th>
+                                <th>EMAIL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($studentsInClass as $index => $mhs)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td><b>{{ $mhs->nipd }}</b></td>
+                                <td style="text-align: left;">{{ $mhs->nama_mhs }}</td>
+                                <td>{{ $mhs->tempat_lahir }}</td>
+                                <td>{{ $mhs->tgl_lahir ? \Carbon\Carbon::parse($mhs->tgl_lahir)->format('d-m-Y') : '-' }}</td>
+                                <td>{{ $mhs->alamat }}</td>
+                                <td>{{ $mhs->no_tlp }}</td>
+                                <td>{{ $mhs->email }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    {{-- Signature only on last page of the class --}}
+                    <div class="signature-container" style="page-break-inside: avoid;">
+                        <p class="tanggal-ttd">Karawang, ...</p>
+                        <p>Staf Akademik,</p>
+                        <div class="signature-wrapper">
+                            <span>(</span><div class="line-inside"></div><span>)</span>
+                        </div>
+                        <p class="signature-role">LP3I College Karawang</p>
                     </div>
-                    <p class="signature-role">LP3I College Karawang</p>
+                    <div style="clear: both;"></div>
+
                 </div>
-                <div style="clear: both;"></div>
-            @endif
-        @endforeach
+            @endforeach
+        @endif
 
         @if(count($mahasiswa) == 0)
             <table>
@@ -248,8 +295,18 @@
             const now = new Date();
             const optionsDate = { day: '2-digit', month: 'long', year: 'numeric' };
             const optionsTime = { hour: '2-digit', minute: '2-digit' };
-            document.getElementById('waktu-cetak').innerHTML = `Dicetak pada: ${now.toLocaleDateString('id-ID', optionsDate)}, ${now.toLocaleTimeString('id-ID', optionsTime)} WIB`;
-            document.getElementById('tanggal-ttd').innerHTML = `Karawang, ${now.toLocaleDateString('id-ID', optionsDate)}`;
+            const dateStr = now.toLocaleDateString('id-ID', optionsDate);
+            const timeStr = now.toLocaleTimeString('id-ID', optionsTime);
+            
+            // Update all print time elements
+            document.querySelectorAll('[id^="waktu-cetak-"]').forEach(el => {
+                el.innerHTML = `Dicetak pada: ${dateStr}, ${timeStr} WIB`;
+            });
+            
+            // Update all signature dates
+            document.querySelectorAll('.tanggal-ttd').forEach(el => {
+                el.innerHTML = `Karawang, ${dateStr}`;
+            });
         }
         window.onload = function() { updateTime(); setTimeout(() => window.print(), 800); }
     </script>

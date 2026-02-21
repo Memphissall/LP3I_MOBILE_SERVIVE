@@ -47,7 +47,7 @@
         <div class="w-full lg:w-1/2 flex flex-col justify-start items-center p-12 bg-white">
             {{-- Logo LP3I & Global Mandiri di Atas --}}
             <div class="flex items-center justify-center mb-12">
-                <img src="{{ asset('images/lp3i_krw.png') }}" alt="LP3I Logo" class="h-16 w-auto mr-3">
+                <img src="{{ asset('images/logo_blue.png') }}" alt="LP3I Logo" class="h-16 w-auto mr-3">
                 <img src="{{ asset('images/global_mandiri.png') }}" alt="Global Mandiri Logo" class="h-16 w-auto">
             </div>
             

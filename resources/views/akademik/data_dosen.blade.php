@@ -420,34 +420,67 @@
 
                                 // Populate form fields
                                 $('#edit-dosen-id').val(data.id_pendidik);
-                                $('#edit-nama').val(data.nama_pendidik);
+                                $('#edit-nama').val(data.nama_pendidik); // Fills name field
+                                
+                                // Split Pendidikan into Jenjang & Gelar
+                                let fullPendidikan = data.pendidikan || '';
+                                let levels = ['S2', 'S3'];
+                                let foundLevel = '';
+                                let detail = fullPendidikan;
+
+                                for(let L of levels) {
+                                    if (fullPendidikan.startsWith(L + ' ') || fullPendidikan === L) {
+                                         foundLevel = L;
+                                         detail = fullPendidikan.substring(L.length).trim();
+                                         break;
+                                    }
+                                }
+                                
+                                // Reset & Set Values
+                                $('#edit-jenjang').val(foundLevel);
+                                if (!foundLevel && fullPendidikan) {
+                                    $('#edit-jenjang').val(''); // If not S2/S3, set to empty (Pilih)
+                                    detail = fullPendidikan; 
+                                } else if (!fullPendidikan) {
+                                     $('#edit-jenjang').val('');
+                                }
+                                
+                                $('#edit-gelar').val(detail);
+                                $('#edit-pendidikan').val(fullPendidikan);
+
                                 $('#edit-bidang').val(data.bidang);
-                                $('#edit-tempat').val(data.tempat_lahir);
-                                $('#edit-tanggal-lahir').val(data.tgl_lahir);
+                                $('#edit-tempat').val(data.tempat_lahir || data.tempat);
+                                
+                                // Format date to YYYY-MM-DD for input type="date"
+                                if (data.tgl_lahir || data.tanggal_lahir) {
+                                    let rawDate = data.tgl_lahir || data.tanggal_lahir;
+                                    let dateVal = rawDate.split('T')[0].split(' ')[0];
+                                    $('#edit-tanggal-lahir').val(dateVal);
+                                } else {
+                                    $('#edit-tanggal-lahir').val('');
+                                }
+
                                 $('#edit-jenis-kelamin').val(data.jenis_kelamin);
                                 $('#edit-agama').val(data.agama);
+                                $('#edit-alamat').val(data.alamat); 
                                 $('#edit-email').val(data.email);
-                                $('#edit-no-telp').val(data.no_tlp);
+                                $('#edit-no-telp').val(data.no_tlp || data.no_telp);
                                 $('#edit-rate-gaji').val(data.rate_gaji);
-                                $('#edit-status').val(data.status);
-
-                                // Set pendidikan value
-                                const pendidikanValue = data.pendidikan;
-
-                                // Check if value exists in select options
-                                const optionExists = $('#edit-pendidikan-select option[value="' + pendidikanValue + '"]').length > 0;
-
-                                if (optionExists) {
-                                    // Use existing option from database
-                                    $('#edit-pendidikan-select').val(pendidikanValue);
-                                    $('#edit-pendidikan-custom').addClass('hidden').prop('required', false);
-                                    $('#edit-pendidikan').val(pendidikanValue);
-                                } else {
-                                    // Use custom option
-                                    $('#edit-pendidikan-select').val('__custom__');
-                                    $('#edit-pendidikan-custom').removeClass('hidden').prop('required', true).val(pendidikanValue);
-                                    $('#edit-pendidikan').val(pendidikanValue);
+                                
+                                // Handle Status Casing (e.g. 'aktif' vs 'Aktif')
+                                let statusVal = data.status;
+                                if (statusVal) {
+                                    // If exact match doesn't exist, try Title Case
+                                    if ($("#edit-status option[value='" + statusVal + "']").length === 0) {
+                                        let titleCase = statusVal.charAt(0).toUpperCase() + statusVal.slice(1).toLowerCase();
+                                        if ($("#edit-status option[value='" + titleCase + "']").length > 0) {
+                                            statusVal = titleCase;
+                                        }
+                                    }
                                 }
+                                $('#edit-status').val(statusVal);
+
+                                $('#edit-dosen-modal').removeClass('hidden');
 
                                 $('#edit-dosen-modal').removeClass('hidden');
                             },
@@ -587,23 +620,22 @@
                 renderTable();
             });
 
-            // Handle Pendidikan Select Change
-            $('#edit-pendidikan-select').on('change', function () {
-                const value = $(this).val();
-                if (value === '__custom__') {
-                    $('#edit-pendidikan-custom').removeClass('hidden').prop('required', true).focus();
-                    $('#edit-pendidikan-select').prop('required', false);
+            // Handle Split Pendidikan Logic
+            function updatePendidikanRequest() {
+                const jenjang = $('#edit-jenjang').val();
+                const gelar = $('#edit-gelar').val();
+                let full = '';
+                
+                if (jenjang) {
+                    full = jenjang + (gelar ? ' ' + gelar : '');
                 } else {
-                    $('#edit-pendidikan-custom').addClass('hidden').prop('required', false).val('');
-                    $('#edit-pendidikan-select').prop('required', true);
-                    $('#edit-pendidikan').val(value);
+                    full = gelar;
                 }
-            });
+                
+                $('#edit-pendidikan').val(full.trim());
+            }
 
-            // Handle Custom Input Change
-            $('#edit-pendidikan-custom').on('input', function () {
-                $('#edit-pendidikan').val($(this).val());
-            });
+            $('#edit-jenjang, #edit-gelar').on('change input', updatePendidikanRequest);
 
             // EDIT BUTTON HANDLER
             // This seems to be a misplaced comment/handler, assuming it's meant for the print button based on context

@@ -104,7 +104,7 @@ class MahasiswaController extends Controller
         // --- OPTIMASI UTAMA BUBUB ---
         // Batasi kolom yang ditarik dari tabel mahasiswa.
         // Ganti nama kolom sesuai database kamu (nipd/nim/nama/jurusan/angkatan/id_kelas)
-        $mahasiswa = $query->select('id_mahasiswa', 'nipd', 'nama_mhs', 'id_program_studi', 'angkatan', 'periode', 'status', 'id_kelas', 'tempat_lahir', 'tgl_lahir', 'alamat', 'no_tlp', 'email')
+        $mahasiswa = $query->select('id_mahasiswa', 'nipd', 'nama_mhs', 'id_program_studi', 'angkatan', 'periode', 'status', 'id_kelas', 'tempat_lahir', 'tgl_lahir', 'alamat', 'no_tlp', 'email', 'jenis_kelamin')
                            ->limit(500)
                            ->get();
         
@@ -321,7 +321,7 @@ class MahasiswaController extends Controller
                 }
             }
 
-            $mahasiswa = $query->with('data_kelas')->get();
+            $mahasiswa = $query->with(['data_kelas.programStudi', 'data_kelas.pendidik'])->get();
             return view('akademik.print_mahasiswa', compact('mahasiswa'));
             
         } catch (\Exception $e) {

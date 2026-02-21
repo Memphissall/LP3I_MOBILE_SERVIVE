@@ -60,11 +60,36 @@ class KelasController extends Controller
                 'id_pendidik' => $request->id_pendidik,
             ]);
             $kelasId = $newKelas->id_kelas;
+        } else {
+            // Existing Class: Fetch Program Studi
+            $existingClass = DB::table('kelas')->where('id_kelas', $kelasId)->first();
+            if ($existingClass) {
+                // We define $idProgramStudi here to be used in update
+                // Note: In 'new' block, $idProgramStudi is defined inside, so we need to ensure scope or redefine
+                // Actually, $idProgramStudi is defined in 'new' block. 
+                // But to be safe, we should check availability.
+            }
+        }
+
+        // Logic Refinement:
+        // In 'new' block, $idProgramStudi is created.
+        // In 'existing' (implicit else since $kelasId initialized at top), we need to fetch it.
+        
+        // Let's rewrite safely:
+        $finalIdProgramStudi = null;
+
+        if ($request->mode_kelas === 'new') {
+             // It was already calculated as $idProgramStudi in the block above
+             $finalIdProgramStudi = $idProgramStudi; 
+        } else {
+             $existingClass = DB::table('kelas')->where('id_kelas', $kelasId)->first();
+             if ($existingClass) $finalIdProgramStudi = $existingClass->id_program_studi;
         }
 
         // UPDATE: Pastikan kolom WHERE adalah id_mahasiswa
         Mahasiswa::whereIn('id_mahasiswa', $request->student_ids)->update([
-            'id_kelas' => $kelasId
+            'id_kelas' => $kelasId,
+            'id_program_studi' => $finalIdProgramStudi
         ]);
 
         DB::commit();
@@ -119,10 +144,22 @@ class KelasController extends Controller
                 'created_at'   => now(),
                 'updated_at'   => now(),
             ]);
+        } else {
+            // Existing Class: Fetch Program Studi from the class
+            $existingClass = DB::table('kelas')->where('id_kelas', $id_kelas)->first();
+            if ($existingClass) {
+                $idProgramStudi = $existingClass->id_program_studi;
+            } else {
+                $idProgramStudi = null;
+            }
         }
 
+        // Update Mahasiswa with Class AND Program Studi
         Mahasiswa::whereIn('id_mahasiswa', $request->student_ids)
-                 ->update(['id_kelas' => $id_kelas]);
+                 ->update([
+                     'id_kelas' => $id_kelas,
+                     'id_program_studi' => $idProgramStudi
+                 ]);
 
         DB::commit();
         return response()->json(['status' => 'success', 'message' => 'Data berhasil disimpan!']);

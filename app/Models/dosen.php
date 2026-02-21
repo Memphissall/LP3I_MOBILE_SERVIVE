@@ -28,6 +28,7 @@ class Dosen extends Model
         'status',
         'foto',
         'total_gaji_diterima',
+        'alamat',
     ];
 
     protected $casts = [

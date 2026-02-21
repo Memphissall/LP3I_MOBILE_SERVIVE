@@ -29,20 +29,16 @@
 
                 {{-- Pendidikan --}}
                 <div>
-                    <label for="edit-pendidikan-select" class="block text-sm font-medium text-gray-700">Pendidikan Terakhir *</label>
-                    <select id="edit-pendidikan-select" required
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- Pilih Pendidikan --</option>
-                        <!-- Options will be populated from database -->
-                        <option value="__custom__">Lainnya (Custom)</option>
-                    </select>
-                    
-                    {{-- Hidden input for custom value --}}
-                    <input type="text" id="edit-pendidikan-custom" name="pendidikan" 
-                        placeholder="Masukkan pendidikan custom"
-                        class="mt-2 hidden block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    
-                    {{-- Hidden input for selected value --}}
+                    <label class="block text-sm font-medium text-gray-700">Pendidikan Terakhir *</label>
+                    <div class="flex gap-2 mt-1">
+                        <select id="edit-jenjang" class="block w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Jenjang</option>
+                            <option value="S2">S2</option>
+                            <option value="S3">S3</option>
+                        </select>
+                        <input type="text" id="edit-gelar" placeholder="Bidang / Gelar (Cth: Teknik Informatika)" 
+                            class="block w-2/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
                     <input type="hidden" id="edit-pendidikan" name="pendidikan">
                 </div>
 
@@ -78,7 +74,6 @@
                     </select>
                 </div>
 
-                {{-- Agama --}}
                 <div>
                     <label for="edit-agama" class="block text-sm font-medium text-gray-700">Agama</label>
                     <select id="edit-agama" name="agama"
@@ -91,6 +86,13 @@
                         <option value="Buddha">Buddha</option>
                         <option value="Konghucu">Konghucu</option>
                     </select>
+                </div>
+
+                {{-- Alamat --}}
+                <div class="col-span-1 md:col-span-2">
+                    <label for="edit-alamat" class="block text-sm font-medium text-gray-700">Alamat Lengkap</label>
+                    <textarea id="edit-alamat" name="alamat" rows="2"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
                 </div>
 
                 {{-- Email --}}

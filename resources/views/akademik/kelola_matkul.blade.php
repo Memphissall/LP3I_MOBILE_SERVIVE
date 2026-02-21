@@ -404,11 +404,23 @@ $(document).ready(function() {
                 $('#btn-tambah-matkul').text('Simpan Data').prop('disabled', false);
             },
             error: function(xhr) {
-                const res = xhr.responseJSON;
+                let errorMessage = 'Terjadi kesalahan pada server';
+                
+                if (xhr.status === 413) {
+                    errorMessage = 'Ukuran file terlalu besar! Silakan upload file yang lebih kecil (Max upload server limited).';
+                } else if (xhr.responseJSON) {
+                    const res = xhr.responseJSON;
+                    if (res.errors) {
+                        errorMessage = Object.values(res.errors).flat().join('\n');
+                    } else if (res.message) {
+                        errorMessage = res.message;
+                    }
+                }
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal Menyimpan',
-                    text: res.message || 'Terjadi kesalahan pada server',
+                    text: errorMessage,
                     confirmButtonColor: '#004269'
                 });
                 $('#btn-tambah-matkul').text('Simpan Data').prop('disabled', false);
@@ -500,11 +512,23 @@ $(document).ready(function() {
                 $('#btn-update-matkul').text('Simpan Perubahan').prop('disabled', false);
             },
             error: function(xhr) {
-                const res = xhr.responseJSON;
+                let errorMessage = 'Terjadi kesalahan pada server';
+                
+                if (xhr.status === 413) {
+                    errorMessage = 'Ukuran file terlalu besar! Silakan upload file yang lebih kecil (Max upload server limited).';
+                } else if (xhr.responseJSON) {
+                    const res = xhr.responseJSON;
+                    if (res.errors) {
+                        errorMessage = Object.values(res.errors).flat().join('\n');
+                    } else if (res.message) {
+                        errorMessage = res.message;
+                    }
+                }
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal Update',
-                    text: res.message || 'Terjadi kesalahan pada server',
+                    text: errorMessage,
                     confirmButtonColor: '#004269'
                 });
                 $('#btn-update-matkul').text('Simpan Perubahan').prop('disabled', false);

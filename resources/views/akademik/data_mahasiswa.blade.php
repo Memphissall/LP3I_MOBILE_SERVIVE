@@ -524,16 +524,40 @@
             });
 
             function resetTambahModal() {
+                // Capture values before reset (Sticky Logic)
+                const lastJurusan = $('#modal-filter-jurusan').val();
+                const lastAngkatan = $('#modal-filter-angkatan').val();
+                const lastPeriode = $('#modal-filter-periode').val();
+                const lastMode = $('input[name="mode_kelas"]:checked').val();
+                const lastClassJurusan = $('#class-filter-jurusan').val();
+                const lastKelas = $('#select-kelas-existing').val();
+
                 $('#step-content-1').removeClass('hidden');
                 $('#step-content-2').addClass('hidden');
                 $('#btn-next').removeClass('hidden');
                 $('#btn-submit, #btn-prev').addClass('hidden');
                 $('#step-indicator-1').addClass('bg-[#004269]').removeClass('bg-[#009DA5]');
                 $('#step-indicator-2').addClass('bg-gray-200 text-gray-500').removeClass('bg-[#004269] text-white');
+                
                 $('#add-student-form')[0].reset();
+                
+                // Restore Sticky Values
+                if (lastJurusan) $('#modal-filter-jurusan').val(lastJurusan);
+                if (lastAngkatan) $('#modal-filter-angkatan').val(lastAngkatan);
+                if (lastPeriode) $('#modal-filter-periode').val(lastPeriode);
+                
+                if (lastMode) {
+                    $(`input[name="mode_kelas"][value="${lastMode}"]`).prop('checked', true).trigger('change');
+                }
+
+                if (lastClassJurusan) $('#class-filter-jurusan').val(lastClassJurusan);
+                
                 $('#selected-count').text('0');
                 $('#select-all-students').prop('checked', false);
-                renderClassOptions('');
+                
+                // Restore Class Options & Selection
+                renderClassOptions(lastClassJurusan || '');
+                if (lastKelas) $('#select-kelas-existing').val(lastKelas);
             }
 
             function fetchStudentsForModal() {
@@ -685,7 +709,18 @@
                     $('#edit-angkatan').val(s.angkatan);
                     $('#edit-periode').val(s.periode);
                     $('#edit-id-kelas').val(s.id_kelas);
-                    $('#edit-jenis-kelamin').val(s.jenis_kelamin);
+                    
+                    // Normalisasi Jenis Kelamin (karena bisa beda input manual dari DB seperti 'male', 'L', dll)
+                    let jk = s.jenis_kelamin;
+                    if (jk) {
+                        let jkLower = jk.toLowerCase().replace(/\s+/g, '');
+                        if (['l', 'male', 'lakilaki', 'pria'].includes(jkLower)) {
+                            jk = 'Laki-laki';
+                        } else if (['p', 'female', 'perempuan', 'wanita'].includes(jkLower)) {
+                            jk = 'Perempuan';
+                        }
+                    }
+                    $('#edit-jenis-kelamin').val(jk);
                     $('#edit-tempat-lahir').val(s.tempat_lahir);
                     $('#edit-tgl-lahir').val(s.tgl_lahir ? s.tgl_lahir.substring(0, 10) : '');
                     $('#edit-agama').val(s.agama);

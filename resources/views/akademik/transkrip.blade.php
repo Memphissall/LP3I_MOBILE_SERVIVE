@@ -1,11 +1,10 @@
 @extends('layouts.app')
 
+@section('page-title', 'Manajemen Transkrip Akademik')
+@section('page-description', 'Rekapitulasi nilai akhir mahasiswa per semester.')
+
 @section('content')
 <div class="p-6">
-    {{-- Header --}}
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Transkrip Nilai</h1>
-    </div>
 
     {{-- Container Filter Utama --}}
     <div class="bg-white p-6 rounded-xl shadow-lg mb-6 border-t-4 border-[#004269]">

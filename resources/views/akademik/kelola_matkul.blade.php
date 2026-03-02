@@ -2,16 +2,13 @@
 
 @extends('layouts.app')
 
+@section('page-title', 'Kelola Materi Ajar')
+@section('page-description', 'Manajemen kurikulum, bobot SKS, dan SAP pembelajaran.')
+
 @section('content')
 
 <div class="p-6">
-    {{-- Header Page --}}
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Materi Ajar</h1>
-            <p class="text-sm text-gray-500 mt-1">Manajemen kurikulum, bobot SKS, dan SAP pembelajaran.</p>
-        </div>
-    </div>
+
 
     {{-- 1. Container Filter Utama (REMASTERED) --}}
     <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 mb-8 overflow-hidden relative border border-gray-100">

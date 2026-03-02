@@ -2,16 +2,12 @@
 
 @extends('layouts.app')
 
+@section('page-title', 'Kelola Jadwal Perkuliahan')
+@section('page-description', 'Atur jadwal, plot pendidik, dan alokasi ruangan kelas.')
+
 @section('content')
 
 <div class="p-6">
-    {{-- Header Page --}}
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Jadwal Perkuliahan</h1>
-            <p class="text-sm text-gray-500 mt-1">Atur jadwal, plot pendidik, dan alokasi ruangan kelas.</p>
-        </div>
-    </div>
 
     {{-- 1. Container Filter Utama --}}
     <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 mb-8 overflow-hidden relative border border-gray-100">

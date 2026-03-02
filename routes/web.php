@@ -137,5 +137,8 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
     
     // Pengumuman Routes
     Route::resource('pengumuman', App\Http\Controllers\PengumumanController::class);
+
+    // Rekap Absensi Routes
+    Route::get('/rekap-absensi', [App\Http\Controllers\AbsensiController::class, 'index'])->name('rekap_absensi.index');
     
 });

@@ -2,16 +2,12 @@
 
 @extends('layouts.app')
 
+@section('page-title', 'Kelola Pengumuman')
+@section('page-description', 'Manajemen pengumuman dan informasi penting kampus.')
+
 @section('content')
 
 <div class="p-6">
-    {{-- Header Page --}}
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Pengumuman</h1>
-            <p class="text-sm text-gray-500 mt-1">Manajemen pengumuman dan informasi penting kampus.</p>
-        </div>
-    </div>
 
     {{-- TABLE SECTION --}}
     <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 overflow-hidden mb-6 border border-gray-100">

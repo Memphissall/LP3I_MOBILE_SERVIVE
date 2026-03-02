@@ -1,14 +1,10 @@
 @extends('layouts.app')
 
+@section('page-title', 'Kelola Kartu Rencana Studi (KRS)')
+@section('page-description', 'Manajemen pengambilan Materi Ajar dan pencetakan KRS mahasiswa.')
+
 @section('content')
 <div class="p-6">
-    {{-- Header Page --}}
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h1 class="text-2xl font-extrabold text-[#004269] tracking-tight">Kelola Kartu Rencana Studi (KRS)</h1>
-            <p class="text-sm text-gray-500 mt-1">Manajemen pengambilan Materi Ajar dan pencetakan KRS mahasiswa.</p>
-        </div>
-    </div>
 
     {{-- 1. Container Filter Utama (REMASTERED) --}}
     <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 mb-8 overflow-hidden relative border border-gray-100">

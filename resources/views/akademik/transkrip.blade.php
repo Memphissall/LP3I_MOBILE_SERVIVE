@@ -49,12 +49,20 @@
     </div>
 
     {{-- Data Table --}}
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden border-t-4 border-[#004269]">
-        <div class="p-6 border-b bg-gradient-to-r from-[#004269] to-[#009DA5]">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-bold text-white">Daftar Mahasiswa</h3>
+    <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 overflow-hidden mb-6 border border-gray-100">
+        <div class="p-5 border-b bg-gradient-to-r from-[#004269] to-[#009DA5]">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+                        {{-- Icon: document with chart (transkrip nilai) --}}
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-white tracking-wide">Daftar Mahasiswa <span class="bg-white/20 px-2 py-0.5 rounded text-sm font-mono ml-2">{{ count($mahasiswaList) }}</span></h3>
+                </div>
                 @if($id_kelas && count($mahasiswaList) > 0)
-                    <a href="{{ route('admin.transkrip.print.batch', ['id_kelas' => $id_kelas]) }}" target="_blank" class="!bg-white !text-[#004269] px-4 py-2 rounded-lg font-semibold hover:!bg-gray-100 transition flex items-center">
+                    <a href="{{ route('admin.transkrip.print.batch', ['id_kelas' => $id_kelas]) }}" target="_blank" class="bg-white text-[#004269] px-4 py-2 rounded-lg font-bold hover:bg-gray-50 transition-all duration-200 shadow-lg shadow-black/10 flex items-center transform hover:scale-105 active:scale-95 text-sm">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
                         </svg>
@@ -68,14 +76,14 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NO</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIPD</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Mahasiswa</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Jml Semester</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total BK</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">IPK</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-12 border-b-2 border-gray-200">No</th>
+                        <th class="px-6 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[120px] border-b-2 border-gray-200">NIPD</th>
+                        <th class="px-6 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[200px] border-b-2 border-gray-200">Nama Mahasiswa</th>
+                        <th class="px-6 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[150px] border-b-2 border-gray-200">Kelas</th>
+                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[110px] border-b-2 border-gray-200">Jml Semester</th>
+                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">Total BK</th>
+                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[100px] border-b-2 border-gray-200">IPK</th>
+                        <th class="px-6 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-[80px] border-b-2 border-gray-200">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

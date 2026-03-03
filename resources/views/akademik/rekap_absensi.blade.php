@@ -77,19 +77,26 @@
     </div>
 
     {{-- Data Table --}}
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden border-t-4 border-[#004269]">
-        {{-- Table Header --}}
-        <div class="p-6 border-b bg-gradient-to-r from-[#004269] to-[#009DA5]">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h3 class="text-lg font-bold text-white">Rekap Nilai Kehadiran</h3>
-                    @if($hasFilters)
-                        <p class="text-white/70 text-xs mt-1">Total: {{ $mahasiswaRows->count() }} mahasiswa</p>
-                    @endif
+    <div class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 overflow-hidden mb-6 border border-gray-100">
+        <div class="p-5 border-b bg-gradient-to-r from-[#004269] to-[#009DA5]">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+                        {{-- Icon: clipboard with checklist (rekap absensi) --}}
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white tracking-wide">Rekap Nilai Kehadiran</h3>
+                        @if($hasFilters)
+                            <p class="text-white/70 text-xs mt-0.5">Total: {{ $mahasiswaRows->count() }} mahasiswa</p>
+                        @endif
+                    </div>
                 </div>
                 {{-- Legend --}}
                 @if($hasFilters && $mahasiswaRows->count() > 0)
-                    <div class="flex items-center gap-3 text-xs text-white/80">
+                    <div class="flex items-center gap-3 text-xs text-white/80 bg-white/10 px-3 py-1.5 rounded-lg">
                         <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-green-400 inline-block"></span> ≥85</span>
                         <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-yellow-400 inline-block"></span> 75–84</span>
                         <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-red-400 inline-block"></span> &lt;75</span>
@@ -103,15 +110,15 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NO</th>
-                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">NAMA MAHASISWA</th>
+                        <th class="px-4 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider w-12 border-b-2 border-gray-200">NO</th>
+                        <th class="px-4 py-3 text-left text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[200px] border-b-2 border-gray-200">NAMA MAHASISWA</th>
                         @foreach($matkulList as $mk)
-                            <th class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]" title="{{ $mk['nama_mk'] }}">
+                            <th class="px-3 py-3 text-center text-sm font-extrabold text-[#004269] uppercase tracking-wider min-w-[100px] border-b-2 border-gray-200" title="{{ $mk['nama_mk'] }}">
                                 {{ strlen($mk['nama_mk']) > 16 ? substr($mk['nama_mk'], 0, 16) . '…' : $mk['nama_mk'] }}
                             </th>
                         @endforeach
                         @if(count($matkulList) > 0)
-                            <th class="px-3 py-3 text-center text-xs font-medium text-white uppercase tracking-wider min-w-[90px] bg-[#004269]">RATA-RATA</th>
+                            <th class="px-3 py-3 text-center text-sm font-extrabold text-white uppercase tracking-wider min-w-[90px] bg-[#004269] border-b-2 border-[#004269]">RATA-RATA</th>
                         @endif
                     </tr>
                 </thead>

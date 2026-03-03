@@ -140,5 +140,9 @@ Route::middleware('admin')->prefix('akademik')->name('admin.')->group(function (
 
     // Rekap Absensi Routes
     Route::get('/rekap-absensi', [App\Http\Controllers\AbsensiController::class, 'index'])->name('rekap_absensi.index');
+
+    // Surat Pengantar Routes
+    Route::get('/surat-pengantar', [App\Http\Controllers\SuratPengantarController::class, 'index'])->name('surat_pengantar.index');
+    Route::get('/surat-pengantar/print', [App\Http\Controllers\SuratPengantarController::class, 'print'])->name('surat_pengantar.print');
     
 });

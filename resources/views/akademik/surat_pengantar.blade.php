@@ -111,6 +111,18 @@
                                value="{{ old('tema_kegiatan') }}">
                     </div>
 
+                    {{-- Isi Surat --}}
+                    <div class="group md:col-span-2">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center">
+                            <svg class="w-4 h-4 mr-1.5 text-[#009DA5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                            Isi Surat (Pendahuluan)
+                        </label>
+                        <textarea name="isi_surat" id="isi_surat" rows="4"
+                               class="w-full p-3 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-[#009DA5] focus:ring-4 focus:ring-[#009DA5]/10 transition-all duration-200 hover:border-gray-300"
+                               placeholder="Ketik isi/pendahuluan surat pengantar di sini...">{{ old('isi_surat', 'Dalam rangka meningkatkan kepedulian Mahasiswa/i LP3I College Karawang sebagai bagian dari upaya memperkuat dan memajukan sektor Usaha Mikro Kecil dan Menengah terhadap pemahaman dan keterampilan dalam memanfaatkan potensi Aplikasi TikTok dalam mengembangkan bisnis UMKM, kami berencana untuk mengadakan kegiatan Seminar dengan tema') }}</textarea>
+                        <p class="text-[10px] text-gray-400 mt-2">* Teks ini akan dicetak sebelum jadwal kegiatan. Kata <i>InsyaAllah</i> dan rincian jadwal akan otomatis ditambahkan di akhir.</p>
+                    </div>
+
                     {{-- Hari & Tanggal Kegiatan --}}
                     <div class="group">
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center">

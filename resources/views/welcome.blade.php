@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Operasional Akademik</title>
-    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     {{-- Pastikan Font Awesome (atau ikon lain) diimpor jika menggunakan ikon --}}
 </head>
 <body class="bg-gray-50 font-sans">

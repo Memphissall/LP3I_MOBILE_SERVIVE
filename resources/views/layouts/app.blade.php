@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     {{-- VITE ASSETS --}}
-    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('scripts')
     
@@ -115,7 +115,7 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
                 </button>
                 <div class="hidden md:block">
-                    <h2 class="text-lg font-bold text-gray-800">@yield('title', 'Dashboard')</h2>
+                    <h2 class="text-lg font-bold text-gray-800">@yield('page-title', 'Dashboard')</h2>
                     <p class="text-xs text-gray-500">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}</p>
                 </div>
             </div>

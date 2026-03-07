@@ -33,6 +33,7 @@ class SuratPengantarController extends Controller
             'instansi_tujuan'  => $request->instansi_tujuan ?? '',
             'perihal'          => $request->perihal ?? '',
             'lampiran'         => $request->lampiran ?? '-',
+            'isi_surat'        => $request->isi_surat ?? 'Dalam rangka meningkatkan kepedulian Mahasiswa/i LP3I College Karawang sebagai bagian dari upaya memperkuat dan memajukan sektor Usaha Mikro Kecil dan Menengah terhadap pemahaman dan keterampilan dalam memanfaatkan potensi Aplikasi TikTok dalam mengembangkan bisnis UMKM, kami berencana untuk mengadakan kegiatan Seminar dengan tema',
             'tema_kegiatan'    => $request->tema_kegiatan ?? '',
             'hari_kegiatan'    => $hariKegiatan,
             'tanggal_kegiatan' => $tanggalKegiatan,

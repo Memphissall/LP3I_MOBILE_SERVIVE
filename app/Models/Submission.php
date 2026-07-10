@@ -14,6 +14,8 @@ class Submission extends Model
         'id_tugas',
         'id_mahasiswa',
         'status',
+        'nilai',
+        'catatan',
         'submitted_at',
     ];
 

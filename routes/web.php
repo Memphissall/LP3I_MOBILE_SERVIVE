@@ -164,8 +164,11 @@ Route::prefix('pendidik/sap')->middleware('auth')->group(function () {
         // Lihat submissi mahasiswa untuk tugas tertentu
     
 
-    Route::get('/tugas/{id_kelas}/{kode_mk}/{tugas_id}/submissi', [TugasController::class, 'lihatSubmissi'])
-            ->name('submissi.index');
+       Route::get('/tugas/{id_kelas}/{id_mk}/{id_tugas}/submissi', 
+    [TugasController::class, 'lihatSubmissi']
+)->name('submissi.index');
+
+        Route::post('/submission/{id_submission}/nilai', [TugasController::class, 'beriNilai'])->name('submission.beriNilai');
 
     });
 

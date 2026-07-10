@@ -187,12 +187,12 @@ class TugasController extends Controller
         ));
     }
 
-    public function lihatSubmissi($id_kelas, $id_mk, $id_tugas)
+public function lihatSubmissi($id_kelas, $id_mk, $id_tugas)
 {
     $tugas = \App\Models\Tugas::findOrFail($id_tugas);
 
     $submissions = \App\Models\Submission::where('id_tugas', $id_tugas)
-        ->with('mahasiswa') // nanti relasi
+        ->with('mahasiswa')
         ->get();
 
     return view('admin.pendidik.tugas.submissi.index', compact(
@@ -201,6 +201,25 @@ class TugasController extends Controller
         'id_kelas',
         'id_mk'
     ));
+}
+
+
+public function beriNilai(Request $request, $id_submission)
+{
+    $request->validate([
+        'nilai' => 'required|integer|min:0|max:100',
+        'catatan' => 'nullable|string'
+    ]);
+
+    $submission = \App\Models\Submission::findOrFail($id_submission);
+
+    $submission->update([
+        'nilai'   => $request->nilai,
+        'catatan' => $request->catatan,
+        'status'  => 'Sudah Dinilai'   // 🔥 INI YANG PENTING
+    ]);
+
+    return back()->with('success', 'Nilai berhasil diberikan.');
 }
 
 }

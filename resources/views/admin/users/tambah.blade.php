@@ -113,15 +113,17 @@
             class="border w-full p-2 mb-4 rounded">
 
         {{-- ================= BUTTON ================= --}}
-        <button type="submit"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded">
-            Simpan
-        </button>
+        <div class="mt-6 flex flex-wrap gap-3">
+            <button type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-semibold">
+                Simpan
+            </button>
 
-        <a href="{{ route('admin.users.index') }}"
-           class="ml-3 bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded">
-            Kembali
-        </a>
+            <a href="{{ route('admin.users.index') }}"
+               class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm font-semibold text-center">
+                Kembali
+            </a>
+        </div>
     </form>
 </div>
 @endsection

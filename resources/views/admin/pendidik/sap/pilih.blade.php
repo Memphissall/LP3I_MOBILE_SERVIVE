@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-5xl mx-auto mt-10">
+<div class="max-w-5xl mx-auto mt-6 sm:mt-10 px-4 sm:px-0">
 
     {{-- HEADER --}}
-    <div class="bg-[#003B5C] text-white px-8 py-5 rounded-t-xl">
-        <h2 class="text-xl font-bold">
+    <div class="bg-[#003B5C] text-white px-4 sm:px-8 py-4 sm:py-5 rounded-t-xl">
+        <h2 class="text-lg sm:text-xl font-bold">
             Pilih SAP Mata Kuliah
         </h2>
     </div>
 
     {{-- CARD --}}
-    <div class="bg-white shadow-md rounded-b-xl p-8">
+    <div class="bg-white shadow-md rounded-b-xl p-4 sm:p-8">
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
@@ -72,11 +72,11 @@
         </div>
 
         {{-- ACTION --}}
-        <div class="mt-8">
+        <div class="mt-8 flex flex-wrap gap-3">
             <button id="btnKelola"
                 disabled
-                class="px-6 py-2 rounded-md font-semibold text-white
-                       bg-[#003B5C] opacity-50 cursor-not-allowed">
+                class="px-5 py-2 rounded-md font-semibold text-white text-sm
+                       bg-[#003B5C] opacity-50 cursor-not-allowed text-center">
                 Lihat SAP
             </button>
         </div>

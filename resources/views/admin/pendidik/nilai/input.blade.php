@@ -80,7 +80,7 @@
     </div>
 
     {{-- FOOTER --}}
-    <div class="flex justify-between items-center px-6 py-4 bg-gray-50">
+    <div class="flex flex-wrap justify-between items-center gap-3 px-6 py-4 bg-gray-50">
         <a href="{{ route('nilai.index') }}"
            class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm">
             ← Back

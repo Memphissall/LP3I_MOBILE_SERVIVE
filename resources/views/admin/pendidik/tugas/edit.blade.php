@@ -29,9 +29,11 @@
             <option value="Nonaktif" {{ old('status', $tugas->status) == 'Nonaktif' ? 'selected' : '' }}>Nonaktif</option>
         </select>
 
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
-        <a href="{{ route('tugas.index', [$tugas->id_kelas, $tugas->id_mk]) }}"
-           class="bg-gray-600 text-white px-4 py-2 rounded ml-2">Kembali</a>
+        <div class="mt-6 flex flex-wrap gap-3">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-semibold">Update</button>
+            <a href="{{ route('tugas.index', [$tugas->id_kelas, $tugas->id_mk]) }}"
+               class="bg-gray-600 text-white px-4 py-2 rounded text-sm font-semibold text-center">Kembali</a>
+        </div>
     </form>
 </div>
 @endsection

@@ -9,40 +9,42 @@
     </div>
 
     <div class="bg-white shadow p-4 rounded">
-        <table class="w-full">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="p-3 border">Id_Pendidik</th>
-                    <th class="p-3 border">Nama</th>
-                    <th class="p-3 border">Email</th>
-                    <th class="p-3 border">Bidang</th>
-                    <th class="p-3 border">Aksi</th>
-                </tr>
-            </thead>
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[600px]">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="p-3 border">Id_Pendidik</th>
+                        <th class="p-3 border">Nama</th>
+                        <th class="p-3 border">Email</th>
+                        <th class="p-3 border">Bidang</th>
+                        <th class="p-3 border">Aksi</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                @foreach ($pendidik as $d)
-                <tr class="border">
-                    <td class="p-3 border">{{ $d->id_pendidik }}</td>
-                    <td class="p-3 border">{{ $d->nama_pendidik }}</td>
-                    <td class="p-3 border">{{ $d->email }}</td>
-                    <td class="p-3 border">{{ $d->bidang }}</td>
+                <tbody>
+                    @foreach ($pendidik as $d)
+                    <tr class="border">
+                        <td class="p-3 border">{{ $d->id_pendidik }}</td>
+                        <td class="p-3 border">{{ $d->nama_pendidik }}</td>
+                        <td class="p-3 border">{{ $d->email }}</td>
+                        <td class="p-3 border">{{ $d->bidang }}</td>
 
-                    <td class="p-3 border">
-                        <a href="{{ route('admin.pendidik.edit', $d->id) }}" class="px-3 py-1 bg-yellow-500 text-white rounded">Edit</a>
+                        <td class="p-3 border">
+                            <a href="{{ route('admin.pendidik.edit', $d->id) }}" class="px-3 py-1 bg-yellow-500 text-white rounded">Edit</a>
 
-                        <form action="{{ route('admin.pendidik.destroy', $d->id) }}" method="POST" class="inline-block"
-                              onsubmit="return confirm('Hapus data?');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="px-3 py-1 bg-red-600 text-white rounded">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
+                            <form action="{{ route('admin.pendidik.destroy', $d->id) }}" method="POST" class="inline-block"
+                                  onsubmit="return confirm('Hapus data?');">
+                                @csrf
+                                @method('DELETE')
+                                <button class="px-3 py-1 bg-red-600 text-white rounded">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
 
-        </table>
+            </table>
+        </div>
     </div>
 
 </div>

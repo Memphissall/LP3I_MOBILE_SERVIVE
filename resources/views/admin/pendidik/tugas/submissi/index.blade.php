@@ -42,97 +42,100 @@
                 <tbody class="divide-y">
 
                 @forelse($submissions as $index => $s)
+                    @if($s->file_tugas)
+                        <form id="form-{{ $s->id_submission }}" action="{{ route('submission.beriNilai', $s->id_submission) }}" method="POST" class="hidden">
+                            @csrf
+                        </form>
+                    @endif
                     <tr class="hover:bg-gray-50">
 
-                        <form action="{{ route('submission.beriNilai', $s->id_submission) }}" method="POST">
-                            @csrf
+                        {{-- No --}}
+                        <td class="px-4 py-3 text-center">
+                            {{ $index + 1 }}
+                        </td>
 
-                            {{-- No --}}
-                            <td class="px-4 py-3 text-center">
-                                {{ $index + 1 }}
-                            </td>
+                        {{-- Nama --}}
+                        <td class="px-4 py-3 font-medium text-gray-800">
+                            {{ $s->mahasiswa->nama_mhs }}
+                        </td>
 
-                            {{-- Nama --}}
-                            <td class="px-4 py-3 font-medium text-gray-800">
-                                {{ $s->mahasiswa->nama_mhs }}
-                            </td>
+                        {{-- File --}}
+                        <td class="px-4 py-3 text-center">
+                            @if($s->file_tugas)
+                                <a href="{{ asset('storage/jawaban/'.$s->file_tugas) }}"
+                                   target="_blank"
+                                   class="text-blue-600 hover:underline font-medium">
+                                    Download
+                                </a>
+                            @else
+                                <span class="text-gray-400 italic">
+                                    Tidak ada file
+                                </span>
+                            @endif
+                        </td>
 
-                            {{-- File --}}
-                            <td class="px-4 py-3 text-center">
-                                @if($s->file_tugas)
-                                    <a href="{{ asset('storage/jawaban/'.$s->file_tugas) }}"
-                                       target="_blank"
-                                       class="text-blue-600 hover:underline font-medium">
-                                        Download
-                                    </a>
-                                @else
-                                    <span class="text-gray-400 italic">
-                                        Tidak ada file
-                                    </span>
-                                @endif
-                            </td>
+                        {{-- Nilai --}}
+                        <td class="px-4 py-3 text-center">
+                            <input type="number"
+                                   name="nilai"
+                                   form="form-{{ $s->id_submission }}"
+                                   value="{{ $s->nilai }}"
+                                   min="0"
+                                   max="100"
+                                   class="border rounded-md px-2 py-1 w-20 text-center focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                   {{ !$s->file_tugas ? 'disabled' : '' }}
+                                   required>
+                        </td>
 
-                            {{-- Nilai --}}
-                            <td class="px-4 py-3 text-center">
-                                <input type="number"
-                                       name="nilai"
-                                       value="{{ $s->nilai }}"
-                                       min="0"
-                                       max="100"
-                                       class="border rounded-md px-2 py-1 w-20 text-center focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                       {{ !$s->file_tugas ? 'disabled' : '' }}
-                                       required>
-                            </td>
+                        {{-- Catatan --}}
+                        <td class="px-4 py-3">
+                            <input type="text"
+                                   name="catatan"
+                                   form="form-{{ $s->id_submission }}"
+                                   value="{{ $s->catatan }}"
+                                   placeholder="Tambahkan catatan..."
+                                   class="border rounded-md px-3 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                   {{ !$s->file_tugas ? 'disabled' : '' }}>
+                        </td>
 
-                            {{-- Catatan --}}
-                            <td class="px-4 py-3">
-                                <input type="text"
-                                       name="catatan"
-                                       value="{{ $s->catatan }}"
-                                       placeholder="Tambahkan catatan..."
-                                       class="border rounded-md px-3 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                       {{ !$s->file_tugas ? 'disabled' : '' }}>
-                            </td>
+                        {{-- Status --}}
+                        <td class="px-4 py-3 text-center">
+                            @if($s->status == 'Terlambat')
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700">
+                                    Terlambat
+                                </span>
 
-                            {{-- Status --}}
-                            <td class="px-4 py-3 text-center">
-                                @if($s->status == 'Terlambat')
-                                    <span class="px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700">
-                                        Terlambat
-                                    </span>
+                            @elseif($s->status == 'Sudah Dinilai')
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                                    Sudah Dinilai
+                                </span>
 
-                                @elseif($s->status == 'Sudah Dinilai')
-                                    <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
-                                        Sudah Dinilai
-                                    </span>
+                            @elseif($s->status == 'Dikumpulkan')
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
+                                    Dikumpulkan
+                                </span>
 
-                                @elseif($s->status == 'Dikumpulkan')
-                                    <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
-                                        Dikumpulkan
-                                    </span>
+                            @else
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">
+                                    Belum Mengumpulkan
+                                </span>
+                            @endif
+                        </td>
 
-                                @else
-                                    <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">
-                                        Belum Mengumpulkan
-                                    </span>
-                                @endif
-                            </td>
-
-                            {{-- Aksi --}}
-                            <td class="px-4 py-3 text-center">
-                                @if($s->file_tugas)
-                                    <button type="submit"
-                                        class="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 transition">
-                                        Simpan
-                                    </button>
-                                @else
-                                    <span class="text-gray-400 text-sm">
-                                        -
-                                    </span>
-                                @endif
-                            </td>
-
-                        </form>
+                        {{-- Aksi --}}
+                        <td class="px-4 py-3 text-center">
+                            @if($s->file_tugas)
+                                <button type="submit"
+                                    form="form-{{ $s->id_submission }}"
+                                    class="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 transition">
+                                    Simpan
+                                </button>
+                            @else
+                                <span class="text-gray-400 text-sm">
+                                    -
+                                </span>
+                            @endif
+                        </td>
 
                     </tr>
 

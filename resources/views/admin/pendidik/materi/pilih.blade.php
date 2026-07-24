@@ -1,19 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="px-8 py-10">
+<div class="px-4 sm:px-8 py-6 sm:py-10">
 
     <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
 
         {{-- HEADER --}}
-        <div class="bg-[#083c5a] px-8 py-5">
-            <h2 class="text-xl text-white font-semibold">
+        <div class="bg-[#083c5a] px-4 sm:px-8 py-4 sm:py-5">
+            <h2 class="text-lg sm:text-xl text-white font-semibold">
                 Filter Materi Ajar
             </h2>
         </div>
 
         {{-- BODY --}}
-        <div class="px-8 py-8">
+        <div class="px-4 sm:px-8 py-6 sm:py-8">
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
@@ -71,14 +71,12 @@
             </div>
 
             {{-- BUTTON --}}
-            <div class="mt-10 flex gap-4">
+            <div class="mt-10 flex flex-wrap gap-3">
                 <button id="btnKelola" disabled
-                    class="px-6 py-3 rounded-lg font-semibold text-white
-                           bg-gray-400 cursor-not-allowed">
+                    class="px-5 py-2 rounded-lg font-semibold text-white text-sm
+                           bg-gray-400 cursor-not-allowed text-center">
                     Kelola Materi
                 </button>
-
-                
             </div>
 
         </div>

@@ -48,17 +48,17 @@
             </div>
 
             {{-- BUTTON AREA --}}
-            <div class="flex justify-between items-center">
+            <div class="flex flex-wrap justify-between items-center gap-3">
 
                 {{-- Kembali --}}
                 <a href="{{ route('tugas.index', [$id_kelas, $id_mk]) }}"
-                   class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
+                   class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition text-sm">
                     Kembali
                 </a>
 
                 {{-- Simpan --}}
                 <button type="submit"
-                        class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition">
+                         class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition text-sm">
                     Simpan Tugas
                 </button>
 

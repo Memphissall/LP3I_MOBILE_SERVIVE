@@ -47,7 +47,7 @@
                    placeholder="Tahun">
 
             {{-- BUTTON --}}
-            <button class="bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-semibold">
+            <button class="bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-semibold py-2">
                 Filter
             </button>
         </div>
@@ -72,6 +72,7 @@
                 <tr class="text-left text-gray-600">
                     <th class="px-6 py-4">Tanggal</th>
                     <th class="px-6 py-4">Pendidik</th>
+                    <th class="px-6 py-4">Jenis Honor / Keterangan</th>
                     <th class="px-6 py-4 text-right">Gaji Bersih</th>
                 </tr>
             </thead>

@@ -9,6 +9,8 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    @yield('styles')
+    @stack('styles')
 
     <style>
         :root{
@@ -33,6 +35,8 @@
             min-height:100vh;
             background:linear-gradient(180deg, var(--indigo), #162c45);
             position:fixed;
+            top:0; left:0;
+            z-index:100;
             color:#fff;
             display:flex;
             flex-direction:column;
@@ -215,8 +219,24 @@
 
         <nav>
             @if(Auth::user()->role === 'admin')
-                <a href="{{ route('admin.dashboard') }}">
+                <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class="fa-solid fa-screwdriver-wrench"></i> Dashboard Admin
+                </a>
+
+                <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') || request()->routeIs('admin.pendidik.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-users"></i> Kelola Akun
+                </a>
+
+                <a href="{{ route('admin.rekap.lkm') }}" class="{{ request()->routeIs('admin.rekap.lkm') ? 'active' : '' }}">
+                    <i class="fa-solid fa-book-open"></i> Rekap LKM
+                </a>
+
+                <a href="{{ route('admin.akademik.tambahan-honor') }}" class="{{ request()->routeIs('admin.akademik.tambahan-honor') ? 'active' : '' }}">
+                    <i class="fa-solid fa-hand-holding-dollar"></i> Honor Tambahan
+                </a>
+
+                <a href="{{ route('admin.rekap.gaji-pendidik') }}" class="{{ request()->routeIs('admin.rekap.gaji-pendidik') ? 'active' : '' }}">
+                    <i class="fa-solid fa-wallet"></i> Monitoring Gaji
                 </a>
             @endif
 
@@ -225,7 +245,7 @@
                     <i class="fa-solid fa-chart-line"></i> Dashboard
                 </a>
 
-                <a href="{{ route('pendidik.jadwal.index') }}">
+                <a href="{{ route('pendidik.jadwal.index') }}" class="{{ request()->routeIs('pendidik.jadwal.index') ? 'active' : '' }}">
                     <i class="fa-solid fa-calendar-days"></i> Jadwal Mengajar
                 </a>
 
@@ -237,25 +257,21 @@
                     <i class="fa-solid fa-book"></i> Materi Pembelajaran
                 </a>
 
-                <a href="{{ route('nilai.index') }}">
+                <a href="{{ route('nilai.index') }}" class="{{ request()->routeIs('nilai.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-star"></i> Nilai Mahasiswa
                 </a>
 
-                <a href="{{ route('tugas.pilih') }}">
+                <a href="{{ route('tugas.pilih') }}" class="{{ request()->routeIs('tugas.*') ? 'active' : '' }}">
                     <i class="fa-solid fa-list-check"></i> Tugas
                 </a>
 
-               <a href="{{ route('pendidik.gaji.index') }}"
-                    class="{{ request()->routeIs('pendidik.gaji.*') ? 'active' : '' }}">
-                        <i class="fa-solid fa-money-bill-wave"></i> Lihat Gaji
-                    </a>
+                <a href="{{ route('pendidik.gaji.index') }}" class="{{ request()->routeIs('pendidik.gaji.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-money-bill-wave"></i> Lihat Gaji
+                </a>
 
-
-                        <a href="{{ route('pendidik.sap.pilih') }}" 
-            class="{{ request()->routeIs('pendidik.sap.*') ? 'active' : '' }}">
-                <i class="fa-solid fa-file-arrow-down"></i> Unduh SAP
-            </a>
-
+                <a href="{{ route('pendidik.sap.pilih') }}" class="{{ request()->routeIs('pendidik.sap.*') ? 'active' : '' }}">
+                    <i class="fa-solid fa-file-arrow-down"></i> Unduh SAP
+                </a>
             @endif
         </nav>
     </div>
@@ -282,6 +298,7 @@
 
     <main>
         @yield('content')
+        {{ $slot ?? '' }}
     </main>
 
     <footer>

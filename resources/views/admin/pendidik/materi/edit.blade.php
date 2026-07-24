@@ -115,14 +115,14 @@
         </div>
 
         {{-- BUTTON --}}
-        <div class="flex justify-between">
+        <div class="mt-6 flex flex-wrap justify-between items-center gap-3">
             <a href="{{ route('materi.index', [$materi->id_kelas, $materi->id_mk]) }}"
-               class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+               class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm text-center">
                 Kembali
             </a>
 
             <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded text-sm text-center">
                 Simpan Perubahan
             </button>
         </div>

@@ -61,7 +61,7 @@
 
             <h3 class="text-xl font-semibold mb-2">Data Pendidik</h3>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label>ID Pendidik</label>
                     <input name="id_pendidik" value="{{ old('id_pendidik') }}"
@@ -133,14 +133,16 @@
             </div>
         </div>
 
-        <button class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">
-            Simpan Data
-        </button>
+        <div class="mt-6 flex flex-wrap gap-3">
+            <button class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-semibold">
+                Simpan Data
+            </button>
 
-        <a href="{{ route('admin.users.index') }}"
-            class="ml-2 bg-gray-500 text-white px-4 py-2 rounded">
-            Kembali
-        </a>
+            <a href="{{ route('admin.users.index') }}"
+                class="bg-gray-500 text-white px-4 py-2 rounded text-sm font-semibold text-center">
+                Kembali
+            </a>
+        </div>
     </form>
 </div>
 

@@ -34,7 +34,7 @@
             @endforeach
         </select>
 
-        <button class="bg-teal-600 hover:bg-teal-700 text-white rounded-lg">
+        <button class="bg-teal-600 hover:bg-teal-700 text-white rounded-lg py-2">
             Filter
         </button>
     </form>

@@ -73,7 +73,7 @@
 
         <div id="pendidikFields" class="{{ $user->role !== 'pendidik' ? 'hidden' : '' }}">
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label>id_pendidik</label>
                     <input type="text" name="id_pendidik" class="w-full border p-2 rounded"
@@ -151,13 +151,15 @@
             </div>
         </div>
 
-        <button class="mt-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-            Update Data
-        </button>
-         <a href="{{ route('admin.users.index') }}" 
-       class="inline-block mb-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-        Kembali
-    </a>
+        <div class="mt-6 flex flex-wrap gap-3">
+            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm font-semibold">
+                Update Data
+            </button>
+            <a href="{{ route('admin.users.index') }}" 
+               class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-sm font-semibold text-center">
+                Kembali
+            </a>
+        </div>
     </form>
 </div>
 

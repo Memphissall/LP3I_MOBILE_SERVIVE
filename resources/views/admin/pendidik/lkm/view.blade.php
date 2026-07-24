@@ -5,12 +5,12 @@
     <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
 
         {{-- HEADER --}}
-        <div class="bg-gradient-to-r from-[#004269] to-[#009DA5] px-6 py-5 flex justify-between items-center">
-            <h2 class="text-xl font-bold text-white tracking-wide">
+        <div class="bg-gradient-to-r from-[#004269] to-[#009DA5] px-6 py-5 flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center">
+            <h2 class="text-lg sm:text-xl font-bold text-white tracking-wide">
                 Riwayat LKM Pendidik
             </h2>
 
-            <div class="flex gap-3">
+            <div class="flex flex-wrap gap-2 w-full sm:w-auto">
                 <a href="{{ url('/pendidik/absen') }}"
                    class="bg-white text-[#004269] px-4 py-2 rounded-lg text-xs font-bold hover:scale-105 transition shadow-sm">
                     ← KEMBALI

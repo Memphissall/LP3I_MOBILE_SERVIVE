@@ -84,14 +84,14 @@
         </div>
 
         {{-- BUTTON --}}
-        <div class="flex gap-3">
+        <div class="mt-6 flex flex-wrap gap-3">
             <button type="submit"
-                    class="bg-blue-600 text-white px-5 py-2 rounded">
+                    class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-semibold">
                 Simpan
             </button>
 
             <a href="{{ route('materi.index', [$id_kelas, $id_mk]) }}"
-               class="bg-gray-400 text-white px-5 py-2 rounded">
+               class="bg-gray-400 text-white px-4 py-2 rounded text-sm font-semibold text-center">
                 Batal
             </a>
         </div>

@@ -20,11 +20,16 @@
 .dashboard {
     display: grid;
     grid-template-columns: 3fr 1.2fr;
+    grid-template-areas: 
+        "welcome calendar"
+        "cards calendar"
+        "icons calendar";
     gap: 22px;
 }
 
 /* WELCOME */
 .welcome {
+    grid-area: welcome;
     background: linear-gradient(135deg, var(--primary), #004269);
     color: white;
     border-radius: 16px;
@@ -53,6 +58,7 @@
 }
 
 .grid-3 {
+    grid-area: cards;
     display: grid;
     grid-template-columns: repeat(3,1fr);
     gap: 20px;
@@ -82,6 +88,7 @@
 
 /* ICON GRID */
 .icon-grid {
+    grid-area: icons;
     display: grid;
     grid-template-columns: repeat(2,1fr);
     gap: 18px;
@@ -107,6 +114,7 @@
 
 /* RIGHT BAR */
 .rightbar {
+    grid-area: calendar;
     background: linear-gradient(180deg, var(--dark1), var(--dark2));
     border-radius: 18px;
     padding: 22px;
@@ -154,7 +162,11 @@
 @media (max-width: 768px) {
     .dashboard {
         grid-template-columns: 1fr;
+        grid-template-areas: none;
         gap: 16px;
+    }
+    .welcome, .rightbar, .grid-3, .icon-grid {
+        grid-area: auto;
     }
     .grid-3 {
         grid-template-columns: 1fr;
@@ -200,11 +212,9 @@
 <div class="page-wrapper">
 <div class="dashboard">
 
-    <!-- LEFT -->
-    <div>
-
-        <!-- 🔥 WELCOME (Sudah ditambahkan ucapan waktu) -->
-        <div class="welcome">
+    <!-- 🔥 WELCOME (Sudah ditambahkan ucapan waktu) -->
+    <div class="welcome flex justify-between items-center gap-4">
+        <div>
             <h2>
                 <span id="greeting"></span>, {{ Auth::user()->name }}!
             </h2>
@@ -215,61 +225,74 @@
                 <span id="datetime-time"></span>
             </p>
         </div>
-
-        <div class="grid-3">
-            <div class="card">
-                <i class="fa-solid fa-calendar-days"></i>
-                <h3>Jadwal Mengajar</h3>
-                <p>Lihat jadwal Anda minggu ini.</p>
-                <a href="{{ route('pendidik.jadwal.index') }}">Lihat Jadwal →</a>
+        @php
+            $dashPhoto = null;
+            $user = Auth::user();
+            if ($user->role === 'pendidik' && $user->pendidik && $user->pendidik->foto) {
+                $dashPhoto = asset('storage/' . $user->pendidik->foto);
+            }
+        @endphp
+        @if ($dashPhoto)
+            <div class="flex-shrink-0">
+                <img src="{{ $dashPhoto }}" alt="Profile Photo" class="w-16 h-16 rounded-full object-cover border-2 border-white/40 shadow-md">
             </div>
-
-            <div class="card">
-                <i class="fa-solid fa-file-lines"></i>
-                <h3>Tugas Mahasiswa</h3>
-                <p>Pantau tugas mahasiswa.</p>
-                <a href="{{ route('tugas.pilih') }}">Kelola Tugas →</a>
-            </div>
-
-            <div class="card">
-                <i class="fa-solid fa-book"></i>
-                <h3>Materi Kuliah</h3>
-                <p>Upload dan update materi.</p>
-                <a href="{{ route('materi.pilih') }}">Kelola Materi →</a>
-            </div>
-        </div>
-
-        <div class="icon-grid">
-            <a href="{{ route('pendidik.absen') }}" class="icon-card">
-                <i class="fa-solid fa-user-check"></i>
-                <div>Absensi</div>
-            </a>
-
-            <a href="{{ route('pendidik.gaji.index') }}" class="icon-card">
-                <i class="fa-solid fa-money-bill-wave"></i>
-                <div>Gaji</div>
-            </a>
-
-            <a href="#" class="icon-card">
-                <i class="fa-solid fa-file-arrow-down"></i>
-                <div>Download SAP</div>
-            </a>
-
-            <a href="{{ route('nilai.index') }}" class="icon-card">
-                <i class="fa-solid fa-star"></i>
-                <div>Nilai</div>
-            </a>
-        </div>
-
+        @endif
     </div>
 
-    <!-- RIGHT -->
+    <!-- RIGHT BAR (CALENDAR) -->
     <div class="rightbar">
         <div class="calendar">
             <h4 id="calendar-title"></h4>
             <div class="calendar-grid" id="calendar-days"></div>
             <div class="calendar-grid" id="calendar-dates"></div>
         </div>
+    </div>
+
+    <!-- CARDS -->
+    <div class="grid-3">
+        <div class="card">
+            <i class="fa-solid fa-calendar-days"></i>
+            <h3>Jadwal Mengajar</h3>
+            <p>Lihat jadwal Anda minggu ini.</p>
+            <a href="{{ route('pendidik.jadwal.index') }}">Lihat Jadwal →</a>
+        </div>
+
+        <div class="card">
+            <i class="fa-solid fa-file-lines"></i>
+            <h3>Tugas Mahasiswa</h3>
+            <p>Pantau tugas mahasiswa.</p>
+            <a href="{{ route('tugas.pilih') }}">Kelola Tugas →</a>
+        </div>
+
+        <div class="card">
+            <i class="fa-solid fa-book"></i>
+            <h3>Materi Kuliah</h3>
+            <p>Upload dan update materi.</p>
+            <a href="{{ route('materi.pilih') }}">Kelola Materi →</a>
+        </div>
+    </div>
+
+    <!-- ICON GRID -->
+    <div class="icon-grid">
+        <a href="{{ route('pendidik.absen') }}" class="icon-card">
+            <i class="fa-solid fa-user-check"></i>
+            <div>Absensi</div>
+        </a>
+
+        <a href="{{ route('pendidik.gaji.index') }}" class="icon-card">
+            <i class="fa-solid fa-money-bill-wave"></i>
+            <div>Gaji</div>
+        </a>
+
+        <a href="#" class="icon-card">
+            <i class="fa-solid fa-file-arrow-down"></i>
+            <div>Download SAP</div>
+        </a>
+
+        <a href="{{ route('nilai.index') }}" class="icon-card">
+            <i class="fa-solid fa-star"></i>
+            <div>Nilai</div>
+        </a>
     </div>
 
 </div>

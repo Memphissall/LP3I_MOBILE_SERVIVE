@@ -3,20 +3,20 @@
 @section('content')
 <div class="max-w-6xl mx-auto py-10">
 
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Kelola Akun</h1>
 
-        <!-- BUTTON KEMBALI -->
-        <a href="{{ route('admin.dashboard') }}"
-           class="px-4 py-2 bg-gray-600 text-white rounded-lg shadow hover:bg-gray-700 transition">
-            ← Back
-        </a>
+        <div class="flex justify-between sm:justify-end items-center gap-2 w-full sm:w-auto">
+            <a href="{{ route('admin.dashboard') }}"
+               class="px-3 py-1.5 bg-gray-600 text-white rounded-lg shadow hover:bg-gray-700 transition text-xs font-semibold text-center">
+                ← Back
+            </a>
 
-        <h1 class="text-3xl font-bold text-gray-800">Kelola Akun</h1>
-
-        <a href="{{ route('admin.pendidik.create') }}"
-           class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">
-            + Add User
-        </a>
+            <a href="{{ route('admin.pendidik.create') }}"
+               class="px-3 py-1.5 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition text-xs font-semibold text-center">
+                + Add User
+            </a>
+        </div>
     </div>
 
     <div class="bg-white shadow-lg rounded-xl overflow-hidden">

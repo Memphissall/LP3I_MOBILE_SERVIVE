@@ -141,14 +141,14 @@
             </div>
 
             {{-- FOOTER --}}
-            <div class="border-t px-6 py-4 flex justify-end gap-2">
+            <div class="border-t px-6 py-4 flex flex-wrap justify-between items-center gap-3">
                 <a href="{{ url()->previous() }}"
-                   class="px-4 py-2 rounded-lg border">
+                   class="px-4 py-2 rounded-lg border text-sm font-semibold text-center">
                     Batal
                 </a>
 
                 <button type="submit"
-                        class="px-5 py-2 bg-blue-600 text-white rounded-lg">
+                        class="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold text-center">
                     💾 Simpan Honor
                 </button>
             </div>

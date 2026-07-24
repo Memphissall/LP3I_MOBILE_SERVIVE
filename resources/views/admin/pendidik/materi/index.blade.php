@@ -2,15 +2,22 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto mt-10">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold">
+    <div class="flex flex-col gap-3 mb-6">
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800">
             Materi {{ $matkul->nama_mk }} - {{ $kelas->nama_kelas }}
         </h2>
 
-        <a href="{{ route('materi.tambah', [$id_kelas, $id_mk]) }}"
-           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
-            <i class="fa-solid fa-plus"></i> Upload Materi
-        </a>
+        <div class="flex justify-between items-center gap-2 w-full">
+            <a href="{{ route('materi.pilih') }}"
+               class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm text-center">
+                ← KEMBALI
+            </a>
+
+            <a href="{{ route('materi.tambah', [$id_kelas, $id_mk]) }}"
+               class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm text-center">
+                <i class="fa-solid fa-plus"></i> Upload Materi
+            </a>
+        </div>
     </div>
 
     <div class="overflow-x-auto bg-white rounded-lg border border-gray-200 shadow-sm">

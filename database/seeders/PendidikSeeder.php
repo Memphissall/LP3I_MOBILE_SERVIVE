@@ -9,8 +9,9 @@ class PendidikSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('pendidik')->insert([
+        $items = [
             [
+                'id_pendidik' => '1',
                 'id_user' => 1,
                 'nama_pendidik' => 'Pendidik Satu',
                 'pendidikan' => 'S2',
@@ -29,6 +30,7 @@ class PendidikSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'id_pendidik' => '2',
                 'id_user' => 2,
                 'nama_pendidik' => 'Pendidik Dua',
                 'pendidikan' => 'S1',
@@ -46,6 +48,10 @@ class PendidikSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($items as $item) {
+            DB::table('pendidik')->updateOrInsert(['id_pendidik' => $item['id_pendidik']], $item);
+        }
     }
 }

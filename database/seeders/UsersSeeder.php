@@ -10,7 +10,7 @@ class UsersSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('users')->insert([
+        $users = [
             [
                 'name' => 'Siswanto',
                 'email' => 'pendidik1@example.com',
@@ -35,6 +35,10 @@ class UsersSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($users as $user) {
+            DB::table('users')->updateOrInsert(['email' => $user['email']], $user);
+        }
     }
 }

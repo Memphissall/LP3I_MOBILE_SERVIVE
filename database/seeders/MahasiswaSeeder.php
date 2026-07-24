@@ -9,7 +9,7 @@ class MahasiswaSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('mahasiswa')->insert([
+        $items = [
             [
                 'nipd' => '20240101',
                 'nama_mhs' => 'Ahmad Fauzi',
@@ -54,6 +54,10 @@ class MahasiswaSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($items as $item) {
+            DB::table('mahasiswa')->updateOrInsert(['nipd' => $item['nipd']], $item);
+        }
     }
 }

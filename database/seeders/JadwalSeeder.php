@@ -9,7 +9,7 @@ class JadwalSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('jadwal')->insert([
+        $items = [
             [
                 'hari' => 'Senin',
                 'jam_mulai' => '08:00',
@@ -34,7 +34,18 @@ class JadwalSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($items as $item) {
+            DB::table('jadwal')->updateOrInsert(
+                [
+                    'hari' => $item['hari'],
+                    'jam_mulai' => $item['jam_mulai'],
+                    'id_kelas' => $item['id_kelas'],
+                ],
+                $item
+            );
+        }
     }
 }
 

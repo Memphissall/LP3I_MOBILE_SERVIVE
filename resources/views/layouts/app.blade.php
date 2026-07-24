@@ -113,6 +113,7 @@
             min-height:100vh;
             display:flex;
             flex-direction:column;
+            transition: margin-left 0.3s ease;
         }
 
         /* ===== NAVBAR ATAS (SEJAJAR SIDEBAR) ===== */
@@ -120,11 +121,17 @@
             background:linear-gradient(90deg, var(--indigo), var(--viridian));
             padding:18px 24px;
             display:flex;
-            justify-content:flex-end;
+            justify-content:space-between;
             align-items:center;
             color:#fff;
             border-bottom:3px solid rgba(0,0,0,.08);
             box-shadow:0 4px 10px rgba(0,0,0,.08);
+        }
+
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
         }
 
         .profile-link{
@@ -150,10 +157,53 @@
             font-size:14px;
             color:#64748b;
         }
+
+        /* ===== RESPONSIVE MOBILE TOGGLE & BACKDROP ===== */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0,0,0,.4);
+            z-index: 999;
+        }
+
+        .sidebar-backdrop.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -260px;
+                transition: left 0.3s ease;
+                z-index: 1000;
+            }
+            .sidebar.show {
+                left: 0;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .menu-toggle {
+                display: block;
+            }
+        }
     </style>
 </head>
 
 <body>
+
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
 <aside class="sidebar">
     <div>
@@ -221,8 +271,13 @@
 
 <div class="main-content">
     <header class="navbar">
-        👋 {{ Auth::user()->name }}
-        <a href="{{ route('profile.edit') }}" class="profile-link">Profil</a>
+        <button class="menu-toggle" id="menuToggleBtn">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="navbar-user">
+            👋 {{ Auth::user()->name }}
+            <a href="{{ route('profile.edit') }}" class="profile-link">Profil</a>
+        </div>
     </header>
 
     <main>
@@ -239,6 +294,22 @@
         e.preventDefault();
         alert('Klik kanan dinonaktifkan demi keamanan sistem!');
     });
+
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const sidebar = document.querySelector('.sidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+
+    if (menuToggleBtn && sidebar && backdrop) {
+        menuToggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('show');
+            backdrop.classList.toggle('active');
+        });
+
+        backdrop.addEventListener('click', function() {
+            sidebar.classList.remove('show');
+            backdrop.classList.remove('active');
+        });
+    }
 </script>
 
 @stack('scripts')

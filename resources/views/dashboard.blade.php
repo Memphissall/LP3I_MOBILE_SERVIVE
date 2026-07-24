@@ -35,6 +35,13 @@
     font-size: 14px;
     margin-top: 6px;
     opacity: .9;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.datetime-sep {
+    margin: 0 6px;
 }
 
 /* CARD */
@@ -115,7 +122,7 @@
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7,1fr);
-    gap: 8px;
+    gap: 6px;
     text-align: center;
     font-size: 13px;
 }
@@ -123,10 +130,17 @@
 .calendar-grid .day {
     color: #7dd3fc;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
 }
 
 .calendar-grid .date {
-    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
     border-radius: 8px;
     background: rgba(255,255,255,.08);
 }
@@ -134,6 +148,52 @@
 .calendar-grid .today {
     background: var(--primary);
     font-weight: bold;
+}
+
+/* RESPONSIVE MEDIA QUERIES */
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .grid-3 {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 16px;
+    }
+    .icon-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 16px;
+    }
+    .page-wrapper {
+        padding: 16px;
+    }
+    #datetime {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 480px) {
+    .icon-grid {
+        grid-template-columns: 1fr;
+    }
+    #datetime {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+    .datetime-sep {
+        display: none;
+    }
+    .calendar-grid {
+        gap: 4px;
+        font-size: 11px;
+    }
+    .calendar-grid .date {
+        padding: 6px 0;
+    }
 }
 </style>
 
@@ -149,7 +209,11 @@
                 <span id="greeting"></span>, {{ Auth::user()->name }}!
             </h2>
             <p>Dashboard Pendidik</p>
-            <p id="datetime"></p>
+            <p id="datetime">
+                <span id="datetime-date"></span>
+                <span class="datetime-sep">•</span>
+                <span id="datetime-time"></span>
+            </p>
         </div>
 
         <div class="grid-3">
@@ -238,8 +302,8 @@ function updateDateTime() {
 
     document.getElementById('greeting').innerText = greetingText;
 
-    document.getElementById('datetime').innerText =
-        `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} • ${hour}:${minute}:${second} WIB`;
+    document.getElementById('datetime-date').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    document.getElementById('datetime-time').innerText = `${hour}:${minute}:${second} WIB`;
 }
 
 updateDateTime();

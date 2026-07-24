@@ -9,7 +9,7 @@ class RuanganSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('ruangan')->insert([
+        $items = [
             [
                 'id_ruangan' => 101,
                 'nama_ruangan' => 'Lab Komputer 1',
@@ -34,6 +34,10 @@ class RuanganSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($items as $item) {
+            DB::table('ruangan')->updateOrInsert(['id_ruangan' => $item['id_ruangan']], $item);
+        }
     }
 }

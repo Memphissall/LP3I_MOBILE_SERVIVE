@@ -9,7 +9,7 @@ class ProgramStudiSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('program_studi')->insert([
+        $items = [
             [
                 'id_program_studi' => 1,
                 'nama_program_studi' => 'Accounting Information System',
@@ -31,6 +31,10 @@ class ProgramStudiSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($items as $item) {
+            DB::table('program_studi')->updateOrInsert(['id_program_studi' => $item['id_program_studi']], $item);
+        }
     }
 }

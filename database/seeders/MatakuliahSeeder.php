@@ -9,7 +9,7 @@ class MataKuliahSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('matakuliah')->insert([
+        $items = [
             [
                 'kode_mk'   => 'AIS001',
                 'nama_mk'   => 'Pengantar Akuntansi',
@@ -40,6 +40,10 @@ class MataKuliahSeeder extends Seeder
                 'created_at'=> now(),
                 'updated_at'=> now(),
             ],
-        ]);
+        ];
+
+        foreach ($items as $item) {
+            DB::table('matakuliah')->updateOrInsert(['kode_mk' => $item['kode_mk']], $item);
+        }
     }
 }

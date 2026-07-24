@@ -9,7 +9,7 @@ class KelasSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('kelas')->insert([
+        $items = [
             [
                 'nama_kelas' => 'AIS',
                 'nama_pa' => 'MR YUGA',
@@ -31,6 +31,10 @@ class KelasSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($items as $item) {
+            DB::table('kelas')->updateOrInsert(['nama_kelas' => $item['nama_kelas']], $item);
+        }
     }
 }

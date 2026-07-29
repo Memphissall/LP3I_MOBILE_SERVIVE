@@ -250,7 +250,7 @@
                         >
                             <div class="px-5 py-4 border-b border-slate-50 bg-slate-50/50 block md:hidden">
                                 <p class="text-xs text-slate-400 font-bold uppercase mb-1">Login sebagai</p>
-                                <p class="text-sm font-bold text-primary truncate">{{ auth()->user()?->mahasiswa->nama ?? 'Guest' }}</p>
+                                <p class="text-sm font-bold text-primary truncate">{{ auth()->user()?->mahasiswa->nama_mhs ?? 'Guest' }}</p>
                             </div>
 
                             <div class="p-2 space-y-1">
@@ -266,9 +266,9 @@
                 </div>
             </header>
             
-            <div class="flex-1 overflow-y-auto bg-surface relative">
+            <div class="flex-1 overflow-y-auto bg-surface relative flex flex-col">
                 
-                <div class="min-h-full flex flex-col justify-between">
+                <div class="flex-1 flex flex-col justify-between">
 
                     <div class="flex-1 p-4 lg:p-8">
                         <div class="max-w-7xl mx-auto space-y-6">
@@ -277,10 +277,8 @@
                         </div>
                     </div>
                     
-                    <div class="p-4 lg:p-8 pt-0"> 
-                        <div class="max-w-7xl mx-auto">
-                            <x-app-footer /> 
-                        </div>
+                    <div class="mt-auto"> 
+                        <x-app-footer /> 
                     </div>
 
                 </div>

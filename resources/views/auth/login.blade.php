@@ -1,31 +1,23 @@
 <x-guest-layout>
-    {{-- Pastikan Alpine.js dimuat agar fitur ganti halaman (step) berfungsi --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <div class="min-h-screen w-full flex items-center justify-center p-4 lg:p-8 font-poppins relative overflow-hidden">
         
-        {{-- Background --}}
         <div class="absolute inset-0 z-0">
             <div class="absolute inset-0 bg-black/40 z-10"></div>
             <img src="{{ asset('/img/gedung-lp3i.jpeg') }}" class="w-full h-full object-cover" alt="Background Gedung">
         </div>
 
-        {{-- Container Utama dengan Alpine.js State (step: 1) --}}
         <div x-data="{ step: 1 }" class="relative z-20 w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[500px] border border-white/20 transition-all duration-300">
 
-            {{-- ================= BAGIAN 1: FORM LOGIN ================= --}}
-            {{-- Di mobile muncul saat step 1, di desktop (lg) selalu dipaksa tampil (lg:!flex) --}}
             <div class="w-full lg:w-[45%] bg-white p-8 lg:p-10 flex-col justify-center relative lg:!flex"
                  :class="step === 1 ? 'flex' : 'hidden'">
                 
                 <div class="text-center mb-6"> 
-                    <h1 class="text-2xl lg:text-3xl font-extrabold text-[#004269] mb-1"> 
-                        Selamat Datang
-                    </h1>
-                    <p class="text-gray-400 text-xs font-bold lg:text-sm mb-2">di</p>
+                   
                     
                     <div class="inline-flex items-center gap-1 border-b-2 border-yellow-400 pb-1">
-                        <span class="text-xl lg:text-2xl font-black text-red-600">E | </span><span class="text-xl lg:text-2xl font-black text-[#004269]">Student.</span>
+                        <span class="text-xl lg:text-2xl font-black text-red-600">E | </span><span class="text-xl lg:text-2xl font-black text-[#004269]">STUDENT</span>
                     </div>
                     <p class="text-[9px] font-bold tracking-[0.3em] text-gray-400 uppercase mt-1">Information System</p>
                 </div>

@@ -35,12 +35,12 @@
     </div>
 
     {{-- TABS --}}
-    <div class="mb-6 tech-tabs-container overflow-x-auto whitespace-nowrap">
+    <div class="mb-4 sm:mb-6 tech-tabs-container overflow-x-auto whitespace-nowrap scrollbar-hide">
         <button @click="activeTab = 'komponen'" :class="activeTab === 'komponen' ? 'tech-tab active' : 'tech-tab inactive'">
-            <i class="fas fa-list-ul mr-2"></i> Detail Komponen
+            <i class="fas fa-list-ul mr-1 sm:mr-2"></i> <span class="hidden sm:inline">Detail </span>Komponen
         </button>
         <button onclick="openModal()" class="tech-tab inactive hover:bg-gray-200">
-            <i class="fas fa-file-invoice mr-2"></i> Kartu Hasil Studi (KHS)
+            <i class="fas fa-file-invoice mr-1 sm:mr-2"></i> <span class="hidden sm:inline">Kartu Hasil Studi (</span>KHS<span class="hidden sm:inline">)</span>
         </button>
     </div>
 
@@ -92,37 +92,37 @@
 
             <div x-show="expanded" x-collapse class="border-t-2 border-dashed border-gray-200 bg-gray-50/80 p-4 sm:p-6 relative">
                 <div class="relative z-10">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                        <div class="bg-white p-2 sm:p-3 rounded-xl border border-gray-200 text-center shadow-sm flex flex-col items-center">
-                            <div class="text-blue-400 mb-1"><i class="fas fa-user-clock text-sm sm:text-base"></i></div>
-                            <span class="text-[0.55rem] sm:text-[0.65rem] text-gray-400 font-bold uppercase tracking-wider block mb-1">Kehadiran</span>
-                            <span class="text-base sm:text-lg font-black text-[#004269]">{{ $item->nilai_kehadiran ?? '-' }}</span>
+                    <div class="grid grid-cols-4 gap-2 sm:gap-4 mb-3 sm:mb-6">
+                        <div class="bg-white p-1.5 sm:p-3 rounded-lg sm:rounded-xl border border-gray-200 text-center shadow-sm flex flex-col items-center justify-center">
+                            <div class="text-blue-400 mb-0.5 sm:mb-1"><i class="fas fa-user-clock text-[0.65rem] sm:text-base"></i></div>
+                            <span class="text-[0.45rem] sm:text-[0.65rem] text-gray-400 font-bold uppercase tracking-wider block mb-0.5 sm:mb-1">Hadir</span>
+                            <span class="text-sm sm:text-lg font-black text-[#004269] leading-none">{{ $item->nilai_kehadiran ?? '-' }}</span>
                         </div>
-                        <div class="bg-white p-2 sm:p-3 rounded-xl border border-gray-200 text-center shadow-sm flex flex-col items-center">
-                            <div class="text-purple-400 mb-1"><i class="fas fa-smile text-sm sm:text-base"></i></div>
-                            <span class="text-[0.55rem] sm:text-[0.65rem] text-gray-400 font-bold uppercase tracking-wider block mb-1">Attitude</span>
-                            <span class="text-base sm:text-lg font-black text-[#004269]">{{ $item->nilai_sikap ?? '-' }}</span>
+                        <div class="bg-white p-1.5 sm:p-3 rounded-lg sm:rounded-xl border border-gray-200 text-center shadow-sm flex flex-col items-center justify-center">
+                            <div class="text-purple-400 mb-0.5 sm:mb-1"><i class="fas fa-smile text-[0.65rem] sm:text-base"></i></div>
+                            <span class="text-[0.45rem] sm:text-[0.65rem] text-gray-400 font-bold uppercase tracking-wider block mb-0.5 sm:mb-1">Sikap</span>
+                            <span class="text-sm sm:text-lg font-black text-[#004269] leading-none">{{ $item->nilai_sikap ?? '-' }}</span>
                         </div>
-                        <div class="bg-white p-2 sm:p-3 rounded-xl border border-gray-200 text-center shadow-sm flex flex-col items-center">
-                            <div class="text-orange-400 mb-1"><i class="fas fa-tasks text-sm sm:text-base"></i></div>
-                            <span class="text-[0.55rem] sm:text-[0.65rem] text-gray-400 font-bold uppercase tracking-wider block mb-1">Tugas</span>
-                            <span class="text-base sm:text-lg font-black text-[#004269]">{{ $item->nilai_tugas ?? '-' }}</span>
+                        <div class="bg-white p-1.5 sm:p-3 rounded-lg sm:rounded-xl border border-gray-200 text-center shadow-sm flex flex-col items-center justify-center">
+                            <div class="text-orange-400 mb-0.5 sm:mb-1"><i class="fas fa-tasks text-[0.65rem] sm:text-base"></i></div>
+                            <span class="text-[0.45rem] sm:text-[0.65rem] text-gray-400 font-bold uppercase tracking-wider block mb-0.5 sm:mb-1">Tugas</span>
+                            <span class="text-sm sm:text-lg font-black text-[#004269] leading-none">{{ $item->nilai_tugas ?? '-' }}</span>
                         </div>
-                        <div class="bg-white p-2 sm:p-3 rounded-xl border border-gray-200 text-center shadow-sm flex flex-col items-center">
-                            <div class="text-pink-400 mb-1"><i class="fas fa-question-circle text-sm sm:text-base"></i></div>
-                            <span class="text-[0.55rem] sm:text-[0.65rem] text-gray-400 font-bold uppercase tracking-wider block mb-1">Formative</span>
-                            <span class="text-base sm:text-lg font-black text-[#004269]">{{ $item->nilai_formative ?? '-' }}</span>
+                        <div class="bg-white p-1.5 sm:p-3 rounded-lg sm:rounded-xl border border-gray-200 text-center shadow-sm flex flex-col items-center justify-center">
+                            <div class="text-pink-400 mb-0.5 sm:mb-1"><i class="fas fa-question-circle text-[0.65rem] sm:text-base"></i></div>
+                            <span class="text-[0.45rem] sm:text-[0.65rem] text-gray-400 font-bold uppercase tracking-wider block mb-0.5 sm:mb-1">Formatif</span>
+                            <span class="text-sm sm:text-lg font-black text-[#004269] leading-none">{{ $item->nilai_formative ?? '-' }}</span>
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                        <div class="bg-gradient-to-r from-[#009DA5]/10 to-transparent p-3 sm:p-4 rounded-xl border-l-4 border-[#009DA5] flex justify-between items-center">
-                            <span class="text-xs sm:text-sm font-bold text-[#009DA5] uppercase flex items-center gap-2"><i class="fas fa-file-alt"></i> UTS</span>
-                            <span class="text-xl sm:text-2xl font-black text-[#004269]">{{ $item->nilai_uts ?? '-' }}</span>
+                    <div class="grid grid-cols-2 gap-2 sm:gap-4">
+                        <div class="bg-gradient-to-r from-[#009DA5]/10 to-transparent p-2 sm:p-4 rounded-lg sm:rounded-xl border-l-4 border-[#009DA5] flex justify-between items-center">
+                            <span class="text-[0.65rem] sm:text-sm font-bold text-[#009DA5] uppercase flex items-center gap-1 sm:gap-2"><i class="fas fa-file-alt"></i> UTS</span>
+                            <span class="text-base sm:text-2xl font-black text-[#004269]">{{ $item->nilai_uts ?? '-' }}</span>
                         </div>
-                        <div class="bg-gradient-to-r from-[#f15b67]/10 to-transparent p-3 sm:p-4 rounded-xl border-l-4 border-[#f15b67] flex justify-between items-center">
-                            <span class="text-xs sm:text-sm font-bold text-[#f15b67] uppercase flex items-center gap-2"><i class="fas fa-file-signature"></i> UAS</span>
-                            <span class="text-xl sm:text-2xl font-black text-[#004269]">{{ $item->nilai_uas ?? '-' }}</span>
+                        <div class="bg-gradient-to-r from-[#f15b67]/10 to-transparent p-2 sm:p-4 rounded-lg sm:rounded-xl border-l-4 border-[#f15b67] flex justify-between items-center">
+                            <span class="text-[0.65rem] sm:text-sm font-bold text-[#f15b67] uppercase flex items-center gap-1 sm:gap-2"><i class="fas fa-file-signature"></i> UAS</span>
+                            <span class="text-base sm:text-2xl font-black text-[#004269]">{{ $item->nilai_uas ?? '-' }}</span>
                         </div>
                     </div>
                 </div>
